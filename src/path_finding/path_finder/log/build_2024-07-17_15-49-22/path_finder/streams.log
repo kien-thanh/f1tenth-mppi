@@ -1,0 +1,21 @@
+[0.012s] Invoking command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder': /usr/bin/cmake /home/dalv204/f1tenth_ws/src/path_finding/path_finder -DCMAKE_INSTALL_PREFIX=/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder
+[1.182s] CMake Error at CMakeLists.txt:28 (find_package):
+[1.182s]   By not providing "Findament_cmake.cmake" in CMAKE_MODULE_PATH this project
+[1.182s]   has asked CMake to find a package configuration file provided by
+[1.182s]   "ament_cmake", but CMake did not find one.
+[1.183s] 
+[1.183s]   Could not find a package configuration file provided by "ament_cmake" with
+[1.183s]   any of the following names:
+[1.183s] 
+[1.183s]     ament_cmakeConfig.cmake
+[1.183s]     ament_cmake-config.cmake
+[1.183s] 
+[1.183s]   Add the installation prefix of "ament_cmake" to CMAKE_PREFIX_PATH or set
+[1.183s]   "ament_cmake_DIR" to a directory containing one of the above files.  If
+[1.183s]   "ament_cmake" provides a separate development package or SDK, be sure it
+[1.183s]   has been installed.
+[1.183s] 
+[1.183s] 
+[1.184s] -- Configuring incomplete, errors occurred!
+[1.184s] See also "/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder/CMakeFiles/CMakeOutput.log".
+[1.185s] Invoked command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder' returned '1': /usr/bin/cmake /home/dalv204/f1tenth_ws/src/path_finding/path_finder -DCMAKE_INSTALL_PREFIX=/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder

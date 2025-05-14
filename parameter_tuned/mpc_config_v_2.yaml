@@ -1,0 +1,77 @@
+L: 0.33
+horizon:
+  N: 50
+  Tf: 1.0
+  delay: 0.0
+  n_drive_control: 5
+model_type: model_input_accel_steering
+models:
+  model_input_accel_steering:
+    constraints:
+      u_max:
+      - 3.0
+      - 0.38
+      u_min:
+      - -3.0
+      - -0.38
+      x_max:
+      - null
+      - null
+      - null
+      - null
+      x_min:
+      - null
+      - null
+      - null
+      - null
+    weights:
+      Q:
+      - 41.58193923797105
+      - 41.58193923797105
+      - 0.1
+      - 62.885243694849535
+      Q_e:
+      - 41.58193923797105
+      - 41.58193923797105
+      - 0.1
+      - 62.885243694849535
+      R:
+      - 0.3764261734703432
+      - 5.547144870641778
+  model_input_accel_steeringrate:
+    constraints:
+      u_max:
+      - 3.0
+      - 0.3
+      u_min:
+      - -3.0
+      - -0.3
+      x_max:
+      - null
+      - null
+      - null
+      - null
+      - 0.38
+      x_min:
+      - null
+      - null
+      - null
+      - null
+      - -0.38
+    weights:
+      Q:
+      - 20.0
+      - 20.0
+      - 1.0
+      - 1.0
+      - 0.0
+      Q_e:
+      - 10.0
+      - 10.0
+      - 1.0
+      - 1.0
+      - 0.0
+      R:
+      - 1.0
+      - 1.0
+vref: 2.0

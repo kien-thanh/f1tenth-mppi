@@ -1,0 +1,9 @@
+/home/dalv204/lab2_ws/build/lab2_pkg/CMakeFiles/install/local.dir
+/home/dalv204/lab2_ws/build/lab2_pkg/CMakeFiles/install.dir
+/home/dalv204/lab2_ws/build/lab2_pkg/CMakeFiles/list_install_components.dir
+/home/dalv204/lab2_ws/build/lab2_pkg/CMakeFiles/rebuild_cache.dir
+/home/dalv204/lab2_ws/build/lab2_pkg/CMakeFiles/edit_cache.dir
+/home/dalv204/lab2_ws/build/lab2_pkg/CMakeFiles/test.dir
+/home/dalv204/lab2_ws/build/lab2_pkg/CMakeFiles/install/strip.dir
+/home/dalv204/lab2_ws/build/lab2_pkg/CMakeFiles/lab2_pkg_uninstall.dir
+/home/dalv204/lab2_ws/build/lab2_pkg/CMakeFiles/uninstall.dir

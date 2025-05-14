@@ -1,0 +1,28 @@
+[0.017s] Invoking command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder -- -j16 -l16
+[0.152s] [100%] Built target rrt_node
+[0.162s] Invoked command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder -- -j16 -l16
+[0.196s] Invoking command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder
+[0.203s] -- Install configuration: ""
+[0.204s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/path_finder/rrt_node
+[0.204s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/pythonpath.sh
+[0.204s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/pythonpath.dsv
+[0.204s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/python3.8/site-packages/path_finder
+[0.204s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/python3.8/site-packages/path_finder/__init__.py
+[0.224s] Listing '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/python3.8/site-packages/path_finder'...
+[0.227s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/path_finder/rrt_node.py
+[0.228s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/ament_index/resource_index/package_run_dependencies/path_finder
+[0.228s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/ament_index/resource_index/parent_prefix_path/path_finder
+[0.228s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/ament_prefix_path.sh
+[0.228s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/ament_prefix_path.dsv
+[0.228s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/path.sh
+[0.228s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/path.dsv
+[0.228s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/local_setup.bash
+[0.228s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/local_setup.sh
+[0.228s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/local_setup.zsh
+[0.228s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/local_setup.dsv
+[0.229s] -- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.dsv
+[0.229s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/ament_index/resource_index/packages/path_finder
+[0.229s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/cmake/path_finderConfig.cmake
+[0.229s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/cmake/path_finderConfig-version.cmake
+[0.229s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.xml
+[0.232s] Invoked command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder

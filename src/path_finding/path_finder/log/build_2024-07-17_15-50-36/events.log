@@ -1,0 +1,289 @@
+[0.000000] (-) TimerEvent: {}
+[0.000557] (path_finder) JobQueued: {'identifier': 'path_finder', 'dependencies': OrderedDict()}
+[0.000878] (path_finder) JobStarted: {'identifier': 'path_finder'}
+[0.008512] (path_finder) JobProgress: {'identifier': 'path_finder', 'progress': 'cmake'}
+[0.009308] (path_finder) Command: {'cmd': ['/usr/bin/cmake', '/home/dalv204/f1tenth_ws/src/path_finding/path_finder', '-DCMAKE_INSTALL_PREFIX=/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder'], 'cwd': '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'dalv204'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('WT_PROFILE_ID', '{4dd1e689-b517-5f39-947d-78e8a8bdf958}'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/dalv204'), ('OLDPWD', '/home/dalv204/f1tenth_ws/src/path_finding'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'dalv204'), ('NAME', 'dlp-204'), ('WSL_INTEROP', '/run/WSL/169909_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files/Python312/Scripts/:/mnt/c/Program Files/Python312/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Arduino/hardware/tools/avr/bin:/mnt/c/Program Files (x86)/GnuWin32/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/diego/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/diego/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/diego/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/diego/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/diego/.dotnet/tools:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/JetBrains/PyCharm Community Edition 2023.3.3/bin:/snap/bin'), ('WT_SESSION', '12451a89-e078-4858-9c7f-eabe30e56658'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'WT_SESSION:WT_PROFILE_ID:'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[0.029426] (path_finder) StdoutLine: {'line': b'-- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)\n'}
+[0.056580] (path_finder) StdoutLine: {'line': b'-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") \n'}
+[0.056886] (path_finder) StdoutLine: {'line': b'-- Using PYTHON_EXECUTABLE: /usr/bin/python3\n'}
+[0.098782] (-) TimerEvent: {}
+[0.199283] (-) TimerEvent: {}
+[0.222643] (path_finder) StdoutLine: {'line': b'-- Found rclcpp: 2.4.3 (/opt/ros/foxy/share/rclcpp/cmake)\n'}
+[0.299445] (-) TimerEvent: {}
+[0.399893] (-) TimerEvent: {}
+[0.461523] (path_finder) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.471874] (path_finder) StdoutLine: {'line': b'-- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)\n'}
+[0.500027] (-) TimerEvent: {}
+[0.600438] (-) TimerEvent: {}
+[0.700876] (-) TimerEvent: {}
+[0.801320] (-) TimerEvent: {}
+[0.901822] (-) TimerEvent: {}
+[1.002307] (-) TimerEvent: {}
+[1.102763] (-) TimerEvent: {}
+[1.203206] (-) TimerEvent: {}
+[1.303668] (-) TimerEvent: {}
+[1.404101] (-) TimerEvent: {}
+[1.504587] (-) TimerEvent: {}
+[1.604979] (-) TimerEvent: {}
+[1.705413] (-) TimerEvent: {}
+[1.805843] (-) TimerEvent: {}
+[1.814610] (path_finder) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.1f")  \n'}
+[1.906032] (-) TimerEvent: {}
+[2.006511] (-) TimerEvent: {}
+[2.106942] (-) TimerEvent: {}
+[2.207415] (-) TimerEvent: {}
+[2.307876] (-) TimerEvent: {}
+[2.408325] (-) TimerEvent: {}
+[2.508747] (-) TimerEvent: {}
+[2.609128] (-) TimerEvent: {}
+[2.709533] (-) TimerEvent: {}
+[2.810067] (-) TimerEvent: {}
+[2.910534] (-) TimerEvent: {}
+[3.011079] (-) TimerEvent: {}
+[3.106631] (path_finder) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/foxy/include  \n'}
+[3.111186] (-) TimerEvent: {}
+[3.211553] (-) TimerEvent: {}
+[3.311948] (-) TimerEvent: {}
+[3.412418] (-) TimerEvent: {}
+[3.512835] (-) TimerEvent: {}
+[3.613285] (-) TimerEvent: {}
+[3.713708] (-) TimerEvent: {}
+[3.814202] (-) TimerEvent: {}
+[3.914634] (-) TimerEvent: {}
+[4.015022] (-) TimerEvent: {}
+[4.115435] (-) TimerEvent: {}
+[4.215850] (-) TimerEvent: {}
+[4.316377] (-) TimerEvent: {}
+[4.416858] (-) TimerEvent: {}
+[4.517275] (-) TimerEvent: {}
+[4.617658] (-) TimerEvent: {}
+[4.718029] (-) TimerEvent: {}
+[4.818426] (-) TimerEvent: {}
+[4.918819] (-) TimerEvent: {}
+[5.019202] (-) TimerEvent: {}
+[5.119613] (-) TimerEvent: {}
+[5.220041] (-) TimerEvent: {}
+[5.320491] (-) TimerEvent: {}
+[5.420961] (-) TimerEvent: {}
+[5.499149] (path_finder) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[5.521103] (-) TimerEvent: {}
+[5.569989] (path_finder) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 1.0.4 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)\n'}
+[5.572492] (path_finder) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[5.575349] (path_finder) StdoutLine: {'line': b'-- Looking for pthread.h\n'}
+[5.621223] (-) TimerEvent: {}
+[5.721593] (-) TimerEvent: {}
+[5.821984] (-) TimerEvent: {}
+[5.827916] (path_finder) StdoutLine: {'line': b'-- Looking for pthread.h - found\n'}
+[5.828275] (path_finder) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n'}
+[5.922114] (-) TimerEvent: {}
+[6.017053] (path_finder) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed\n'}
+[6.017444] (path_finder) StdoutLine: {'line': b'-- Looking for pthread_create in pthreads\n'}
+[6.022254] (-) TimerEvent: {}
+[6.122617] (-) TimerEvent: {}
+[6.184139] (path_finder) StdoutLine: {'line': b'-- Looking for pthread_create in pthreads - not found\n'}
+[6.184395] (path_finder) StdoutLine: {'line': b'-- Looking for pthread_create in pthread\n'}
+[6.222772] (-) TimerEvent: {}
+[6.323253] (-) TimerEvent: {}
+[6.345340] (path_finder) StdoutLine: {'line': b'-- Looking for pthread_create in pthread - found\n'}
+[6.346214] (path_finder) StdoutLine: {'line': b'-- Found Threads: TRUE  \n'}
+[6.423383] (-) TimerEvent: {}
+[6.496281] (path_finder) StdoutLine: {'line': b'-- Found rclpy: 1.0.13 (/opt/ros/foxy/share/rclpy/cmake)\n'}
+[6.497834] (path_finder) StdoutLine: {'line': b'-- Found geometry_msgs: 2.0.5 (/opt/ros/foxy/share/geometry_msgs/cmake)\n'}
+[6.523531] (-) TimerEvent: {}
+[6.533756] (path_finder) StdoutLine: {'line': b'-- Found nav_msgs: 2.0.5 (/opt/ros/foxy/share/nav_msgs/cmake)\n'}
+[6.604105] (path_finder) StdoutLine: {'line': b'-- Found ackermann_msgs: 2.0.2 (/opt/ros/foxy/share/ackermann_msgs/cmake)\n'}
+[6.623648] (-) TimerEvent: {}
+[6.637868] (path_finder) StdoutLine: {'line': b'-- Found sensor_msgs: 2.0.5 (/opt/ros/foxy/share/sensor_msgs/cmake)\n'}
+[6.702773] (path_finder) StdoutLine: {'line': b'-- Found visualization_msgs: 2.0.5 (/opt/ros/foxy/share/visualization_msgs/cmake)\n'}
+[6.723782] (-) TimerEvent: {}
+[6.772141] (path_finder) StdoutLine: {'line': b'-- Found tf2_ros: 0.13.14 (/opt/ros/foxy/share/tf2_ros/cmake)\n'}
+[6.823909] (-) TimerEvent: {}
+[6.924338] (-) TimerEvent: {}
+[7.024823] (-) TimerEvent: {}
+[7.119720] (path_finder) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)\n'}
+[7.124922] (-) TimerEvent: {}
+[7.194320] (path_finder) StdoutLine: {'line': b"-- Added test 'copyright' to check source files copyright and LICENSE\n"}
+[7.201470] (path_finder) StdoutLine: {'line': b"-- Added test 'cppcheck' to perform static code analysis on C / C++ code\n"}
+[7.201795] (path_finder) StdoutLine: {'line': b'-- Configured cppcheck include dirs: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/include\n'}
+[7.201893] (path_finder) StdoutLine: {'line': b'-- Configured cppcheck exclude dirs and/or files: \n'}
+[7.207804] (path_finder) StdoutLine: {'line': b"-- Added test 'cpplint' to check C / C++ code against the Google style\n"}
+[7.207951] (path_finder) StdoutLine: {'line': b'-- Configured cpplint exclude dirs and/or files: \n'}
+[7.209942] (path_finder) StdoutLine: {'line': b"-- Added test 'flake8' to check Python code syntax and style conventions\n"}
+[7.212338] (path_finder) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[7.214337] (path_finder) StdoutLine: {'line': b"-- Added test 'pep257' to check Python code against some of the style conventions in PEP 257\n"}
+[7.220512] (path_finder) StdoutLine: {'line': b"-- Added test 'uncrustify' to check C / C++ code style\n"}
+[7.220717] (path_finder) StdoutLine: {'line': b'-- Configured uncrustify additional arguments: \n'}
+[7.222342] (path_finder) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[7.225048] (-) TimerEvent: {}
+[7.227366] (path_finder) StdoutLine: {'line': b'-- Configuring done\n'}
+[7.241850] (path_finder) StdoutLine: {'line': b'-- Generating done\n'}
+[7.243848] (path_finder) StdoutLine: {'line': b'-- Build files have been written to: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder\n'}
+[7.253343] (path_finder) CommandEnded: {'returncode': 0}
+[7.254326] (path_finder) JobProgress: {'identifier': 'path_finder', 'progress': 'build'}
+[7.256462] (path_finder) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder', '--', '-j16', '-l16'], 'cwd': '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'dalv204'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('WT_PROFILE_ID', '{4dd1e689-b517-5f39-947d-78e8a8bdf958}'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/dalv204'), ('OLDPWD', '/home/dalv204/f1tenth_ws/src/path_finding'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'dalv204'), ('NAME', 'dlp-204'), ('WSL_INTEROP', '/run/WSL/169909_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files/Python312/Scripts/:/mnt/c/Program Files/Python312/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Arduino/hardware/tools/avr/bin:/mnt/c/Program Files (x86)/GnuWin32/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/diego/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/diego/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/diego/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/diego/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/diego/.dotnet/tools:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/JetBrains/PyCharm Community Edition 2023.3.3/bin:/snap/bin'), ('WT_SESSION', '12451a89-e078-4858-9c7f-eabe30e56658'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'WT_SESSION:WT_PROFILE_ID:'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[7.293317] (path_finder) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target rrt_node\x1b[0m\n'}
+[7.325186] (-) TimerEvent: {}
+[7.425630] (-) TimerEvent: {}
+[7.444229] (path_finder) StdoutLine: {'line': b'[ 66%] \x1b[32mBuilding CXX object CMakeFiles/rrt_node.dir/src/rrt.cpp.o\x1b[0m\n'}
+[7.444513] (path_finder) StdoutLine: {'line': b'[ 66%] \x1b[32mBuilding CXX object CMakeFiles/rrt_node.dir/src/rrt_node.cpp.o\x1b[0m\n'}
+[7.525770] (-) TimerEvent: {}
+[7.626325] (-) TimerEvent: {}
+[7.726932] (-) TimerEvent: {}
+[7.827450] (-) TimerEvent: {}
+[7.927960] (-) TimerEvent: {}
+[8.028467] (-) TimerEvent: {}
+[8.129015] (-) TimerEvent: {}
+[8.229621] (-) TimerEvent: {}
+[8.330135] (-) TimerEvent: {}
+[8.430618] (-) TimerEvent: {}
+[8.531119] (-) TimerEvent: {}
+[8.631644] (-) TimerEvent: {}
+[8.732095] (-) TimerEvent: {}
+[8.800680] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid RRT::scan_callback(sensor_msgs::msg::LaserScan_<std::allocator<void> >::ConstSharedPtr)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[8.801069] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:33:75:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kscan_msg\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.801171] (path_finder) StderrLine: {'line': b'   33 | void RRT::scan_callback(\x1b[01;35m\x1b[Kconst sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg\x1b[m\x1b[K) {\n'}
+[8.801257] (path_finder) StderrLine: {'line': b'      |                         \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~\x1b[m\x1b[K\n'}
+[8.805036] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid RRT::pose_callback(nav_msgs::msg::Odometry_<std::allocator<void> >::ConstSharedPtr)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[8.805228] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:43:71:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kpose_msg\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.805534] (path_finder) StderrLine: {'line': b'   43 | void RRT::pose_callback(\x1b[01;35m\x1b[Kconst nav_msgs::msg::Odometry::ConstSharedPtr pose_msg\x1b[m\x1b[K) {\n'}
+[8.805709] (path_finder) StderrLine: {'line': b'      |                         \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~\x1b[m\x1b[K\n'}
+[8.805998] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kint RRT::nearest(std::vector<RRT_Node>&, std::vector<double>&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[8.806204] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:79:41:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Ktree\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.806519] (path_finder) StderrLine: {'line': b'   79 | int RRT::nearest(\x1b[01;35m\x1b[Kstd::vector<RRT_Node> &tree\x1b[m\x1b[K, std::vector<double> &sampled_point) {\n'}
+[8.806683] (path_finder) StderrLine: {'line': b'      |                  \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[8.806823] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:79:68:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Ksampled_point\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.806962] (path_finder) StderrLine: {'line': b'   79 | int RRT::nearest(std::vector<RRT_Node> &tree, \x1b[01;35m\x1b[Kstd::vector<double> &sampled_point\x1b[m\x1b[K) {\n'}
+[8.807172] (path_finder) StderrLine: {'line': b'      |                                               \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[8.807241] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[KRRT_Node RRT::steer(RRT_Node&, std::vector<double>&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[8.807306] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:93:31:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Knearest_node\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.807366] (path_finder) StderrLine: {'line': b'   93 | RRT_Node RRT::steer(\x1b[01;35m\x1b[KRRT_Node &nearest_node\x1b[m\x1b[K, std::vector<double> &sampled_point) {\n'}
+[8.807443] (path_finder) StderrLine: {'line': b'      |                     \x1b[01;35m\x1b[K~~~~~~~~~~^~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[8.807514] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:93:66:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Ksampled_point\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.807573] (path_finder) StderrLine: {'line': b'   93 | RRT_Node RRT::steer(RRT_Node &nearest_node, \x1b[01;35m\x1b[Kstd::vector<double> &sampled_point\x1b[m\x1b[K) {\n'}
+[8.807629] (path_finder) StderrLine: {'line': b'      |                                             \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[8.807684] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kbool RRT::check_collision(RRT_Node&, RRT_Node&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[8.807740] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:113:37:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Knearest_node\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.807804] (path_finder) StderrLine: {'line': b'  113 | bool RRT::check_collision(\x1b[01;35m\x1b[KRRT_Node &nearest_node\x1b[m\x1b[K, RRT_Node &new_node) {\n'}
+[8.807861] (path_finder) StderrLine: {'line': b'      |                           \x1b[01;35m\x1b[K~~~~~~~~~~^~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[8.807915] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:113:61:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Knew_node\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.807974] (path_finder) StderrLine: {'line': b'  113 | bool RRT::check_collision(RRT_Node &nearest_node, \x1b[01;35m\x1b[KRRT_Node &new_node\x1b[m\x1b[K) {\n'}
+[8.808029] (path_finder) StderrLine: {'line': b'      |                                                   \x1b[01;35m\x1b[K~~~~~~~~~~^~~~~~~~\x1b[m\x1b[K\n'}
+[8.808089] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kbool RRT::is_goal(RRT_Node&, double, double)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[8.808144] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:128:29:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Klatest_added_node\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.808201] (path_finder) StderrLine: {'line': b'  128 | bool RRT::is_goal(\x1b[01;35m\x1b[KRRT_Node &latest_added_node\x1b[m\x1b[K, double goal_x, double goal_y) {\n'}
+[8.808258] (path_finder) StderrLine: {'line': b'      |                   \x1b[01;35m\x1b[K~~~~~~~~~~^~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[8.808313] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:128:55:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kgoal_x\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.808368] (path_finder) StderrLine: {'line': b'  128 | bool RRT::is_goal(RRT_Node &latest_added_node, \x1b[01;35m\x1b[Kdouble goal_x\x1b[m\x1b[K, double goal_y) {\n'}
+[8.808421] (path_finder) StderrLine: {'line': b'      |                                                \x1b[01;35m\x1b[K~~~~~~~^~~~~~\x1b[m\x1b[K\n'}
+[8.808475] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:128:70:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kgoal_y\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.808554] (path_finder) StderrLine: {'line': b'  128 | bool RRT::is_goal(RRT_Node &latest_added_node, double goal_x, \x1b[01;35m\x1b[Kdouble goal_y\x1b[m\x1b[K) {\n'}
+[8.808625] (path_finder) StderrLine: {'line': b'      |                                                               \x1b[01;35m\x1b[K~~~~~~~^~~~~~\x1b[m\x1b[K\n'}
+[8.808683] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kstd::vector<RRT_Node> RRT::find_path(std::vector<RRT_Node>&, RRT_Node&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[8.808741] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:145:61:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Ktree\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.808800] (path_finder) StderrLine: {'line': b'  145 | std::vector<RRT_Node> RRT::find_path(\x1b[01;35m\x1b[Kstd::vector<RRT_Node> &tree\x1b[m\x1b[K, RRT_Node &latest_added_node) {\n'}
+[8.808856] (path_finder) StderrLine: {'line': b'      |                                      \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[8.808910] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:145:77:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Klatest_added_node\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.808975] (path_finder) StderrLine: {'line': b'  145 | std::vector<RRT_Node> RRT::find_path(std::vector<RRT_Node> &tree, \x1b[01;35m\x1b[KRRT_Node &latest_added_node\x1b[m\x1b[K) {\n'}
+[8.809030] (path_finder) StderrLine: {'line': b'      |                                                                   \x1b[01;35m\x1b[K~~~~~~~~~~^~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[8.809085] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kdouble RRT::cost(std::vector<RRT_Node>&, RRT_Node&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[8.809139] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:162:41:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Ktree\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.809193] (path_finder) StderrLine: {'line': b'  162 | double RRT::cost(\x1b[01;35m\x1b[Kstd::vector<RRT_Node> &tree\x1b[m\x1b[K, RRT_Node &node) {\n'}
+[8.809247] (path_finder) StderrLine: {'line': b'      |                  \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[8.809441] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:162:57:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Knode\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.809616] (path_finder) StderrLine: {'line': b'  162 | double RRT::cost(std::vector<RRT_Node> &tree, \x1b[01;35m\x1b[KRRT_Node &node\x1b[m\x1b[K) {\n'}
+[8.809726] (path_finder) StderrLine: {'line': b'      |                                               \x1b[01;35m\x1b[K~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[8.809813] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kdouble RRT::line_cost(RRT_Node&, RRT_Node&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[8.809897] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:176:33:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kn1\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.809988] (path_finder) StderrLine: {'line': b'  176 | double RRT::line_cost(\x1b[01;35m\x1b[KRRT_Node &n1\x1b[m\x1b[K, RRT_Node &n2) {\n'}
+[8.810071] (path_finder) StderrLine: {'line': b'      |                       \x1b[01;35m\x1b[K~~~~~~~~~~^~\x1b[m\x1b[K\n'}
+[8.810151] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:176:47:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kn2\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.810232] (path_finder) StderrLine: {'line': b'  176 | double RRT::line_cost(RRT_Node &n1, \x1b[01;35m\x1b[KRRT_Node &n2\x1b[m\x1b[K) {\n'}
+[8.810358] (path_finder) StderrLine: {'line': b'      |                                     \x1b[01;35m\x1b[K~~~~~~~~~~^~\x1b[m\x1b[K\n'}
+[8.810456] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kstd::vector<int> RRT::near(std::vector<RRT_Node>&, RRT_Node&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[8.810541] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:190:51:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Ktree\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.810628] (path_finder) StderrLine: {'line': b'  190 | std::vector<int> RRT::near(\x1b[01;35m\x1b[Kstd::vector<RRT_Node> &tree\x1b[m\x1b[K, RRT_Node &node) {\n'}
+[8.810681] (path_finder) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[8.810733] (path_finder) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:190:67:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Knode\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[8.810785] (path_finder) StderrLine: {'line': b'  190 | std::vector<int> RRT::near(std::vector<RRT_Node> &tree, \x1b[01;35m\x1b[KRRT_Node &node\x1b[m\x1b[K) {\n'}
+[8.810836] (path_finder) StderrLine: {'line': b'      |                                                         \x1b[01;35m\x1b[K~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[8.832237] (-) TimerEvent: {}
+[8.932717] (-) TimerEvent: {}
+[9.033224] (-) TimerEvent: {}
+[9.133841] (-) TimerEvent: {}
+[9.234377] (-) TimerEvent: {}
+[9.334917] (-) TimerEvent: {}
+[9.435574] (-) TimerEvent: {}
+[9.536208] (-) TimerEvent: {}
+[9.636733] (-) TimerEvent: {}
+[9.737227] (-) TimerEvent: {}
+[9.837810] (-) TimerEvent: {}
+[9.938352] (-) TimerEvent: {}
+[10.038854] (-) TimerEvent: {}
+[10.139398] (-) TimerEvent: {}
+[10.239877] (-) TimerEvent: {}
+[10.340365] (-) TimerEvent: {}
+[10.454002] (-) TimerEvent: {}
+[10.554498] (-) TimerEvent: {}
+[10.654969] (-) TimerEvent: {}
+[10.755477] (-) TimerEvent: {}
+[10.855926] (-) TimerEvent: {}
+[10.956482] (-) TimerEvent: {}
+[11.057019] (-) TimerEvent: {}
+[11.157522] (-) TimerEvent: {}
+[11.257999] (-) TimerEvent: {}
+[11.358471] (-) TimerEvent: {}
+[11.458976] (-) TimerEvent: {}
+[11.559487] (-) TimerEvent: {}
+[11.660053] (-) TimerEvent: {}
+[11.760491] (-) TimerEvent: {}
+[11.860903] (-) TimerEvent: {}
+[11.961381] (-) TimerEvent: {}
+[12.061827] (-) TimerEvent: {}
+[12.162254] (-) TimerEvent: {}
+[12.262712] (-) TimerEvent: {}
+[12.363204] (-) TimerEvent: {}
+[12.463707] (-) TimerEvent: {}
+[12.564156] (-) TimerEvent: {}
+[12.664662] (-) TimerEvent: {}
+[12.765153] (-) TimerEvent: {}
+[12.865672] (-) TimerEvent: {}
+[12.966178] (-) TimerEvent: {}
+[13.026296] (path_finder) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable rrt_node\x1b[0m\n'}
+[13.066314] (-) TimerEvent: {}
+[13.166763] (-) TimerEvent: {}
+[13.267286] (-) TimerEvent: {}
+[13.367778] (-) TimerEvent: {}
+[13.467751] (path_finder) StdoutLine: {'line': b'[100%] Built target rrt_node\n'}
+[13.468056] (-) TimerEvent: {}
+[13.478128] (path_finder) CommandEnded: {'returncode': 0}
+[13.504107] (path_finder) JobProgress: {'identifier': 'path_finder', 'progress': 'install'}
+[13.513271] (path_finder) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder'], 'cwd': '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'dalv204'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('WT_PROFILE_ID', '{4dd1e689-b517-5f39-947d-78e8a8bdf958}'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/dalv204'), ('OLDPWD', '/home/dalv204/f1tenth_ws/src/path_finding'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'dalv204'), ('NAME', 'dlp-204'), ('WSL_INTEROP', '/run/WSL/169909_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files/Python312/Scripts/:/mnt/c/Program Files/Python312/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Arduino/hardware/tools/avr/bin:/mnt/c/Program Files (x86)/GnuWin32/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/diego/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/diego/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/diego/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/diego/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/diego/.dotnet/tools:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/JetBrains/PyCharm Community Edition 2023.3.3/bin:/snap/bin'), ('WT_SESSION', '12451a89-e078-4858-9c7f-eabe30e56658'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'WT_SESSION:WT_PROFILE_ID:'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[13.521175] (path_finder) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[13.521647] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/path_finder/rrt_node\n'}
+[13.524576] (path_finder) StdoutLine: {'line': b'-- Set runtime path of "/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/path_finder/rrt_node" to ""\n'}
+[13.524818] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/pythonpath.sh\n'}
+[13.525052] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/pythonpath.dsv\n'}
+[13.525147] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/python3.8/site-packages/path_finder\n'}
+[13.525480] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/python3.8/site-packages/path_finder/__init__.py\n'}
+[13.546246] (path_finder) StdoutLine: {'line': b"Listing '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/python3.8/site-packages/path_finder'...\n"}
+[13.546532] (path_finder) StdoutLine: {'line': b"Compiling '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/python3.8/site-packages/path_finder/__init__.py'...\n"}
+[13.549944] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/path_finder/rrt_node.py\n'}
+[13.551173] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/ament_index/resource_index/package_run_dependencies/path_finder\n'}
+[13.551497] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/ament_index/resource_index/parent_prefix_path/path_finder\n'}
+[13.551735] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/ament_prefix_path.sh\n'}
+[13.551961] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/ament_prefix_path.dsv\n'}
+[13.552425] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/path.sh\n'}
+[13.552788] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/environment/path.dsv\n'}
+[13.553139] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/local_setup.bash\n'}
+[13.553513] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/local_setup.sh\n'}
+[13.553710] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/local_setup.zsh\n'}
+[13.553799] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/local_setup.dsv\n'}
+[13.553876] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.dsv\n'}
+[13.554107] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/ament_index/resource_index/packages/path_finder\n'}
+[13.554602] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/cmake/path_finderConfig.cmake\n'}
+[13.554779] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/cmake/path_finderConfig-version.cmake\n'}
+[13.554930] (path_finder) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.xml\n'}
+[13.557630] (path_finder) CommandEnded: {'returncode': 0}
+[13.568254] (-) TimerEvent: {}
+[13.614689] (path_finder) JobEnded: {'identifier': 'path_finder', 'rc': 0}
+[13.615990] (-) EventReactorShutdown: {}

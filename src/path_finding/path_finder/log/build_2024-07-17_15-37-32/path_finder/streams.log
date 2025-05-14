@@ -1,0 +1,35 @@
+[0.012s] Invoking command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder': /usr/bin/cmake /home/dalv204/f1tenth_ws/src/path_finding/path_finder -DCMAKE_INSTALL_PREFIX=/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder
+[0.230s] -- The C compiler identification is GNU 9.4.0
+[0.531s] -- The CXX compiler identification is GNU 9.4.0
+[0.670s] -- Check for working C compiler: /usr/bin/cc
+[0.819s] -- Check for working C compiler: /usr/bin/cc -- works
+[0.822s] -- Detecting C compiler ABI info
+[0.971s] -- Detecting C compiler ABI info - done
+[0.978s] -- Detecting C compile features
+[0.979s] -- Detecting C compile features - done
+[0.983s] -- Check for working CXX compiler: /usr/bin/c++
+[1.127s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[1.128s] -- Detecting CXX compiler ABI info
+[1.282s] -- Detecting CXX compiler ABI info - done
+[1.289s] -- Detecting CXX compile features
+[1.290s] -- Detecting CXX compile features - done
+[2.480s] CMake Error at CMakeLists.txt:28 (find_package):
+[2.480s]   By not providing "Findament_cmake.cmake" in CMAKE_MODULE_PATH this project
+[2.480s]   has asked CMake to find a package configuration file provided by
+[2.480s]   "ament_cmake", but CMake did not find one.
+[2.481s] 
+[2.481s]   Could not find a package configuration file provided by "ament_cmake" with
+[2.481s]   any of the following names:
+[2.481s] 
+[2.481s]     ament_cmakeConfig.cmake
+[2.481s]     ament_cmake-config.cmake
+[2.481s] 
+[2.481s]   Add the installation prefix of "ament_cmake" to CMAKE_PREFIX_PATH or set
+[2.481s]   "ament_cmake_DIR" to a directory containing one of the above files.  If
+[2.481s]   "ament_cmake" provides a separate development package or SDK, be sure it
+[2.481s]   has been installed.
+[2.481s] 
+[2.482s] 
+[2.482s] -- Configuring incomplete, errors occurred!
+[2.482s] See also "/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder/CMakeFiles/CMakeOutput.log".
+[2.484s] Invoked command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder' returned '1': /usr/bin/cmake /home/dalv204/f1tenth_ws/src/path_finding/path_finder -DCMAKE_INSTALL_PREFIX=/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder

@@ -1,0 +1,200 @@
+[0.000000] (-) TimerEvent: {}
+[0.001924] (lab2_pkg) JobQueued: {'identifier': 'lab2_pkg', 'dependencies': OrderedDict()}
+[0.002031] (lab2_pkg) JobStarted: {'identifier': 'lab2_pkg'}
+[0.023167] (lab2_pkg) JobProgress: {'identifier': 'lab2_pkg', 'progress': 'cmake'}
+[0.024213] (lab2_pkg) Command: {'cmd': ['/usr/bin/cmake', '/home/dalv204/lab2_ws/src/lab2_pkg', '-DCMAKE_INSTALL_PREFIX=/home/dalv204/lab2_ws/install/lab2_pkg'], 'cwd': '/home/dalv204/lab2_ws/build/lab2_pkg', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('TMUX', '/tmp//tmux-1000/default,71550,3'), ('USER', 'dalv204'), ('SHLVL', '3'), ('LD_LIBRARY_PATH', '/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('WT_PROFILE_ID', '{61c54bbd-c2c6-5271-96e7-009a87ff44bf}'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/dalv204'), ('OLDPWD', '/home/dalv204/lab2_ws/src/lab2_pkg'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('COLCON_PREFIX_PATH', '/home/dalv204/lab1_ws/install'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'dalv204'), ('NAME', 'dlp-204'), ('WSL_INTEROP', '/run/WSL/605_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'screen'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files/Python312/Scripts/:/mnt/c/Program Files/Python312/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Arduino/hardware/tools/avr/bin:/mnt/c/Program Files (x86)/GnuWin32/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/diego/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/diego/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/diego/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/diego/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/diego/.dotnet/tools:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/JetBrains/PyCharm Community Edition 2023.3.3/bin:/snap/bin'), ('WT_SESSION', '5a21bfe0-eb61-4f58-a558-4fb7d2feacc4'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/home/dalv204/lab1_ws/install/lab1_pkg:/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/dalv204/lab2_ws/build/lab2_pkg'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('TMUX_PANE', '%7'), ('HOSTTYPE', 'x86_64'), ('CMAKE_PREFIX_PATH', '/home/dalv204/lab1_ws/install/lab1_pkg:/opt/ros/foxy'), ('WSLENV', 'WT_SESSION:WT_PROFILE_ID:')]), 'shell': False}
+[0.099348] (-) TimerEvent: {}
+[0.199920] (-) TimerEvent: {}
+[0.300465] (-) TimerEvent: {}
+[0.400966] (-) TimerEvent: {}
+[0.501505] (-) TimerEvent: {}
+[0.602110] (-) TimerEvent: {}
+[0.686489] (lab2_pkg) StdoutLine: {'line': b'-- The C compiler identification is GNU 9.4.0\n'}
+[0.702271] (-) TimerEvent: {}
+[0.802767] (-) TimerEvent: {}
+[0.903244] (-) TimerEvent: {}
+[1.003738] (-) TimerEvent: {}
+[1.104366] (-) TimerEvent: {}
+[1.205055] (-) TimerEvent: {}
+[1.305782] (-) TimerEvent: {}
+[1.316993] (lab2_pkg) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 9.4.0\n'}
+[1.405969] (-) TimerEvent: {}
+[1.506522] (-) TimerEvent: {}
+[1.580518] (lab2_pkg) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc\n'}
+[1.606750] (-) TimerEvent: {}
+[1.707314] (-) TimerEvent: {}
+[1.807896] (-) TimerEvent: {}
+[1.899257] (lab2_pkg) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc -- works\n'}
+[1.902539] (lab2_pkg) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[1.908028] (-) TimerEvent: {}
+[2.008556] (-) TimerEvent: {}
+[2.109085] (-) TimerEvent: {}
+[2.183670] (lab2_pkg) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[2.198021] (lab2_pkg) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[2.199805] (lab2_pkg) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[2.204691] (lab2_pkg) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++\n'}
+[2.209255] (-) TimerEvent: {}
+[2.309648] (-) TimerEvent: {}
+[2.410230] (-) TimerEvent: {}
+[2.510873] (-) TimerEvent: {}
+[2.546663] (lab2_pkg) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ -- works\n'}
+[2.548237] (lab2_pkg) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[2.611041] (-) TimerEvent: {}
+[2.711730] (-) TimerEvent: {}
+[2.812265] (-) TimerEvent: {}
+[2.861632] (lab2_pkg) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[2.875465] (lab2_pkg) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[2.876035] (lab2_pkg) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[2.889042] (lab2_pkg) StdoutLine: {'line': b'-- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)\n'}
+[2.912561] (-) TimerEvent: {}
+[2.933815] (lab2_pkg) StdoutLine: {'line': b'-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") \n'}
+[2.934231] (lab2_pkg) StdoutLine: {'line': b'-- Using PYTHON_EXECUTABLE: /usr/bin/python3\n'}
+[3.012803] (-) TimerEvent: {}
+[3.113365] (-) TimerEvent: {}
+[3.213894] (-) TimerEvent: {}
+[3.288222] (lab2_pkg) StdoutLine: {'line': b'-- Found rclpy: 1.0.13 (/opt/ros/foxy/share/rclpy/cmake)\n'}
+[3.292141] (lab2_pkg) StdoutLine: {'line': b'-- Found ackermann_msgs: 2.0.2 (/opt/ros/foxy/share/ackermann_msgs/cmake)\n'}
+[3.314092] (-) TimerEvent: {}
+[3.414594] (-) TimerEvent: {}
+[3.515125] (-) TimerEvent: {}
+[3.615715] (-) TimerEvent: {}
+[3.683306] (lab2_pkg) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[3.701166] (lab2_pkg) StdoutLine: {'line': b'-- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)\n'}
+[3.715928] (-) TimerEvent: {}
+[3.816453] (-) TimerEvent: {}
+[3.916954] (-) TimerEvent: {}
+[4.017526] (-) TimerEvent: {}
+[4.118126] (-) TimerEvent: {}
+[4.218749] (-) TimerEvent: {}
+[4.319415] (-) TimerEvent: {}
+[4.419986] (-) TimerEvent: {}
+[4.520557] (-) TimerEvent: {}
+[4.621166] (-) TimerEvent: {}
+[4.721836] (-) TimerEvent: {}
+[4.822433] (-) TimerEvent: {}
+[4.922925] (-) TimerEvent: {}
+[5.023437] (-) TimerEvent: {}
+[5.124042] (-) TimerEvent: {}
+[5.224559] (-) TimerEvent: {}
+[5.325440] (-) TimerEvent: {}
+[5.426129] (-) TimerEvent: {}
+[5.526724] (-) TimerEvent: {}
+[5.627256] (-) TimerEvent: {}
+[5.727755] (-) TimerEvent: {}
+[5.828291] (-) TimerEvent: {}
+[5.928776] (-) TimerEvent: {}
+[6.029266] (-) TimerEvent: {}
+[6.045476] (lab2_pkg) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.1f")  \n'}
+[6.129434] (-) TimerEvent: {}
+[6.229945] (-) TimerEvent: {}
+[6.330447] (-) TimerEvent: {}
+[6.430966] (-) TimerEvent: {}
+[6.531514] (-) TimerEvent: {}
+[6.632042] (-) TimerEvent: {}
+[6.732653] (-) TimerEvent: {}
+[6.833125] (-) TimerEvent: {}
+[6.933652] (-) TimerEvent: {}
+[7.034195] (-) TimerEvent: {}
+[7.134703] (-) TimerEvent: {}
+[7.235217] (-) TimerEvent: {}
+[7.335745] (-) TimerEvent: {}
+[7.436327] (-) TimerEvent: {}
+[7.536830] (-) TimerEvent: {}
+[7.637333] (-) TimerEvent: {}
+[7.737859] (-) TimerEvent: {}
+[7.838360] (-) TimerEvent: {}
+[7.938908] (-) TimerEvent: {}
+[8.039475] (-) TimerEvent: {}
+[8.140062] (-) TimerEvent: {}
+[8.240874] (-) TimerEvent: {}
+[8.341503] (-) TimerEvent: {}
+[8.442057] (-) TimerEvent: {}
+[8.542528] (-) TimerEvent: {}
+[8.544999] (lab2_pkg) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/foxy/include  \n'}
+[8.642751] (-) TimerEvent: {}
+[8.743359] (-) TimerEvent: {}
+[8.843899] (-) TimerEvent: {}
+[8.944515] (-) TimerEvent: {}
+[9.045014] (-) TimerEvent: {}
+[9.145731] (-) TimerEvent: {}
+[9.246418] (-) TimerEvent: {}
+[9.347032] (-) TimerEvent: {}
+[9.447607] (-) TimerEvent: {}
+[9.548126] (-) TimerEvent: {}
+[9.648741] (-) TimerEvent: {}
+[9.749383] (-) TimerEvent: {}
+[9.849934] (-) TimerEvent: {}
+[9.950442] (-) TimerEvent: {}
+[10.050967] (-) TimerEvent: {}
+[10.151526] (-) TimerEvent: {}
+[10.252153] (-) TimerEvent: {}
+[10.352746] (-) TimerEvent: {}
+[10.453220] (-) TimerEvent: {}
+[10.553682] (-) TimerEvent: {}
+[10.654196] (-) TimerEvent: {}
+[10.754821] (-) TimerEvent: {}
+[10.855399] (-) TimerEvent: {}
+[10.955953] (-) TimerEvent: {}
+[11.056528] (-) TimerEvent: {}
+[11.157052] (-) TimerEvent: {}
+[11.257666] (-) TimerEvent: {}
+[11.358203] (-) TimerEvent: {}
+[11.458711] (-) TimerEvent: {}
+[11.559465] (-) TimerEvent: {}
+[11.659960] (-) TimerEvent: {}
+[11.760599] (-) TimerEvent: {}
+[11.861117] (-) TimerEvent: {}
+[11.961685] (-) TimerEvent: {}
+[12.062256] (-) TimerEvent: {}
+[12.162764] (-) TimerEvent: {}
+[12.263241] (-) TimerEvent: {}
+[12.364030] (-) TimerEvent: {}
+[12.464587] (-) TimerEvent: {}
+[12.565256] (-) TimerEvent: {}
+[12.665833] (-) TimerEvent: {}
+[12.766421] (-) TimerEvent: {}
+[12.867044] (-) TimerEvent: {}
+[12.967594] (-) TimerEvent: {}
+[13.068310] (-) TimerEvent: {}
+[13.132883] (lab2_pkg) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[13.168522] (-) TimerEvent: {}
+[13.269162] (-) TimerEvent: {}
+[13.308990] (lab2_pkg) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)\n'}
+[13.369448] (-) TimerEvent: {}
+[13.441451] (lab2_pkg) StdoutLine: {'line': b"-- Added test 'copyright' to check source files copyright and LICENSE\n"}
+[13.446541] (lab2_pkg) StdoutLine: {'line': b"-- Added test 'flake8' to check Python code syntax and style conventions\n"}
+[13.448258] (lab2_pkg) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[13.449970] (lab2_pkg) StdoutLine: {'line': b"-- Added test 'pep257' to check Python code against some of the style conventions in PEP 257\n"}
+[13.453956] (lab2_pkg) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[13.460529] (lab2_pkg) StdoutLine: {'line': b'-- Configuring done\n'}
+[13.469652] (-) TimerEvent: {}
+[13.470881] (lab2_pkg) StdoutLine: {'line': b'-- Generating done\n'}
+[13.473225] (lab2_pkg) StdoutLine: {'line': b'-- Build files have been written to: /home/dalv204/lab2_ws/build/lab2_pkg\n'}
+[13.487946] (lab2_pkg) CommandEnded: {'returncode': 0}
+[13.488978] (lab2_pkg) JobProgress: {'identifier': 'lab2_pkg', 'progress': 'build'}
+[13.492190] (lab2_pkg) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/dalv204/lab2_ws/build/lab2_pkg', '--', '-j16', '-l16'], 'cwd': '/home/dalv204/lab2_ws/build/lab2_pkg', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('TMUX', '/tmp//tmux-1000/default,71550,3'), ('USER', 'dalv204'), ('SHLVL', '3'), ('LD_LIBRARY_PATH', '/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('WT_PROFILE_ID', '{61c54bbd-c2c6-5271-96e7-009a87ff44bf}'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/dalv204'), ('OLDPWD', '/home/dalv204/lab2_ws/src/lab2_pkg'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('COLCON_PREFIX_PATH', '/home/dalv204/lab1_ws/install'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'dalv204'), ('NAME', 'dlp-204'), ('WSL_INTEROP', '/run/WSL/605_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'screen'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files/Python312/Scripts/:/mnt/c/Program Files/Python312/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Arduino/hardware/tools/avr/bin:/mnt/c/Program Files (x86)/GnuWin32/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/diego/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/diego/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/diego/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/diego/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/diego/.dotnet/tools:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/JetBrains/PyCharm Community Edition 2023.3.3/bin:/snap/bin'), ('WT_SESSION', '5a21bfe0-eb61-4f58-a558-4fb7d2feacc4'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/home/dalv204/lab1_ws/install/lab1_pkg:/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/dalv204/lab2_ws/build/lab2_pkg'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('TMUX_PANE', '%7'), ('HOSTTYPE', 'x86_64'), ('CMAKE_PREFIX_PATH', '/home/dalv204/lab1_ws/install/lab1_pkg:/opt/ros/foxy'), ('WSLENV', 'WT_SESSION:WT_PROFILE_ID:')]), 'shell': False}
+[13.551708] (lab2_pkg) CommandEnded: {'returncode': 0}
+[13.569951] (-) TimerEvent: {}
+[13.587708] (lab2_pkg) JobProgress: {'identifier': 'lab2_pkg', 'progress': 'install'}
+[13.609871] (lab2_pkg) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/dalv204/lab2_ws/build/lab2_pkg'], 'cwd': '/home/dalv204/lab2_ws/build/lab2_pkg', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('TMUX', '/tmp//tmux-1000/default,71550,3'), ('USER', 'dalv204'), ('SHLVL', '3'), ('LD_LIBRARY_PATH', '/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('WT_PROFILE_ID', '{61c54bbd-c2c6-5271-96e7-009a87ff44bf}'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/dalv204'), ('OLDPWD', '/home/dalv204/lab2_ws/src/lab2_pkg'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('COLCON_PREFIX_PATH', '/home/dalv204/lab1_ws/install'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'dalv204'), ('NAME', 'dlp-204'), ('WSL_INTEROP', '/run/WSL/605_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'screen'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files/Python312/Scripts/:/mnt/c/Program Files/Python312/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Arduino/hardware/tools/avr/bin:/mnt/c/Program Files (x86)/GnuWin32/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/diego/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/diego/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/diego/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/diego/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/diego/.dotnet/tools:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/JetBrains/PyCharm Community Edition 2023.3.3/bin:/snap/bin'), ('WT_SESSION', '5a21bfe0-eb61-4f58-a558-4fb7d2feacc4'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/home/dalv204/lab1_ws/install/lab1_pkg:/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/dalv204/lab2_ws/build/lab2_pkg'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('TMUX_PANE', '%7'), ('HOSTTYPE', 'x86_64'), ('CMAKE_PREFIX_PATH', '/home/dalv204/lab1_ws/install/lab1_pkg:/opt/ros/foxy'), ('WSLENV', 'WT_SESSION:WT_PROFILE_ID:')]), 'shell': False}
+[13.623029] (lab2_pkg) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[13.625670] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/lib/lab2_pkg/safety_node.py\n'}
+[13.629021] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/package_run_dependencies/lab2_pkg\n'}
+[13.630331] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/parent_prefix_path/lab2_pkg\n'}
+[13.631942] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.sh\n'}
+[13.632235] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.dsv\n'}
+[13.632758] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/path.sh\n'}
+[13.633069] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/path.dsv\n'}
+[13.633392] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.bash\n'}
+[13.634046] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.sh\n'}
+[13.634343] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.zsh\n'}
+[13.634642] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.dsv\n'}
+[13.635391] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/package.dsv\n'}
+[13.637222] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/packages/lab2_pkg\n'}
+[13.638061] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig.cmake\n'}
+[13.638698] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig-version.cmake\n'}
+[13.638887] (lab2_pkg) StdoutLine: {'line': b'-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/package.xml\n'}
+[13.642859] (lab2_pkg) CommandEnded: {'returncode': 0}
+[13.670389] (-) TimerEvent: {}
+[13.720034] (lab2_pkg) JobEnded: {'identifier': 'lab2_pkg', 'rc': 0}
+[13.721862] (-) EventReactorShutdown: {}

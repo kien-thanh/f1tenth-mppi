@@ -1,0 +1,26 @@
+[0.009s] Invoking command in '/home/dalv204/lab2_ws/build/lab2_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/lab2_ws/build/lab2_pkg -- -j16 -l16
+[0.086s] Invoked command in '/home/dalv204/lab2_ws/build/lab2_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/lab2_ws/build/lab2_pkg -- -j16 -l16
+[0.137s] Invoking command in '/home/dalv204/lab2_ws/build/lab2_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/lab2_ws/build/lab2_pkg
+[0.149s] -- Install configuration: ""
+[0.150s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/lib/lab2_pkg/safety_node.py
+[0.150s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/launch/launch
+[0.151s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/safety_launch.py
+[0.151s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode
+[0.152s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode/settings.json
+[0.152s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode/c_cpp_properties.json
+[0.152s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/package_run_dependencies/lab2_pkg
+[0.152s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/parent_prefix_path/lab2_pkg
+[0.153s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.sh
+[0.153s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.dsv
+[0.153s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/path.sh
+[0.153s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/path.dsv
+[0.153s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.bash
+[0.153s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.sh
+[0.154s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.zsh
+[0.154s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.dsv
+[0.154s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/package.dsv
+[0.154s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/packages/lab2_pkg
+[0.154s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig.cmake
+[0.154s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig-version.cmake
+[0.154s] -- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/package.xml
+[0.157s] Invoked command in '/home/dalv204/lab2_ws/build/lab2_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/lab2_ws/build/lab2_pkg

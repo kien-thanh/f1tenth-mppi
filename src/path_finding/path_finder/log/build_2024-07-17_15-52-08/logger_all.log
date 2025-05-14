@@ -1,0 +1,113 @@
+[0.428s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build']
+[0.428s] DEBUG:colcon:Parsed command line arguments: Namespace(allow_overriding=[], ament_cmake_args=None, base_paths=['.'], build_base='build', catkin_cmake_args=None, catkin_skip_building_tests=False, cmake_args=None, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, cmake_target=None, cmake_target_skip_unavailable=False, continue_on_error=False, event_handlers=None, executor='parallel', ignore_user_meta=False, install_base='install', log_base=None, log_level=None, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7f7b4cb617f0>>, merge_install=False, metas=['./colcon.meta'], packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, packages_up_to_regex=None, parallel_workers=16, paths=None, symlink_install=False, test_result_base=None, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7f7b4cb617f0>, verb_name='build', verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7f7b4ca39430>)
+[0.612s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.612s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.612s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.612s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.612s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.612s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.612s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder'
+[0.612s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.613s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.629s] DEBUG:colcon.colcon_core.package_identification:Package '.' with type 'ros.ament_cmake' and name 'path_finder'
+[0.629s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.629s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.629s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.629s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.629s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.654s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.654s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.658s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 264 installed packages in /opt/ros/foxy
+[0.659s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.768s] Level 5:colcon.colcon_core.verb:set package 'path_finder' build argument 'cmake_args' from command line to 'None'
+[0.768s] Level 5:colcon.colcon_core.verb:set package 'path_finder' build argument 'cmake_target' from command line to 'None'
+[0.768s] Level 5:colcon.colcon_core.verb:set package 'path_finder' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.768s] Level 5:colcon.colcon_core.verb:set package 'path_finder' build argument 'cmake_clean_cache' from command line to 'False'
+[0.768s] Level 5:colcon.colcon_core.verb:set package 'path_finder' build argument 'cmake_clean_first' from command line to 'False'
+[0.768s] Level 5:colcon.colcon_core.verb:set package 'path_finder' build argument 'cmake_force_configure' from command line to 'False'
+[0.768s] Level 5:colcon.colcon_core.verb:set package 'path_finder' build argument 'ament_cmake_args' from command line to 'None'
+[0.768s] Level 5:colcon.colcon_core.verb:set package 'path_finder' build argument 'catkin_cmake_args' from command line to 'None'
+[0.768s] Level 5:colcon.colcon_core.verb:set package 'path_finder' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.768s] DEBUG:colcon.colcon_core.verb:Building package 'path_finder' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder', 'merge_install': False, 'path': '/home/dalv204/f1tenth_ws/src/path_finding/path_finder', 'symlink_install': False, 'test_result_base': None}
+[0.768s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.769s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.770s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder' with build type 'ament_cmake'
+[0.770s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder'
+[0.775s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.775s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.775s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.788s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder -- -j16 -l16
+[0.933s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder -- -j16 -l16
+[0.966s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder
+[1.002s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(path_finder)
+[1.003s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/f1tenth_ws/src/path_finding/path_finder/build/path_finder
+[1.009s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder' for CMake module files
+[1.010s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder' for CMake config files
+[1.011s] Level 1:colcon.colcon_core.shell:create_environment_hook('path_finder', 'cmake_prefix_path')
+[1.011s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/cmake_prefix_path.ps1'
+[1.012s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/cmake_prefix_path.dsv'
+[1.013s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/cmake_prefix_path.sh'
+[1.014s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib'
+[1.014s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/bin'
+[1.014s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/pkgconfig/path_finder.pc'
+[1.015s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/python3.8/site-packages'
+[1.015s] Level 1:colcon.colcon_core.shell:create_environment_hook('path_finder', 'pythonpath')
+[1.015s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/pythonpath.ps1'
+[1.015s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/pythonpath.dsv'
+[1.015s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/pythonpath.sh'
+[1.016s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/bin'
+[1.016s] INFO:colcon.colcon_core.shell:Creating package script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.ps1'
+[1.017s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.dsv'
+[1.018s] INFO:colcon.colcon_core.shell:Creating package script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.sh'
+[1.019s] INFO:colcon.colcon_core.shell:Creating package script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.bash'
+[1.020s] INFO:colcon.colcon_core.shell:Creating package script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.zsh'
+[1.021s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/colcon-core/packages/path_finder)
+[1.047s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(path_finder)
+[1.047s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder' for CMake module files
+[1.047s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder' for CMake config files
+[1.047s] Level 1:colcon.colcon_core.shell:create_environment_hook('path_finder', 'cmake_prefix_path')
+[1.048s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/cmake_prefix_path.ps1'
+[1.048s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/cmake_prefix_path.dsv'
+[1.048s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/cmake_prefix_path.sh'
+[1.049s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib'
+[1.049s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/bin'
+[1.049s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/pkgconfig/path_finder.pc'
+[1.049s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/lib/python3.8/site-packages'
+[1.049s] Level 1:colcon.colcon_core.shell:create_environment_hook('path_finder', 'pythonpath')
+[1.049s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/pythonpath.ps1'
+[1.049s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/pythonpath.dsv'
+[1.050s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/hook/pythonpath.sh'
+[1.050s] Level 1:colcon.colcon_core.environment:checking '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/bin'
+[1.050s] INFO:colcon.colcon_core.shell:Creating package script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.ps1'
+[1.051s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.dsv'
+[1.051s] INFO:colcon.colcon_core.shell:Creating package script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.sh'
+[1.051s] INFO:colcon.colcon_core.shell:Creating package script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.bash'
+[1.051s] INFO:colcon.colcon_core.shell:Creating package script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/path_finder/package.zsh'
+[1.064s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/path_finder/share/colcon-core/packages/path_finder)
+[1.065s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[1.065s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[1.066s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[1.066s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[1.122s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[1.122s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[1.122s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[1.122s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[1.124s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files
+[1.124s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[1.125s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/local_setup.ps1'
+[1.126s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/_local_setup_util_ps1.py'
+[1.128s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/setup.ps1'
+[1.130s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/local_setup.sh'
+[1.130s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/_local_setup_util_sh.py'
+[1.130s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/setup.sh'
+[1.131s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/local_setup.bash'
+[1.132s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/setup.bash'
+[1.133s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/local_setup.zsh'
+[1.134s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/dalv204/f1tenth_ws/src/path_finding/path_finder/install/setup.zsh'

@@ -1,0 +1,63 @@
+# ROS 2 build artifacts
+build/
+install/
+log/
+
+# Colcon build logs and cache
+colcon.log
+.colcon/
+colcon.meta
+
+# ROS 2 package configuration
+**/CMakeLists.txt.user
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/Makefile
+**/CMakeFiles/
+
+# Python virtual environments
+venv/
+.env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ROS 2 workspace setup files
+setup.bash
+setup.zsh
+setup.sh
+
+# IDE or editor files
+*.swp
+*.swo
+*~
+*.vscode/
+.idea/
+*.iml
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+
+# ROS 2 debugging output
+*.trace
+
+src/mpc/mpc/c_generated_code/
+src/mpc/mpc/acados_ocp.json
+src/mpc/mpc/logs/
+
+c_generated_code/
+acados_ocp.json
+logs/
+
+checkpoints*/
+sim_results*/
+tracking_log*/
+figures/
+sim_result_filter_sort.py
+sim_results_merge_all_csv.py
+parameter_tuning_mpc_visualize.py
+parameter_tuning_pure_pursuit_visualize.py
+vis*

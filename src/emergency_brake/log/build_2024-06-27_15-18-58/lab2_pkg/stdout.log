@@ -1,0 +1,38 @@
+-- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)
+-- Using PYTHON_EXECUTABLE: /usr/bin/python3
+-- Found rclpy: 1.0.13 (/opt/ros/foxy/share/rclpy/cmake)
+-- Found ackermann_msgs: 2.0.2 (/opt/ros/foxy/share/ackermann_msgs/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)
+-- Added test 'copyright' to check source files copyright and LICENSE
+-- Added test 'flake8' to check Python code syntax and style conventions
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'pep257' to check Python code against some of the style conventions in PEP 257
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/dalv204/lab2_ws/build/lab2_pkg
+-- Install configuration: ""
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/lib/lab2_pkg/safety_node.py
+-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/launch/launch
+-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/safety_launch.py
+-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode
+-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode/settings.json
+-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode/c_cpp_properties.json
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/package_run_dependencies/lab2_pkg
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/parent_prefix_path/lab2_pkg
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.sh
+-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/path.sh
+-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/path.dsv
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.bash
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.sh
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.zsh
+-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.dsv
+-- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/package.dsv
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/packages/lab2_pkg
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig.cmake
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig-version.cmake
+-- Up-to-date: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/package.xml

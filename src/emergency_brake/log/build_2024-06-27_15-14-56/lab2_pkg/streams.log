@@ -1,0 +1,56 @@
+[0.027s] Invoking command in '/home/dalv204/lab2_ws/build/lab2_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake /home/dalv204/lab2_ws/src/lab2_pkg -DCMAKE_INSTALL_PREFIX=/home/dalv204/lab2_ws/install/lab2_pkg
+[0.685s] -- The C compiler identification is GNU 9.4.0
+[1.315s] -- The CXX compiler identification is GNU 9.4.0
+[1.579s] -- Check for working C compiler: /usr/bin/cc
+[1.897s] -- Check for working C compiler: /usr/bin/cc -- works
+[1.901s] -- Detecting C compiler ABI info
+[2.182s] -- Detecting C compiler ABI info - done
+[2.196s] -- Detecting C compile features
+[2.198s] -- Detecting C compile features - done
+[2.203s] -- Check for working CXX compiler: /usr/bin/c++
+[2.545s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[2.546s] -- Detecting CXX compiler ABI info
+[2.860s] -- Detecting CXX compiler ABI info - done
+[2.874s] -- Detecting CXX compile features
+[2.874s] -- Detecting CXX compile features - done
+[2.887s] -- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)
+[2.932s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+[2.932s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[3.286s] -- Found rclpy: 1.0.13 (/opt/ros/foxy/share/rclpy/cmake)
+[3.290s] -- Found ackermann_msgs: 2.0.2 (/opt/ros/foxy/share/ackermann_msgs/cmake)
+[3.681s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[3.699s] -- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)
+[6.044s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.1f")  
+[8.543s] -- Found FastRTPS: /opt/ros/foxy/include  
+[13.131s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[13.307s] -- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)
+[13.440s] -- Added test 'copyright' to check source files copyright and LICENSE
+[13.445s] -- Added test 'flake8' to check Python code syntax and style conventions
+[13.446s] -- Added test 'lint_cmake' to check CMake code style
+[13.448s] -- Added test 'pep257' to check Python code against some of the style conventions in PEP 257
+[13.452s] -- Added test 'xmllint' to check XML markup files
+[13.459s] -- Configuring done
+[13.469s] -- Generating done
+[13.471s] -- Build files have been written to: /home/dalv204/lab2_ws/build/lab2_pkg
+[13.486s] Invoked command in '/home/dalv204/lab2_ws/build/lab2_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake /home/dalv204/lab2_ws/src/lab2_pkg -DCMAKE_INSTALL_PREFIX=/home/dalv204/lab2_ws/install/lab2_pkg
+[13.491s] Invoking command in '/home/dalv204/lab2_ws/build/lab2_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/lab2_ws/build/lab2_pkg -- -j16 -l16
+[13.550s] Invoked command in '/home/dalv204/lab2_ws/build/lab2_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/lab2_ws/build/lab2_pkg -- -j16 -l16
+[13.609s] Invoking command in '/home/dalv204/lab2_ws/build/lab2_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/lab2_ws/build/lab2_pkg
+[13.621s] -- Install configuration: ""
+[13.624s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/lib/lab2_pkg/safety_node.py
+[13.627s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/package_run_dependencies/lab2_pkg
+[13.628s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/parent_prefix_path/lab2_pkg
+[13.630s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.sh
+[13.630s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.dsv
+[13.631s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/path.sh
+[13.631s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/environment/path.dsv
+[13.631s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.bash
+[13.632s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.sh
+[13.632s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.zsh
+[13.633s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/local_setup.dsv
+[13.633s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/package.dsv
+[13.635s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/ament_index/resource_index/packages/lab2_pkg
+[13.636s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig.cmake
+[13.637s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig-version.cmake
+[13.637s] -- Installing: /home/dalv204/lab2_ws/install/lab2_pkg/share/lab2_pkg/package.xml
+[13.641s] Invoked command in '/home/dalv204/lab2_ws/build/lab2_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/lab2_ws/build/lab2_pkg

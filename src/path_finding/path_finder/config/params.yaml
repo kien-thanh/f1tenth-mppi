@@ -1,0 +1,19 @@
+##### yaml file for data sources depending on whether is run on car or in simulation
+
+---
+# TOPICS
+pose_topic: "/pf/viz/inferred_pose"
+pose_topic_sim: "/ego_racecar/odom"
+clicked_topic: "/clicked_point"  # if a point is clicked on map 
+scan_topic: "/scan"
+scan_topic_sim: "/scan"
+map_topic: "/map"
+global_path_topic: "/global_path"
+pure_pursuit_topic: "/custom_waypoints"
+drive_topic: "/drive"
+initial_pose_topic: "/initialpose"
+
+# RRT PARAMETERS
+critical_point_tolerance: 0.40 # in meters
+steer_step_size: 0.20 # in meters  (would recommend minimum 20 cm)
+## step size must be smaller than point tolerance
