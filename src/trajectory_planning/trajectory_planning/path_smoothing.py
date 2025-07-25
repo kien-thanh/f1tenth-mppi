@@ -156,7 +156,7 @@ class PathEditor:
 
 
 if __name__ == "__main__":
-    waypoint_file = Path("~/f1Tenth/waypoints/wp-2025-01-07-14-04-22.csv").expanduser()
+    waypoint_file = Path("~/f1Tenth/waypoints/wp-2025-07-25-17-08-42.csv").expanduser()
     points = load_waypoints(waypoint_file)
     points = points[450:]  # drop the beginning points
     points = np.r_[points, [points[0]]]  # form a close loop path
