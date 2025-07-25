@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'trajectory_planning_node = trajectory_planning.trajectory_planning_node:main',
-            'waypoint_logger_node = pure_pursuit.waypoint_logger_node:main',
+            'waypoint_logger_node = trajectory_planning.waypoint_logger_node:main',
         ],
     },
 )
