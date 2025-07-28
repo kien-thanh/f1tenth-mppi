@@ -35,8 +35,8 @@ df = pd.read_csv(filepath, header=None)
 raw_data = df.values
 
 # Check if the trajectory is closed: if the last point is not equal to the first, add the first point to the end
-if not np.allclose(raw_data[0], raw_data[-1]):
-    raw_data = np.vstack([raw_data, raw_data[0]])
+# if not np.allclose(raw_data[0], raw_data[-1]):
+#     raw_data = np.vstack([raw_data, raw_data[0]])
 
 # scaling
 x = 0.8*(raw_data[:, 0]) + 1.0  # [x0, x1, ..., xN-1, x0], dim N+1
@@ -53,6 +53,18 @@ ds = np.sqrt(dx ** 2 + dy ** 2)  # arc length between point [0->1, 1->2, ..., N-
 # Calculate the cumulative arc length parameter t (starting from 0)
 # arc length between point [0->0, 0->1, 0->2, ..., 0->0 (total length of the closed loop)], dim N+1
 t = np.insert(np.cumsum(ds), 0, 0.0)
+
+# print("t[:10]:", t[:10])
+# print("t[-10:]:", t[-10:])
+# print("np.diff(t)[-10:]:", np.diff(t)[-10:])
+# print("Any duplicates in t?", np.any(np.diff(t) <= 0))
+# bad_indices = np.where(np.diff(t) <= 0)[0]
+# print("Non-increasing t at indices:", bad_indices)
+# for i in bad_indices:
+#     print(f"t[{i}] = {t[i]:.6f}, t[{i+1}] = {t[i+1]:.6f}, Δ = {t[i+1] - t[i]:.6f}")
+#     print(f"x[{i}] = {x[i]:.6f}, x[{i+1}] = {x[i+1]:.6f}")
+#     print(f"y[{i}] = {y[i]:.6f}, y[{i+1}] = {y[i+1]:.6f}")
+#     print("-" * 40)
 
 # ----------------------
 # 3. Create periodic spline interpolators
