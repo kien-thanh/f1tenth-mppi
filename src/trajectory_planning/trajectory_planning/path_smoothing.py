@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.widgets import Button, RectangleSelector
 from scipy.interpolate import splprep, splev
+import argparse
 
 """
 1. Manually remove outliers in the recorded trajectory.
@@ -23,10 +24,11 @@ def load_waypoints(filepath, sampling_interval=None):
 
 
 class PathEditor:
-    def __init__(self, points):
+    def __init__(self, points, filepath: Path):
         self.btn_reset = None
         self.btn_smooth = None
         self.points = points
+        self.filepath = filepath
         self.selected_indices = set()
         self.fig, self.ax = plt.subplots(dpi=300)  # Increased dpi for higher resolution
         self.rect_selector = None
@@ -43,7 +45,7 @@ class PathEditor:
         # Rectangle selector for region selection
         self.rect_selector = RectangleSelector(
             self.ax, self.on_select,
-            drawtype='box', useblit=False,
+            useblit=False,
             button=[1],  # Left click for selection
             minspanx=5, minspany=5,
             spancoords='pixels'
@@ -130,7 +132,7 @@ class PathEditor:
         smoothed_path = np.column_stack((x_smooth, y_smooth))
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f'../waypoints/wp_smoothed_{timestamp}.csv'
+        filename = self.filepath.with_name(f"{self.filepath.stem}_smoothed.csv")
         np.savetxt(filename, smoothed_path, delimiter=',', fmt='%f')
 
         # Update plot with smoothed path
@@ -156,8 +158,12 @@ class PathEditor:
 
 
 if __name__ == "__main__":
-    waypoint_file = Path("~/f1Tenth/waypoints/wp-2025-07-25-17-08-42.csv").expanduser()
-    points = load_waypoints(waypoint_file)
+    parser = argparse.ArgumentParser(description="Smooth a path using B-spline and remove outliers.")
+    parser.add_argument("waypoint_file", type=str, help="Path to the waypoint CSV file")
+    args = parser.parse_args()
+
+    filepath = Path(args.waypoint_file).expanduser()
+    points = load_waypoints(filepath)
     points = points[450:]  # drop the beginning points
     points = np.r_[points, [points[0]]]  # form a close loop path
-    editor = PathEditor(points)
+    editor = PathEditor(points, filepath)
