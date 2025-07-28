@@ -18,7 +18,7 @@ mpc_config_file = os.path.expanduser(mpc_config_file)
 with open(mpc_config_file) as f:
     config = yaml.safe_load(f)
 
-vref, N, Tf = 5, config["horizon"]["N"], config["horizon"]["Tf"]
+vref, N, Tf = 2, config["horizon"]["N"], config["horizon"]["Tf"]
 L = config["L"]
 
 # ----------------------
