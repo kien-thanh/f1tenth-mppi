@@ -39,8 +39,8 @@ raw_data = df.values
 #     raw_data = np.vstack([raw_data, raw_data[0]])
 
 # scaling
-x = 0.8*(raw_data[:, 0]) + 1.0  # [x0, x1, ..., xN-1, x0], dim N+1
-y = 0.8*(raw_data[:, 1]) - 0.1  # [y0, y1, ..., yN-1, y0], dim N+1
+x = 1*(raw_data[:, 0])  # [x0, x1, ..., xN-1, x0], dim N+1
+y = 1*(raw_data[:, 1])  # [y0, y1, ..., yN-1, y0], dim N+1
 
 # ----------------------
 # 2. Parameterize the trajectory (using cumulative arc length)
