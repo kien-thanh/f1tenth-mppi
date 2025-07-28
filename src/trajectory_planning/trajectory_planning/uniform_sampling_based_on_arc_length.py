@@ -30,7 +30,7 @@ sampling_interval = vref*Tf/N  # Sampling interval in meters
 # ----------------------
 # 1. Read and preprocess data
 # ----------------------
-filepath = os.path.expanduser("~/f1Tenth/waypoints/wp_smoothed_20250210_214738.csv")
+filepath = os.path.expanduser("~/f1Tenth/waypoints/wp-2025-07-25-17-08-42_smoothed.csv")
 df = pd.read_csv(filepath, header=None)
 raw_data = df.values
 

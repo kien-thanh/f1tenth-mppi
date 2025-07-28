@@ -48,8 +48,7 @@ class TrajectoryPlanning(Node):
         # vref=2, arc_length=0.04
         # vref=3, arc_length=0.06
         # vref=4, arc_length=0.08
-        self.declare_parameter("waypoint_file",
-                               "~/f1Tenth/waypoints/wp_scaled_uniform_arc_length_sampling_0.06.csv")
+        self.declare_parameter("waypoint_file", "/home/kt/f1Tenth/waypoints/wp-2025-07-25-17-08-42_smoothed.csv")
         waypoint_file = self.get_parameter("waypoint_file").get_parameter_value().string_value
         waypoint_file = os.path.expanduser(waypoint_file)
 
