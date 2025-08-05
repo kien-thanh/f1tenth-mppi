@@ -30,7 +30,7 @@ sampling_interval = vref*Tf/N  # Sampling interval in meters
 # ----------------------
 # 1. Read and preprocess data
 # ----------------------
-filepath = os.path.expanduser("~/f1Tenth/waypoints/wp-2025-07-25-17-08-42_smoothed.csv")
+filepath = os.path.expanduser("~/f1Tenth/waypoints/wp-2025-08-05-12-00-32_smoothed.csv")
 df = pd.read_csv(filepath, header=None)
 raw_data = df.values
 
@@ -41,6 +41,15 @@ raw_data = df.values
 # scaling
 x = 1*(raw_data[:, 0])  # [x0, x1, ..., xN-1, x0], dim N+1
 y = 1*(raw_data[:, 1])  # [y0, y1, ..., yN-1, y0], dim N+1
+
+# Remove consecutive duplicate points (if any)
+coords = np.column_stack((x, y))
+# Keep only points that change from the previous point
+mask = np.any(np.diff(coords, axis=0) != 0, axis=1)  # True if either x or y changes
+mask = np.insert(mask, 0, True)  # always keep the first point
+
+x = x[mask]
+y = y[mask]
 
 # ----------------------
 # 2. Parameterize the trajectory (using cumulative arc length)
@@ -54,17 +63,6 @@ ds = np.sqrt(dx ** 2 + dy ** 2)  # arc length between point [0->1, 1->2, ..., N-
 # arc length between point [0->0, 0->1, 0->2, ..., 0->0 (total length of the closed loop)], dim N+1
 t = np.insert(np.cumsum(ds), 0, 0.0)
 
-# print("t[:10]:", t[:10])
-# print("t[-10:]:", t[-10:])
-# print("np.diff(t)[-10:]:", np.diff(t)[-10:])
-# print("Any duplicates in t?", np.any(np.diff(t) <= 0))
-# bad_indices = np.where(np.diff(t) <= 0)[0]
-# print("Non-increasing t at indices:", bad_indices)
-# for i in bad_indices:
-#     print(f"t[{i}] = {t[i]:.6f}, t[{i+1}] = {t[i+1]:.6f}, Δ = {t[i+1] - t[i]:.6f}")
-#     print(f"x[{i}] = {x[i]:.6f}, x[{i+1}] = {x[i+1]:.6f}")
-#     print(f"y[{i}] = {y[i]:.6f}, y[{i+1}] = {y[i+1]:.6f}")
-#     print("-" * 40)
 
 # ----------------------
 # 3. Create periodic spline interpolators

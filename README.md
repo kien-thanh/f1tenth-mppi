@@ -75,17 +75,18 @@ ros2 launch particle_filter localize_launch.py
 python waypoint_logger_node.py
 ```
 
-##### visualization
-
-- launch
-
-``` bash
-rviz2
-```
-
-- Use add by topic, add map. In the settings for map, change durability policy under topic to transient local
+- To observe localization and waypoint generation, launch RViz and add /map via topics. In the settings for map, change durability policy under topic to "transient local"
 - To show the current localization, add /pf/viz/inferred_pose
 - Optionally, you can add /pf/viz/particles to see the particles
+
+#### 4. Process waypoints
+
+1. Manually remove redundant and overlapping points, especially at the beginning or the end of the recording. These points could interfere with the following processes.
+2. Create a smooth path by executing the following command and click on "Smooth". The smoothed path is saved next to the original file with a "smoothed" suffix.
+    ``` bash
+    python path_smoothing.py <path>/<filename>.csv
+    ```
+    ![image](assets/docs/path_smoothing.png)
 
 ## Trajectory planning node
 
