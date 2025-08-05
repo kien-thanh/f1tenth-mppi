@@ -88,6 +88,13 @@ python waypoint_logger_node.py
     ```
     ![image](assets/docs/path_smoothing.png)
 
+#### 5. Uniform arc length sampling
+Edit input file in uniform_sampling_based_on_arc_length.py and execute. The output will be the waypoint file for the trajectory planning node.
+```
+cd ~/f1Tenth/src/trajectory_planning
+python -m trajectory_planning.uniform_sampling_based_on_arc_length
+```
+
 ## Trajectory planning node
 
 The waypoint file used by the trajectory planning node should match the corresponding vref (for Pure Pursuit)/vref, T,
