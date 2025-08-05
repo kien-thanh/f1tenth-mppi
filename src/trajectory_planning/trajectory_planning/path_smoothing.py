@@ -164,6 +164,5 @@ if __name__ == "__main__":
 
     filepath = Path(args.waypoint_file).expanduser()
     points = load_waypoints(filepath)
-    points = points[450:]  # drop the beginning points
     points = np.r_[points, [points[0]]]  # form a close loop path
     editor = PathEditor(points, filepath)
