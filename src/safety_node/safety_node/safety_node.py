@@ -35,7 +35,7 @@ class SafetyNode(Node):
         self.declare_parameter("ttc_threshold", 0.2)  # v=2, 0.3
         self.declare_parameter("fov_half", 5.0) # half of FOV, degree, used for filtering
         # Add a margin of 0.3 to avoid collisions, as braking from the start to a complete stop requires time
-        self.declare_parameter("range_margin", 0.0)
+        self.declare_parameter("range_margin", 0.5)
 
         is_real_car = self.get_parameter('is_real_car').get_parameter_value().bool_value
         self.iTTC_threshold = self.get_parameter('ttc_threshold').get_parameter_value().double_value
@@ -113,7 +113,7 @@ class SafetyNode(Node):
                 self.get_logger().info('Emergency braking')
                 drive_msg.drive.speed = 0.0
                 drive_msg.drive.steering_angle = 0.0
-                self.release_braking = False # keep braking until get the True value from the /release_braking topic
+                self.release_braking = True # keep braking until get the True value from the /release_braking topic
                 self.drive_pub.publish(drive_msg)
                 self.get_logger().info(f"Min iTTC: {min_iTTC}, "
                                        f"range: {min_range} m, "
