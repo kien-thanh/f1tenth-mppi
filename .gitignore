@@ -1,4 +1,4 @@
-.venv
+.venv/
 
 # ROS 2 build artifacts
 build/
