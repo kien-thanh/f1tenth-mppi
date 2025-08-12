@@ -7,7 +7,9 @@ RUN apt-get update --fix-missing && \
                        python3-pip \
                        libeigen3-dev \
                        tmux \
-                       ros-foxy-rviz2
+                       ros-foxy-rviz2 \
+                       gdbserver \
+                       gdb
 RUN apt-get -y dist-upgrade
 RUN pip3 install transforms3d
 
@@ -22,5 +24,6 @@ COPY .p10k.zsh /root/.p10k.zsh
 RUN echo "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh" >> /root/.zshrc
 
 RUN echo "source /opt/ros/foxy/setup.zsh" >> /root/.zshrc
+RUN echo "source /workspaces/f1Tenth/install/setup.zsh" >> /root/.zshrc
 
 RUN chsh -s $(which zsh)

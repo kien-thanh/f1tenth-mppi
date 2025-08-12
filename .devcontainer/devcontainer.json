@@ -5,5 +5,23 @@
     "--gpus", "all",
     "--network", "f1tenth"
   ],
-  "onCreateCommand": "rosdep update --rosdistro=foxy && rosdep install --from-paths src --ignore-src -r -y"
+  "onCreateCommand": "rosdep update --rosdistro=foxy && rosdep install --from-paths src --ignore-src -r -y",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools-themes",
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.vscode-pylance",
+        "ms-python.vscode-python-envs",
+        "Ranch-Hand-Robotics.rde-ros-2",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "tomoki1207.pdf",
+        "mechatroner.rainbow-csv"
+      ]
+    }
+  }
 }
