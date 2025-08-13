@@ -9,7 +9,9 @@ RUN apt-get update --fix-missing && \
                        tmux \
                        ros-foxy-rviz2 \
                        gdbserver \
-                       gdb
+                       gdb \
+                       ninja-build \
+                       ccache
 RUN apt-get -y dist-upgrade
 RUN pip3 install transforms3d
 
