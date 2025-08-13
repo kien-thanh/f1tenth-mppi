@@ -5,9 +5,6 @@
 #include "std_msgs/msg/float64.hpp"
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include "nav_msgs/msg/odometry.hpp"
-#include "wall_follow/msg/distance.hpp"
-#include "wall_follow/msg/pid.hpp"
-#include "wall_follow/msg/steering.hpp"
 #include "ackermann_msgs/msg/ackermann_drive_stamped.hpp"
 #include "control_toolbox/pid.hpp"
 
@@ -18,8 +15,11 @@ public:
     {
         drive_pub_ = create_publisher<ackermann_msgs::msg::AckermannDriveStamped>("/drive", 10);
         scan_sub_ = create_subscription<sensor_msgs::msg::LaserScan>("/scan", 10, std::bind(&WallFollow::scan_callback, this, std::placeholders::_1));
-        distance_pub_ = create_publisher<std_msgs::msg::Float64>("/distance", 10);
-        steering_pub_ = create_publisher<std_msgs::msg::Float64>("/steering", 10);
+
+        dbg_dist_pub_ = create_publisher<std_msgs::msg::Float64>("/dbg/distance", 10);
+        dbg_dist_lookahead_pub_ = create_publisher<std_msgs::msg::Float64>("/dbg/distance_lookahead", 10);
+        dbg_steer_pub_ = create_publisher<std_msgs::msg::Float64>("/dbg/steering_angle", 10);
+        dbg_dist_err_pub_ = create_publisher<std_msgs::msg::Float64>("/dbg/distance_error", 10);
 
         kp_ = declare_parameter("kp", 1.0);
         ki_ = declare_parameter("ki", 0.0);
@@ -52,8 +52,10 @@ public:
 private:
     rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr scan_sub_;
     rclcpp::Publisher<ackermann_msgs::msg::AckermannDriveStamped>::SharedPtr drive_pub_;
-    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr distance_pub_;
-    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr steering_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr dbg_steer_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr dbg_dist_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr dbg_dist_lookahead_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr dbg_dist_err_pub_;
 
     OnSetParametersCallbackHandle::SharedPtr param_cb_handle_;
 
@@ -111,11 +113,21 @@ private:
 
         auto D_t1 = D_t + 0.5 * sin(alpha);
 
+        auto error = dist - D_t1;
+
         auto distance_msg = std_msgs::msg::Float64();
         distance_msg.data = D_t;
-        distance_pub_->publish(distance_msg);
+        dbg_dist_pub_->publish(distance_msg);
 
-        return dist - D_t1;
+        auto distance_lookahead_msg = std_msgs::msg::Float64();
+        distance_lookahead_msg.data = D_t1;
+        dbg_dist_lookahead_pub_->publish(distance_lookahead_msg);
+
+        auto distance_error_msg = std_msgs::msg::Float64();
+        distance_error_msg.data = error;
+        dbg_dist_err_pub_->publish(distance_error_msg);
+
+        return error;
     }
 
     float deg2rad(float angle)
@@ -139,18 +151,18 @@ private:
         auto dt = t - last_t;
         last_t = t;
 
-        auto error = get_error(scan_msg, 0.5);
+        auto error = get_error(scan_msg, 0.8);
 
-        auto steering_angle = pid_.computeCommand(error, dt.nanoseconds());
+        auto steering_angle = -pid_.computeCommand(error, dt.nanoseconds());
 
         auto steering_msg = std_msgs::msg::Float64();
         steering_msg.data = steering_angle;
-        steering_pub_->publish(steering_msg);
-        
+        dbg_steer_pub_->publish(steering_msg);
+
         if (steering_angle > 0.47) {
-            steering_angle = 0.47; // Limit steering angle to 45 degrees
+            steering_angle = 0.47;
         } else if (steering_angle < -0.47) {
-            steering_angle = -0.47; // Limit steering angle to -45 degrees
+            steering_angle = -0.47;
         }
 
 
@@ -159,7 +171,7 @@ private:
         auto drive_msg = ackermann_msgs::msg::AckermannDriveStamped();
         drive_msg.header.stamp = this->now();
         drive_msg.drive.speed = velocity;
-        drive_msg.drive.steering_angle = -steering_angle;
+        drive_msg.drive.steering_angle = steering_angle;
         drive_pub_->publish(drive_msg);
 
     }

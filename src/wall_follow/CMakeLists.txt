@@ -20,34 +20,16 @@ foreach(PACKAGE
   sensor_msgs
   control_toolbox
   std_msgs
-  rosidl_default_generators
-  builtin_interfaces
   )
 
   find_package(${PACKAGE} REQUIRED)
 
 endforeach()
 
-# Include Cpp "include" directory
-include_directories(include)
-
-rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/Distance.msg"
-  "msg/PID.msg"
-  "msg/Steering.msg"
-  DEPENDENCIES std_msgs builtin_interfaces
-)
-
 # Create Cpp executable
 add_executable(wall_follow_node src/wall_follow_node.cpp)
 ament_target_dependencies(wall_follow_node 
   rclcpp geometry_msgs ackermann_msgs nav_msgs sensor_msgs control_toolbox std_msgs
-)
-
-add_dependencies(wall_follow_node ${PROJECT_NAME}__rosidl_generator_cpp)
-
-rosidl_target_interfaces(wall_follow_node
-  ${PROJECT_NAME} "rosidl_typesupport_cpp"
 )
 
 # Install Cpp executables
