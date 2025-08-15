@@ -21,10 +21,10 @@ class ReactiveFollowGap(Node):
         # Topics & Subs, Pubs
         lidarscan_topic = '/scan'
         drive_topic = '/drive'
-        # TODO: Subscribe to LIDAR
+
         self.sub_lidar = self.create_subscription(LaserScan, lidarscan_topic, self.lidar_callback, 10)
-        # TODO: Publish to drive
         self.pub_drive = self.create_publisher(AckermannDriveStamped, drive_topic, 10)
+        self.pub_lidar_disparity = self.create_publisher(LaserScan, '/dbg_lidar_disparity', 10)
 
         # Visualize the gap, safety bubble and move direction
         vis_topic = 'vis_gap'
@@ -48,6 +48,30 @@ class ReactiveFollowGap(Node):
         # 2. Rejecting high values
         proc_ranges[proc_ranges > max_dist] = max_dist
         return proc_ranges
+
+    def disparity_extension(self, ranges):
+        disparity_condition = 0.2
+        extension = 30# TODO: Make dependent on distance to the car
+
+        i = 0
+        while i < len(ranges) - 1:
+            if (ranges[i] - ranges[i+1] > disparity_condition):
+                for j in range(max(0, i-(extension-1)), i+1):
+                    ranges[j] = ranges[i+1]
+                i += 1
+            if (ranges[i+1] - ranges[i] > disparity_condition):
+                for j in range(i+1, min(len(ranges), i+extension+1)):
+                    ranges[j] = ranges[i]
+                i += extension+1
+            else:
+                i += 1
+        
+        lidar_disparity_msg = LaserScan()
+        lidar_disparity_msg.ranges = ranges.tolist()
+        self.pub_lidar_disparity.publish(lidar_disparity_msg)
+
+        return ranges
+
 
     def find_max_gap(self, free_space_ranges):
         """  Find the longest gap (consecutive non-zero sequence) in free_space_ranges.
@@ -98,6 +122,10 @@ class ReactiveFollowGap(Node):
 
         # Preprocess lidar ranges,
         ranges = self.preprocess_lidar(ranges)
+
+        # Disparity extended lidar ranges
+        ranges = self.disparity_extension(ranges)
+
         # Only consider a certain angle range in front of the vehicle when finding the gap
         valid_indices = (angles >= np.radians(-60)) & (angles <= np.radians(60))
         ranges = ranges[valid_indices]
@@ -109,7 +137,7 @@ class ReactiveFollowGap(Node):
         closest_point_angle = angles[closest_point_idx]
 
         # Eliminate all points inside 'bubble' (set them to zero)
-        radius = 0.5
+        radius = 0.7
         x0, y0 = closest_point_range * np.cos(closest_point_angle), closest_point_range * np.sin(closest_point_angle)
         for i in range(len(ranges)):
             x = ranges[i] * np.cos(angles[i])
@@ -146,11 +174,11 @@ class ReactiveFollowGap(Node):
         drive_msg = AckermannDriveStamped()
         drive_msg.drive.steering_angle = best_point_angle
         if np.radians(1e-5) < abs(best_point_angle) <= np.radians(10):
-            drive_msg.drive.speed = 1.5
+            drive_msg.drive.speed = 0.2
         elif np.radians(10) < abs(best_point_angle) <= np.radians(20):
-            drive_msg.drive.speed = 1.0
+            drive_msg.drive.speed = 0.2
         else:
-            drive_msg.drive.speed = 0.5
+            drive_msg.drive.speed = 0.2
 
         self.pub_drive.publish(drive_msg)
 
