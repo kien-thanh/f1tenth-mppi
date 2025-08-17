@@ -2,10 +2,9 @@
   "name": "F1TENTH Dev Container",
   "dockerFile": "Dockerfile",
   "runArgs": [
-    "--gpus=all",
     "--network=f1tenth"
   ],
-  "onCreateCommand": "rosdep update --rosdistro=foxy && rosdep install --from-paths src --ignore-src -r -y",
+  "onCreateCommand": "rosdep update --rosdistro=humble && rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install --cmake-args -GNinja",
   "customizations": {
     "vscode": {
       "extensions": [
