@@ -1,4 +1,6 @@
 .venv/
+.DS_Store
+range_libc/
 
 # ROS 2 build artifacts
 build/

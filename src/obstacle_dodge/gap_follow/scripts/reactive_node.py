@@ -50,8 +50,8 @@ class ReactiveFollowGap(Node):
         return proc_ranges
 
     def disparity_extension(self, ranges):
-        disparity_condition = 0.2
-        extension = 30# TODO: Make dependent on distance to the car
+        disparity_condition = 0.1
+        extension = 50# TODO: Make dependent on distance to the car
 
         i = 0
         while i < len(ranges) - 1:
@@ -59,6 +59,8 @@ class ReactiveFollowGap(Node):
                 for j in range(max(0, i-(extension-1)), i+1):
                     ranges[j] = ranges[i+1]
                 i += 1
+            if i == len(ranges) - 1:
+                break
             if (ranges[i+1] - ranges[i] > disparity_condition):
                 for j in range(i+1, min(len(ranges), i+extension+1)):
                     ranges[j] = ranges[i]
@@ -136,14 +138,14 @@ class ReactiveFollowGap(Node):
         closest_point_range = ranges[closest_point_idx]
         closest_point_angle = angles[closest_point_idx]
 
-        # Eliminate all points inside 'bubble' (set them to zero)
-        radius = 0.7
+        # # Eliminate all points inside 'bubble' (set them to zero)
+        # radius = 0.7
         x0, y0 = closest_point_range * np.cos(closest_point_angle), closest_point_range * np.sin(closest_point_angle)
-        for i in range(len(ranges)):
-            x = ranges[i] * np.cos(angles[i])
-            y = ranges[i] * np.sin(angles[i])
-            if (x - x0) ** 2 + (y - y0) ** 2 < radius ** 2:  # point inside the bubble
-                ranges[i] = 0.0
+        # for i in range(len(ranges)):
+        #     x = ranges[i] * np.cos(angles[i])
+        #     y = ranges[i] * np.sin(angles[i])
+        #     if (x - x0) ** 2 + (y - y0) ** 2 < radius ** 2:  # point inside the bubble
+        #         ranges[i] = 0.0
 
         # Find the max gap
         start_i, end_i = self.find_max_gap(ranges)
@@ -157,9 +159,9 @@ class ReactiveFollowGap(Node):
 
         # Visualize the safety bubble, gap and move direction
         # bubble
-        angles_circle = np.linspace(0, 2 * np.pi, 10)
-        self.bubble = [[x0 + radius * np.cos(k),
-                        y0 + radius * np.sin(k)] for k in angles_circle]
+        # angles_circle = np.linspace(0, 2 * np.pi, 10)
+        # self.bubble = [[x0 + radius * np.cos(k),
+        #                 y0 + radius * np.sin(k)] for k in angles_circle]
         # gap
         self.gap = [[r * np.cos(angle), r * np.sin(angle)]
                     for r, angle in zip(ranges, angles)
@@ -174,11 +176,11 @@ class ReactiveFollowGap(Node):
         drive_msg = AckermannDriveStamped()
         drive_msg.drive.steering_angle = best_point_angle
         if np.radians(1e-5) < abs(best_point_angle) <= np.radians(10):
-            drive_msg.drive.speed = 0.2
+            drive_msg.drive.speed = 0.5
         elif np.radians(10) < abs(best_point_angle) <= np.radians(20):
-            drive_msg.drive.speed = 0.2
+            drive_msg.drive.speed = 0.5
         else:
-            drive_msg.drive.speed = 0.2
+            drive_msg.drive.speed = 0.5
 
         self.pub_drive.publish(drive_msg)
 
