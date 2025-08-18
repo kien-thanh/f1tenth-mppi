@@ -11,7 +11,8 @@ RUN apt-get update --fix-missing && \
                        gdb \
                        ninja-build \
                        ccache \
-                       ros-humble-foxglove-bridge
+                       ros-humble-foxglove-bridge \
+                       ros-humble-urg-node-msgs
 RUN apt-get -y dist-upgrade
 RUN pip3 install transforms3d
 

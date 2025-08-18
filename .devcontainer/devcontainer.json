@@ -2,7 +2,8 @@
   "name": "F1TENTH Dev Container",
   "dockerFile": "Dockerfile",
   "runArgs": [
-    "--network=f1tenth"
+    "--network=f1tenth",
+    "-p", "8765:8765"
   ],
   "onCreateCommand": "rosdep update --rosdistro=humble && rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install --packages-skip range_lib --cmake-args -GNinja",
   "customizations": {
