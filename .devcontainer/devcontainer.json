@@ -4,7 +4,7 @@
   "runArgs": [
     "--network=f1tenth"
   ],
-  "onCreateCommand": "rosdep update --rosdistro=humble && rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install --cmake-args -GNinja",
+  "onCreateCommand": "rosdep update --rosdistro=humble && rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install --packages-skip range_lib --cmake-args -GNinja",
   "customizations": {
     "vscode": {
       "extensions": [
