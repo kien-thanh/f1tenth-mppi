@@ -187,7 +187,7 @@ class ReactiveFollowGap(Node):
     def create_marker(self, lidar_timestamp):
         marker = Marker()
         marker.header.stamp = lidar_timestamp
-        marker.header.frame_id = 'ego_racecar/laser'
+        marker.header.frame_id = 'laser'
         marker.ns = 'points'
         marker.id = 0
         marker.type = Marker.POINTS
