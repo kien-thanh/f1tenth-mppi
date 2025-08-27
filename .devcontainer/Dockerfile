@@ -12,9 +12,10 @@ RUN apt-get update --fix-missing && \
                        ninja-build \
                        ccache \
                        ros-humble-foxglove-bridge \
-                       ros-humble-urg-node-msgs
+                       ros-humble-urg-node-msgs \
+                       ros-humble-slam-toolbox
 RUN apt-get -y dist-upgrade
-RUN pip3 install transforms3d
+RUN pip3 install transforms3d scipy
 
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
     && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "/root/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" \
