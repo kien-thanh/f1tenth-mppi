@@ -13,7 +13,8 @@ RUN apt-get update --fix-missing && \
                        ccache \
                        ros-humble-foxglove-bridge \
                        ros-humble-urg-node-msgs \
-                       ros-humble-slam-toolbox
+                       ros-humble-slam-toolbox \
+                       ros-humble-navigation2 
 RUN apt-get -y dist-upgrade
 RUN pip3 install transforms3d scipy
 
