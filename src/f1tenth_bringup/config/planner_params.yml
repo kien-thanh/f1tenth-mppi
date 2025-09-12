@@ -1,0 +1,7 @@
+planner_server:
+  ros__parameters:
+    planner_plugins: ["GridBased"]
+    robot_base_frame: ego_racecar/base_link
+
+    GridBased:
+      plugin: "nav2_smac_planner::SmacPlannerHybrid"
