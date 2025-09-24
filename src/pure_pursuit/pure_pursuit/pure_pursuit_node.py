@@ -13,13 +13,14 @@ from pure_pursuit.utils import segment_circle_intersection
 from common_utils.utils import (init_marker, publish_marker, quaternion_to_yaw, publish_drive, WaypointsProcessor,
                                 LapProcessor, TrackingLogger)
 from vehicle_msgs.msg import VehicleState
+from geometry_msgs.msg import PoseWithCovarianceStamped
 
 class PurePursuit(Node):
     def __init__(self):
         super().__init__('pure_pursuit_node')
 
         # Declare and get parameters
-        self.declare_parameter("is_real_car", False)  # simulator or real car
+        self.declare_parameter("is_real_car", True)  # simulator or real car
         self.declare_parameter("is_work_with_safety_node", False)  # work with safety node together or not
         self.declare_parameter('config_file',
                                "/workspaces/f1Tenth/src/pure_pursuit/pure_pursuit/config.yaml")
@@ -34,7 +35,7 @@ class PurePursuit(Node):
         # Topics
         # sub
         traj_topic = "/global_plan"
-        odom_topic = '/pf/pose/odom' if is_real_car else '/ego_racecar/odom'
+        odom_topic = '/amcl_pose' if is_real_car else '/ego_racecar/odom'
         # pub
         drive_topic = '/controller_drive' if is_work_with_safety_node else '/drive'
         lap_count_topic = "/lap_count"
@@ -43,7 +44,7 @@ class PurePursuit(Node):
 
         # Subscribers
         self.traj_sub = self.create_subscription(VehicleState, traj_topic, self.traj_callback, 10)
-        self.odom_sub = self.create_subscription(Odometry, odom_topic, self.odom_callback, 10)
+        self.odom_sub = self.create_subscription(PoseWithCovarianceStamped, odom_topic, self.odom_callback, 10)
 
         # Publishers
         self.drive_pub = self.create_publisher(AckermannDriveStamped, drive_topic, 10)
@@ -130,11 +131,12 @@ class PurePursuit(Node):
             return
 
         # Get current state
-        pose, twist = data.pose.pose, data.twist.twist
+        # pose, twist = data.pose.pose, data.twist.twist
+        pose = data.pose.pose
         x, y = pose.position.x, pose.position.y
         theta = quaternion_to_yaw(pose.orientation)
-        v = twist.linear.x
-        self.xcurrent = np.array([x, y, theta, v])
+        # v = twist.linear.x
+        self.xcurrent = np.array([x, y, theta, 1.0])
 
         # Compute the lookahead point
         lookahead_point, steering_angle = self.compute_lookahead()

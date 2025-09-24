@@ -9,7 +9,7 @@ def generate_launch_description():
             package='nav2_map_server',
             executable='map_server',
             name='map_server',
-            parameters=[{'yaml_filename': get_package_share_directory('f1tenth_bringup') + '/maps/test_map.yaml'}]
+            parameters=[{'yaml_filename': get_package_share_directory('f1tenth_bringup') + '/maps/map4.yaml'}]
         ),
         Node(
             package='nav2_amcl',
