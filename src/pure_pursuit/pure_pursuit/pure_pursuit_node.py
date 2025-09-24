@@ -19,10 +19,10 @@ class PurePursuit(Node):
         super().__init__('pure_pursuit_node')
 
         # Declare and get parameters
-        self.declare_parameter("is_real_car", True)  # simulator or real car
-        self.declare_parameter("is_work_with_safety_node", True)  # work with safety node together or not
+        self.declare_parameter("is_real_car", False)  # simulator or real car
+        self.declare_parameter("is_work_with_safety_node", False)  # work with safety node together or not
         self.declare_parameter('config_file',
-                               "~/f1Tenth/src/pure_pursuit/pure_pursuit/config.yaml")
+                               "/workspaces/f1Tenth/src/pure_pursuit/pure_pursuit/config.yaml")
         self.declare_parameter('is_tracking_log', True)
 
         is_real_car = self.get_parameter('is_real_car').get_parameter_value().bool_value
@@ -33,7 +33,7 @@ class PurePursuit(Node):
 
         # Topics
         # sub
-        traj_topic = "/planned_trajectory"
+        traj_topic = "/global_plan"
         odom_topic = '/pf/pose/odom' if is_real_car else '/ego_racecar/odom'
         # pub
         drive_topic = '/controller_drive' if is_work_with_safety_node else '/drive'

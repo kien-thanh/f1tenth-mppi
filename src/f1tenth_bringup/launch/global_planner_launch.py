@@ -5,15 +5,7 @@ from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
     
 def generate_launch_description():
-    map_yaml_file_arg = DeclareLaunchArgument(
-        'map',
-        description='Full path to map YAML file to load'
-    )
-
-    map_yaml_file = LaunchConfiguration('map')
-
     return LaunchDescription([
-        map_yaml_file_arg,
         Node(
             package='nav2_planner',
             executable='planner_server',

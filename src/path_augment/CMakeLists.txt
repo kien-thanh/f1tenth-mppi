@@ -9,12 +9,14 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(vehicle_msgs REQUIRED)
 
 add_executable(path_augment src/path_augment.cpp)
 
 ament_target_dependencies(path_augment
   rclcpp
   nav_msgs
+  vehicle_msgs
 )
 
 install(TARGETS
