@@ -27,7 +27,7 @@ class PathAugment : public rclcpp::Node
       plan.x.resize(n);
       plan.y.resize(n);
       plan.theta.resize(n);
-      plan.v.resize(n, 1.0);     // Initialize all velocities to 2.0
+      plan.v.resize(n, 2.0);     // Initialize all velocities to 2.0
       plan.delta.resize(n, 0.0); // Initialize all steering angles to 0
 
       for (size_t i = 0; i < n; ++i) {

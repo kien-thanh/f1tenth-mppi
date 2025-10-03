@@ -1,6 +1,5 @@
 amcl:
   ros__parameters:
-    set_initial_pose: True
     update_min_d: 0.01
     update_min_a: 0.01
     update_min_time: 0.01
