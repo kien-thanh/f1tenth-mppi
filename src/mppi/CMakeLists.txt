@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_CUDA_ARCHITECTURES 86)
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/submodules/MPPI-Generic/cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/MPPI-Generic/cmake")
 
 project(mppi LANGUAGES CXX CUDA)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/submodules/MPPI-Generic)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/MPPI-Generic)
 include(MPPIGenericToolsConfig)
 
 set(CMAKE_CXX_STANDARD 17)

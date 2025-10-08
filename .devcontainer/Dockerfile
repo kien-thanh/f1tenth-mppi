@@ -20,6 +20,7 @@ RUN apt-get install software-properties-common curl -y && \
 
 RUN apt-get install -y zsh \
                        git \
+                       git-lfs \
                        vim \
                        tmux \
                        python3-pip \
@@ -33,6 +34,8 @@ RUN apt-get install -y zsh \
                        ccache
 
 RUN pip3 install transforms3d scipy
+
+RUN git lfs install
 
 # ============================================================================
 # Custom shell setup
