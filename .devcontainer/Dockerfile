@@ -21,9 +21,12 @@ RUN apt-get install software-properties-common curl -y && \
 RUN apt-get install -y zsh \
                        git \
                        vim \
+                       tmux \
                        python3-pip \
                        libeigen3-dev \
-                       tmux \
+                       build-essential \
+                       g++ \
+                       gcc \
                        gdbserver \
                        gdb \
                        ninja-build \

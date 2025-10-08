@@ -3,14 +3,14 @@
   "dockerFile": "Dockerfile",
   "runArgs": [
     "--network=f1tenth",
-    "-p", "8765:8765"
+    "-p", "8765:8765",
+    "--gpus", "all"
   ],
   "onCreateCommand": "rosdep init && rosdep update --rosdistro=humble && rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install --packages-skip range_lib --cmake-args -GNinja",
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-vscode.cpptools-themes",
-        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
         "ms-vscode.cmake-tools",
         "ms-python.python",
         "ms-python.debugpy",
