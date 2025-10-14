@@ -3,6 +3,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "ackermann_msgs/msg/ackermann_drive_stamped.hpp"
+#include "nav_msgs/msg/occupancy_grid.hpp"
 
 #include <mppi/controllers/MPPI/mppi_controller.cuh>
 #include <mppi/cost_functions/quadratic_cost/quadratic_cost.cuh>
@@ -29,7 +30,8 @@ class LocalTrajectoryPublisher : public rclcpp::Node
 public:
   LocalTrajectoryPublisher() : Node("mppi_node")
   {
-    publisher_ = this->create_publisher<ackermann_msgs::msg::AckermannDriveStamped>("/drive", 10);
+    drive_pub_ = this->create_publisher<ackermann_msgs::msg::AckermannDriveStamped>("/drive", 10);
+    global_plan_sub_ = this->create_subscription<std_msgs::msg::String>("/global_plan", 10, std::bind(&LocalTrajectoryPublisher::planCallback, this, std::placeholders::_1));
 
     float dt = 0.02;
     DYN_T dynamics;                    // set up dynamics
@@ -64,7 +66,7 @@ public:
       ackermann_msgs::msg::AckermannDriveStamped msg;
       msg.drive.speed = plant.current_state_(3);
       msg.drive.steering_angle = plant.current_state_(4);
-      publisher_->publish(msg);
+      drive_pub_->publish(msg);
 
       std::this_thread::sleep_for(std::chrono::milliseconds(20)); // wait 0.02s
     }
@@ -82,7 +84,13 @@ public:
   }
 
 private:
-  rclcpp::Publisher<ackermann_msgs::msg::AckermannDriveStamped>::SharedPtr publisher_;
+  rclcpp::Publisher<ackermann_msgs::msg::AckermannDriveStamped>::SharedPtr drive_pub_;
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr global_plan_sub_;
+
+  void planCallback(const std_msgs::msg::String::SharedPtr msg)
+  {
+    RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg->data.c_str());
+  }
 };
 
 int main(int argc, char **argv)
