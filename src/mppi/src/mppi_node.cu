@@ -2,8 +2,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "std_msgs/msg/float32_multi_array.hpp"
 #include "ackermann_msgs/msg/ackermann_drive_stamped.hpp"
-#include "nav_msgs/msg/occupancy_grid.hpp"
 
 #include <mppi/controllers/MPPI/mppi_controller.cuh>
 #include <mppi/cost_functions/quadratic_cost/quadratic_cost.cuh>
@@ -12,26 +12,41 @@
 #include <singletrack_cost.cuh>
 #include <plant.hpp>
 
+using AckermannDriveStamped = ackermann_msgs::msg::AckermannDriveStamped;
+using Float32MultiArray = std_msgs::msg::Float32MultiArray;
+
+using DYN_T = SingletrackDynamics;
+using COST_T = SingletrackCost;
+
 const int NUM_TIMESTEPS = 100;
 const int NUM_ROLLOUTS = 1024;
 const int DYN_BLOCK_X = 64;
-using DYN_T = SingletrackDynamics;
 const int DYN_BLOCK_Y = DYN_T::STATE_DIM;
-using COST_T = SingletrackCost;
+
 using FB_T = DDPFeedback<DYN_T, NUM_TIMESTEPS>;
 using SAMPLING_T = mppi::sampling_distributions::GaussianDistribution<DYN_T::DYN_PARAMS_T>;
 using CONTROLLER_T = VanillaMPPIController<DYN_T, COST_T, FB_T, NUM_TIMESTEPS, NUM_ROLLOUTS, SAMPLING_T>;
 using CONTROLLER_PARAMS_T = CONTROLLER_T::TEMPLATED_PARAMS;
-
 using PLANT_T = SingletrackPlant<CONTROLLER_T>;
+
+__global__ void myKernel(float* output, cudaTextureObject_t texObj, float x , float y, float resolution)
+{
+  // Calculate texture coordinates
+  x = (x + 51.224998f) / resolution;
+  y = (y + 51.224998f) / resolution;
+
+  *output = tex2D<float>(texObj, x, y);
+}
 
 class LocalTrajectoryPublisher : public rclcpp::Node
 {
 public:
   LocalTrajectoryPublisher() : Node("mppi_node")
   {
-    drive_pub_ = this->create_publisher<ackermann_msgs::msg::AckermannDriveStamped>("/drive", 10);
-    global_plan_sub_ = this->create_subscription<std_msgs::msg::String>("/global_plan", 10, std::bind(&LocalTrajectoryPublisher::planCallback, this, std::placeholders::_1));
+    drive_pub_ = this->create_publisher<AckermannDriveStamped>("/drive", 10);
+    distance_map_sub_ = this->create_subscription<Float32MultiArray>("/distance_map", 10, [this](const Float32MultiArray::SharedPtr msg) {
+      this->distanceMapCallback(msg);
+    });
 
     float dt = 0.02;
     DYN_T dynamics;                    // set up dynamics
@@ -55,41 +70,96 @@ public:
     // Create plant
     PLANT_T plant(controller, (1.0 / dt), 1);
 
-    std::atomic<bool> alive(true);
-    for (int t = 0; t < 500; t++)
-    {
-      plant.updateState(plant.current_state_, (t + 1) * dt);
-      plant.runControlIteration(&alive);
+    // std::atomic<bool> alive(true);
+    // for (int t = 0; t < 500; t++)
+    // {
+    //   plant.updateState(plant.current_state_, (t + 1) * dt);
+    //   plant.runControlIteration(&alive);
 
-      std::cout << "State: at time " << (t + 1) * dt << "s: " << plant.current_state_.transpose() << std::endl;
+    //   std::cout << "State: at time " << (t + 1) * dt << "s: " << plant.current_state_.transpose() << std::endl;
 
-      ackermann_msgs::msg::AckermannDriveStamped msg;
-      msg.drive.speed = plant.current_state_(3);
-      msg.drive.steering_angle = plant.current_state_(4);
-      drive_pub_->publish(msg);
+    //   ackermann_msgs::msg::AckermannDriveStamped msg;
+    //   msg.drive.speed = plant.current_state_(3);
+    //   msg.drive.steering_angle = plant.current_state_(4);
+    //   drive_pub_->publish(msg);
 
-      std::this_thread::sleep_for(std::chrono::milliseconds(20)); // wait 0.02s
-    }
+    //   std::this_thread::sleep_for(std::chrono::milliseconds(20)); // wait 0.02s
+    // }
 
-    std::cout << "Avg Optimization time: " << plant.getAvgOptimizationTime() << " ms" << std::endl;
-    std::cout << "Last Optimization time: " << plant.getLastOptimizationTime() << " ms" << std::endl;
-    std::cout << "Avg Loop time: " << plant.getAvgLoopTime() << " ms" << std::endl;
-    std::cout << "Avg Optimization Hz: " << 1.0 / (plant.getAvgOptimizationTime() * 1e-3) << " Hz" << std::endl;
+    // std::cout << "Avg Optimization time: " << plant.getAvgOptimizationTime() << " ms" << std::endl;
+    // std::cout << "Last Optimization time: " << plant.getLastOptimizationTime() << " ms" << std::endl;
+    // std::cout << "Avg Loop time: " << plant.getAvgLoopTime() << " ms" << std::endl;
+    // std::cout << "Avg Optimization Hz: " << 1.0 / (plant.getAvgOptimizationTime() * 1e-3) << " Hz" << std::endl;
 
-    auto control_sequence = controller->getControlSeq();
-    std::cout << "State: \n"
-              << plant.current_state_.transpose() << std::endl;
-    std::cout << "Control Sequence:\n"
-              << control_sequence << std::endl;
+    // auto control_sequence = controller->getControlSeq();
+    // std::cout << "State: \n"
+    //           << plant.current_state_.transpose() << std::endl;
+    // std::cout << "Control Sequence:\n"
+    //           << control_sequence << std::endl;
   }
 
 private:
-  rclcpp::Publisher<ackermann_msgs::msg::AckermannDriveStamped>::SharedPtr drive_pub_;
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr global_plan_sub_;
+  rclcpp::Publisher<AckermannDriveStamped>::SharedPtr drive_pub_;
+  rclcpp::Subscription<Float32MultiArray>::SharedPtr distance_map_sub_;
 
-  void planCallback(const std_msgs::msg::String::SharedPtr msg)
+  void distanceMapCallback(const Float32MultiArray::SharedPtr msg)
   {
-    RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg->data.c_str());
+    std::cout << "Received distance map of size: " << msg->data.size() << std::endl;
+
+    // Dimensions of the distance map
+    size_t width = msg->layout.dim[1].size;
+    size_t height = msg->layout.dim[0].size;
+
+    float* distMapHost = msg->data.data(); // Pointer to the first element of the distance map array on the host memory
+
+    // Allocate CUDA array in device memory
+    cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc(32, 0, 0, 0, cudaChannelFormatKindFloat);
+    cudaArray_t cuArray;
+    cudaMallocArray(&cuArray, &channelDesc, width, height);
+
+    const size_t widthInBytes = width * sizeof(float);
+
+    // Copy data located at address distMapHost in host memory to device memory
+    // Pitch and width in bytes are the same because we have no padding
+    cudaMemcpy2DToArray(cuArray, 0, 0, distMapHost, widthInBytes, widthInBytes, height, cudaMemcpyHostToDevice);
+
+    // Specify texture
+    struct cudaResourceDesc resDesc;
+    memset(&resDesc, 0, sizeof(resDesc));
+    resDesc.resType = cudaResourceTypeArray;
+    resDesc.res.array.array = cuArray;
+
+    // Specify texture object parameters
+    struct cudaTextureDesc texDesc;
+    memset(&texDesc, 0, sizeof(texDesc));
+    texDesc.addressMode[0] = cudaAddressModeClamp;
+    texDesc.addressMode[1] = cudaAddressModeClamp;
+    texDesc.filterMode = cudaFilterModeLinear;
+    texDesc.readMode = cudaReadModeElementType;
+    texDesc.normalizedCoords = 0; // do not use normalized coordinates
+
+    // Create texture object
+    cudaTextureObject_t texObj = 0;
+    cudaCreateTextureObject(&texObj, &resDesc, &texDesc, NULL);
+
+    // Allocate result of transformation in device memory
+    float* output;
+    cudaMalloc(&output, sizeof(float));
+
+    float x = -0.169f;
+    float y = -0.178f;
+
+    myKernel<<<1, 1>>>(output, texObj, x, y, 0.05f);
+
+    // Copy result from device to host
+    float result;
+    cudaMemcpy(&result, output, sizeof(float), cudaMemcpyDeviceToHost);
+
+    std::cout << "Distance at (" << x << ", " << y << ") is: " << result << std::endl;
+
+    cudaDestroyTextureObject(texObj);
+    cudaFreeArray(cuArray);
+    cudaFree(output);
   }
 };
 

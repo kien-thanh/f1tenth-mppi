@@ -44,10 +44,10 @@ class DistanceTransform(Node):
         qos.durability = QoSDurabilityPolicy.TRANSIENT_LOCAL
 
         self.map_sub = self.create_subscription(OccupancyGrid, 'map', self.map_sub_callback, qos)
-        self.plan_sub = self.create_subscription(Path, 'plan', self.plan_sub_callback, qos)
+        self.plan_sub = self.create_subscription(Path, 'plan', self.plan_sub_callback, 1)
 
         self.distance_heatmap_pub = self.create_publisher(Image, 'distance_heatmap', qos)
-        self.distance_map = self.create_publisher(Float32MultiArray, 'distance_grid', qos)
+        self.distance_map = self.create_publisher(Float32MultiArray, 'distance_map', qos)
 
     def map_sub_callback(self, msg: OccupancyGrid):
         """
@@ -73,34 +73,46 @@ class DistanceTransform(Node):
         dist = cv2.distanceTransform(grid, cv2.DIST_L2, 3)
         dist *= self.map_resolution  # convert to meters
 
+        self.publish_distance_map(dist)
+
         # Normalize automatically for visualization (no clipping)
         dist_norm = cv2.normalize(dist, None, 0, 255, cv2.NORM_MINMAX)
         dist_norm = dist_norm.astype(np.uint8)
 
         # Apply color map for nice visualization
-        dist_color = cv2.applyColorMap(dist_norm, cv2.COLORMAP_JET)
+        dist_heatmap = cv2.applyColorMap(dist_norm, cv2.COLORMAP_JET)
+        # Resize to reduce image size
+        dist_heatmap = cv2.resize(dist_heatmap, (512, 512), interpolation=cv2.INTER_AREA)
 
-        # Publish as sensor_msgs/Image
-        bridge = CvBridge()
-        vis = cv2.resize(dist_color, (512, 512), interpolation=cv2.INTER_AREA)
-        img_msg = bridge.cv2_to_imgmsg(vis, encoding="bgr8")
-        img_msg.header.stamp = self.get_clock().now().to_msg()
-        img_msg.header.frame_id = "map"
-        self.distance_heatmap_pub.publish(img_msg)
+        self.publish_distance_heatmap(dist_heatmap)
 
-    def publish_distance_grid(self, distance_map: np.ndarray):
+    def publish_distance_map(self, distance_map: np.ndarray):
         """
-        Publish the distance grid as an Float32MultiArray message.
+        Publish the distance map as an Float32MultiArray message.
 
         Args:
             distance_map (np.ndarray): The distance map to publish
-            size (tuple): The size of the distance map (width, height). 
+            size (tuple): The size of the distance map (width, height).
         """
         msg = Float32MultiArray()
         msg.data = distance_map.flatten().tolist()
         msg.layout.dim.append(MultiArrayDimension(label="rows", size=distance_map.shape[0]))
         msg.layout.dim.append(MultiArrayDimension(label="cols", size=distance_map.shape[1]))
         self.distance_map.publish(msg)
+
+    def publish_distance_heatmap(self, heatmap: np.ndarray):
+        """
+        Publish the distance heatmap as an Image message.
+
+        Args:
+            heatmap (np.ndarray): The heatmap to publish.
+        """
+        # Publish as sensor_msgs/Image
+        bridge = CvBridge()
+        img_msg = bridge.cv2_to_imgmsg(heatmap, encoding="bgr8")
+        img_msg.header.stamp = self.get_clock().now().to_msg()
+        img_msg.header.frame_id = "map"
+        self.distance_heatmap_pub.publish(img_msg)
 
 def main(args=None):
     rclpy.init(args=args)
