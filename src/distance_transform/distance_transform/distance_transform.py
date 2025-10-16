@@ -12,7 +12,7 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
 
-def path_to_grid(path: Path, grid_size=(2048, 2048), origin=(-51.224998, -51.224998), resolution=0.05):
+def path_to_grid(path: Path, grid_size=(16384, 16384), origin=(-8.192, -8.192), resolution=0.001):
     """
     Convert a Path message to a grid representation.
     Path is marked with 0, everywhere else with 1.
@@ -30,7 +30,8 @@ def path_to_grid(path: Path, grid_size=(2048, 2048), origin=(-51.224998, -51.224
     for pose in path.poses:
         x = int((pose.pose.position.x - origin[0]) / resolution)
         # Invert y-axis because image coordinates start from top-left in OpenCV
-        y = grid_size[1] - 1 - int((pose.pose.position.y - origin[1]) / resolution)
+        # y = grid_size[1] - 1 - int((pose.pose.position.y - origin[1]) / resolution)
+        y = int((pose.pose.position.y - origin[1]) / resolution)
         if 0 <= x < grid_size[0] and 0 <= y < grid_size[1]:
             grid[y, x] = 0
     return grid
@@ -67,13 +68,14 @@ class DistanceTransform(Node):
         if not hasattr(self, 'map_size'):
             self.get_logger().info("Map not received yet.")
             return
-        
-        grid = path_to_grid(msg, self.map_size, self.map_origin, self.map_resolution)
 
-        dist = cv2.distanceTransform(grid, cv2.DIST_L2, 3)
-        dist *= self.map_resolution  # convert to meters
+        grid = path_to_grid(msg, (16384, 16384), (-8.192, -8.192), 0.001)
+
+        dist = cv2.distanceTransform(grid, cv2.DIST_L2, 0)
+        dist *= 0.001  # convert to meters
 
         self.publish_distance_map(dist)
+        print(dist[6192, 8192])
 
         # Normalize automatically for visualization (no clipping)
         dist_norm = cv2.normalize(dist, None, 0, 255, cv2.NORM_MINMAX)
