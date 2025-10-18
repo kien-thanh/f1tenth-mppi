@@ -1,8 +1,8 @@
 import rclpy
 from rclpy.node import Node
 
-import numpy as np
 import cv2
+import numpy as np
 
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy
 from nav_msgs.msg import Path
@@ -11,30 +11,36 @@ from std_msgs.msg import Float32MultiArray, MultiArrayDimension
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
+import plot 
+from grid import Grid
 
-def path_to_grid(path: Path, grid_size=(16384, 16384), origin=(-8.192, -8.192), resolution=0.001):
+def path_to_grid(path: Path, grid_width, grid_height, origin=(-8.192, -8.192), resolution=0.001):
     """
     Convert a Path message to a grid representation.
     Path is marked with 0, everywhere else with 1.
 
     Args:
         path (Path): The input path message.
-        grid_size (tuple): Size of the output grid (width, height).
+        grid_width (int): Width of the output grid.
+        grid_height (int): Height of the output grid.
         origin (tuple): Origin of the grid in world coordinates (x, y).
         resolution (float): Resolution of the grid in meters per cell.
 
     Returns:
         np.ndarray: 2D grid representation of the path.
     """
-    grid = np.ones(grid_size, dtype=np.uint8)
+    grid = np.ones((grid_height, grid_width), dtype=np.uint8)
     for pose in path.poses:
         x = int((pose.pose.position.x - origin[0]) / resolution)
         # Invert y-axis because image coordinates start from top-left in OpenCV
         # y = grid_size[1] - 1 - int((pose.pose.position.y - origin[1]) / resolution)
         y = int((pose.pose.position.y - origin[1]) / resolution)
-        if 0 <= x < grid_size[0] and 0 <= y < grid_size[1]:
+        if 0 <= x < grid_width and 0 <= y < grid_height:
             grid[y, x] = 0
     return grid
+
+def distance_transform():
+    pass
 
 class DistanceTransform(Node):
 
@@ -68,25 +74,23 @@ class DistanceTransform(Node):
         if not hasattr(self, 'map_size'):
             self.get_logger().info("Map not received yet.")
             return
+        
+        plot.path(msg)
 
-        grid = path_to_grid(msg, (16384, 16384), (-8.192, -8.192), 0.001)
+        resolution = 0.01  # 1 cm per cell
 
-        dist = cv2.distanceTransform(grid, cv2.DIST_L2, 0)
-        dist *= 0.001  # convert to meters
+        grid = Grid.from_nav2_path(
+            msg, 
+            padding=(1.0, 1.0),  # 1.0 meter padding
+            resolution=resolution
+        )
+
+        dist = cv2.distanceTransform(grid.data, cv2.DIST_L2, 0)
+        dist *= resolution  # convert to meters
 
         self.publish_distance_map(dist)
-        print(dist[6192, 8192])
 
-        # Normalize automatically for visualization (no clipping)
-        dist_norm = cv2.normalize(dist, None, 0, 255, cv2.NORM_MINMAX)
-        dist_norm = dist_norm.astype(np.uint8)
-
-        # Apply color map for nice visualization
-        dist_heatmap = cv2.applyColorMap(dist_norm, cv2.COLORMAP_JET)
-        # Resize to reduce image size
-        dist_heatmap = cv2.resize(dist_heatmap, (512, 512), interpolation=cv2.INTER_AREA)
-
-        self.publish_distance_heatmap(dist_heatmap)
+        plot.heatmap(dist, title="Distance Transform Heatmap")
 
     def publish_distance_map(self, distance_map: np.ndarray):
         """
@@ -102,33 +106,12 @@ class DistanceTransform(Node):
         msg.layout.dim.append(MultiArrayDimension(label="cols", size=distance_map.shape[1]))
         self.distance_map.publish(msg)
 
-    def publish_distance_heatmap(self, heatmap: np.ndarray):
-        """
-        Publish the distance heatmap as an Image message.
-
-        Args:
-            heatmap (np.ndarray): The heatmap to publish.
-        """
-        # Publish as sensor_msgs/Image
-        bridge = CvBridge()
-        img_msg = bridge.cv2_to_imgmsg(heatmap, encoding="bgr8")
-        img_msg.header.stamp = self.get_clock().now().to_msg()
-        img_msg.header.frame_id = "map"
-        self.distance_heatmap_pub.publish(img_msg)
-
 def main(args=None):
     rclpy.init(args=args)
-
     minimal_subscriber = DistanceTransform()
-
     rclpy.spin(minimal_subscriber)
-
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
     minimal_subscriber.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()
