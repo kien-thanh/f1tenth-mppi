@@ -1,8 +1,9 @@
 #include <singletrack_cost.cuh>
 
-SingletrackCost::SingletrackCost(cudaStream_t stream)
+SingletrackCost::SingletrackCost(cudaTextureObject_t texObj, cudaStream_t stream)
 {
     bindToStream(stream);
+    this->texObj_ = texObj;
 }
 
 __device__ float SingletrackCost::computeStateCost(float *state, int timestep, float *theta_c, int *crash_status)
@@ -17,15 +18,18 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
 
     float cost = 0.0f;
 
-    if (abs(y) >= half_width)
-    {
-        cost = INFINITY;
-    }
+    // if (abs(y) >= half_width)
+    // {
+    //     cost = INFINITY;
+    // }
 
-    else 
-    {
-        cost = y*y + steer*steer + yaw*yaw + (x - 2.0f)*(x - 2.0f);
-    }
+
+    x = (x + 1.240737762184536f + 0.0025f) / 0.005f;
+    y = (y + 0.9999977108091116f + 0.0025f) / 0.005f;
+
+    float state_cost = tex2D<float>(texObj_, x, y);
+
+    cost = 2.0f * (state_cost * state_cost) + (vel - 1.0f) * (vel - 1.0f) + 5.0f * (steer * steer) + 0.1f * yaw * yaw;
 
     return cost;
 }

@@ -17,7 +17,7 @@ class SingletrackCost : public Cost<SingletrackCost, SingletrackCostParams, Sing
 public:
     using DYN_P = Cost<SingletrackCost, SingletrackCostParams, SingletrackDynamicsParams>::TEMPLATED_DYN_PARAMS;
 
-    SingletrackCost(cudaStream_t stream = nullptr);
+    SingletrackCost(cudaTextureObject_t texObj, cudaStream_t stream = nullptr);
 
     __device__ float computeStateCost(float *s, int timestep = 0, float *theta_c = nullptr, int *crash_status = nullptr);
 
@@ -26,6 +26,9 @@ public:
     __device__ float terminalCost(float *s, float *theta_c);
 
     float terminalCost(const Eigen::Ref<const output_array> s);
+
+private:
+    cudaTextureObject_t texObj_;
 };
 
 #if __CUDACC__
