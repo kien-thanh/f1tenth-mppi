@@ -13,31 +13,7 @@ from cv_bridge import CvBridge
 
 import plot 
 from grid import Grid
-
-def path_to_grid(path: Path, grid_width, grid_height, origin=(-8.192, -8.192), resolution=0.001):
-    """
-    Convert a Path message to a grid representation.
-    Path is marked with 0, everywhere else with 1.
-
-    Args:
-        path (Path): The input path message.
-        grid_width (int): Width of the output grid.
-        grid_height (int): Height of the output grid.
-        origin (tuple): Origin of the grid in world coordinates (x, y).
-        resolution (float): Resolution of the grid in meters per cell.
-
-    Returns:
-        np.ndarray: 2D grid representation of the path.
-    """
-    grid = np.ones((grid_height, grid_width), dtype=np.uint8)
-    for pose in path.poses:
-        x = int((pose.pose.position.x - origin[0]) / resolution)
-        # Invert y-axis because image coordinates start from top-left in OpenCV
-        # y = grid_size[1] - 1 - int((pose.pose.position.y - origin[1]) / resolution)
-        y = int((pose.pose.position.y - origin[1]) / resolution)
-        if 0 <= x < grid_width and 0 <= y < grid_height:
-            grid[y, x] = 0
-    return grid
+from grid import resample_path
 
 def distance_transform():
     pass
@@ -75,13 +51,21 @@ class DistanceTransform(Node):
             self.get_logger().info("Map not received yet.")
             return
         
-        plot.path(msg)
+        x = [pose.pose.position.x for pose in msg.poses]
+        y = [pose.pose.position.y for pose in msg.poses]
+
+        # Creates path in the form [[x0, y0], [x1, y1], ...]
+        path = np.column_stack((x, y))
+
+        path = resample_path(path, spacing=0.001)
+        
+        plot.path(path)
 
         resolution = 0.01  # 1 cm per cell
 
         grid = Grid.from_nav2_path(
-            msg, 
-            padding=(1.0, 1.0),  # 1.0 meter padding
+            path=path,
+            padding=(1.0, 1.0),
             resolution=resolution
         )
 

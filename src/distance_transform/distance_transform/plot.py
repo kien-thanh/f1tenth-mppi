@@ -4,15 +4,12 @@ import time
 
 from nav_msgs.msg import Path
 
-def path(path: Path):
+def path(path: np.array):
     """
     Plot the given nav2 path on a 2D grid.
     """
-    xs = [pose.pose.position.x for pose in path.poses]
-    ys = [pose.pose.position.y for pose in path.poses]
-
     fig = px.scatter(
-        x=xs, y=ys, 
+        x=path.T[0], y=path.T[1],
         title="Path Visualization",
         labels={"x": "X", "y": "Y"}
     )

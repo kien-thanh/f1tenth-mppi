@@ -1,6 +1,39 @@
 import numpy as np
+from scipy.interpolate import splprep, splev
 
 from nav_msgs.msg import Path
+
+def resample_path(path: np.array, spacing: float) -> list[tuple[float, float]]:
+    """
+    Resample the given path so that consecutive points are spaced at the given distance.
+    Args:
+        path (Path): The input path message.
+        spacing (float): The desired spacing between consecutive points in meters.
+    Returns:
+        list: A list of (x, y) tuples representing the resampled path.
+    """
+    if not path:
+        return []
+
+    # Extract the x and y coordinates from the path
+    x = path.T[0]
+    y = path.T[1]
+
+    # Create a B-spline representation of the path
+    tck, _ = splprep([x, y], s=0)
+
+    u_fine = np.linspace(0, 1, 100000)
+    du = u_fine[1] - u_fine[0]
+    dx, dy = splev(u_fine, tck, der=1)
+    ds = np.sqrt(dx**2 + dy**2) * du
+    cumulative_length = np.cumsum(ds)
+
+    target_distances = np.arange(0, cumulative_length[-1], spacing)
+
+    u_new = np.interp(target_distances, cumulative_length, u_fine)
+
+    x_new, y_new = splev(u_new, tck)
+    return list(zip(x_new, y_new))
 
 class Grid:
     """
@@ -24,7 +57,7 @@ class Grid:
         self.resolution = resolution
 
     @classmethod
-    def from_nav2_path(cls, path: Path, padding: tuple, resolution: float):
+    def from_nav2_path(cls, path: np.array, padding: tuple, resolution: float):
         """
         Mark the grid cells corresponding to the given path as free (0).
         Args:
@@ -33,11 +66,12 @@ class Grid:
             resolution (float): Resolution of the grid in meters per cell.
         """
 
-        if not path.poses:
+        if not path:
             raise ValueError("Path contains no poses.")
 
-        xs = [pose.pose.position.x for pose in path.poses]
-        ys = [pose.pose.position.y for pose in path.poses]
+        xs = path.T[0]
+        ys = path.T[1]
+
 
         min_x = min(xs) - padding[0]
         max_x = max(xs) + padding[0]
@@ -52,11 +86,11 @@ class Grid:
 
         grid = cls(width, height, origin, resolution)
         grid.data = np.ones((height, width), dtype=np.uint8)
-        for pose in path.poses:
+        for p in path:
             # Floor to ensure that points are in the cell containing them
             # Could happen that that two points are mapped to the same cell if resolution not low enough
-            x = int(np.floor((pose.pose.position.x - origin[0]) / resolution))
-            y = int(np.floor((pose.pose.position.y - origin[1]) / resolution))
+            x = int(np.floor((p[0] - origin[0]) / resolution))
+            y = int(np.floor((p[1] - origin[1]) / resolution))
             if 0 <= x < width and 0 <= y < height:
                 grid.data[y, x] = 0
         return grid
