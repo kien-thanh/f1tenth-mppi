@@ -32,8 +32,8 @@ using PLANT_T = SingletrackPlant<CONTROLLER_T>;
 __global__ void myKernel(float* output, cudaTextureObject_t texObj, float x , float y, float resolution)
 {
   // Calculate texture coordinates
-  x = (x + 8.192f) / resolution;
-  y = (y + 8.192f) / resolution;
+  x = (x + 1.240737762184536f + 0.0025f) / resolution;
+  y = (y + 0.9999977108091116f + 0.0025f) / resolution;
 
   *output = tex2D<float>(texObj, x, y);
 }
@@ -146,10 +146,10 @@ private:
     float* output;
     cudaMalloc(&output, sizeof(float));
 
-    float x = 0.0f;
-    float y = -2.0f;
+    float x = 1.0f;
+    float y = 1.25f;
 
-    myKernel<<<1, 1>>>(output, texObj, x, y, 0.001f);
+    myKernel<<<1, 1>>>(output, texObj, x, y, 0.005f);
 
     // Copy result from device to host
     float result;

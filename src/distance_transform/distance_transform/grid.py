@@ -3,7 +3,7 @@ from scipy.interpolate import splprep, splev
 
 from nav_msgs.msg import Path
 
-def resample_path(path: np.array, spacing: float) -> list[tuple[float, float]]:
+def resample_path(path: np.array, spacing: float) -> np.array:
     """
     Resample the given path so that consecutive points are spaced at the given distance.
     Args:
@@ -12,7 +12,7 @@ def resample_path(path: np.array, spacing: float) -> list[tuple[float, float]]:
     Returns:
         list: A list of (x, y) tuples representing the resampled path.
     """
-    if not path:
+    if not path.any():
         return []
 
     # Extract the x and y coordinates from the path
@@ -33,7 +33,7 @@ def resample_path(path: np.array, spacing: float) -> list[tuple[float, float]]:
     u_new = np.interp(target_distances, cumulative_length, u_fine)
 
     x_new, y_new = splev(u_new, tck)
-    return list(zip(x_new, y_new))
+    return np.column_stack((x_new, y_new))
 
 class Grid:
     """
@@ -66,7 +66,7 @@ class Grid:
             resolution (float): Resolution of the grid in meters per cell.
         """
 
-        if not path:
+        if not path.any():
             raise ValueError("Path contains no poses.")
 
         xs = path.T[0]
@@ -83,6 +83,7 @@ class Grid:
         height = int(np.ceil(((max_y - min_y) / resolution) + 1e-6))
 
         origin = (min_x, min_y)
+        print(origin)
 
         grid = cls(width, height, origin, resolution)
         grid.data = np.ones((height, width), dtype=np.uint8)
