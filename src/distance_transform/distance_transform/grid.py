@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import numpy as np
+import cv2
 from scipy.interpolate import splprep, splev
 
 from nav_msgs.msg import Path
@@ -55,6 +58,7 @@ class Grid:
         self.height = height
         self.origin = origin
         self.resolution = resolution
+        self.data = None
 
     @classmethod
     def from_nav2_path(cls, path: np.array, padding: tuple, resolution: float):
@@ -64,6 +68,8 @@ class Grid:
             path (Path): The input path message.
             padding (tuple): Padding to add around the path in meters.
             resolution (float): Resolution of the grid in meters per cell.
+        Returns:
+            Grid: The generated grid.
         """
 
         if not path.any():
@@ -83,9 +89,10 @@ class Grid:
         height = int(np.ceil(((max_y - min_y) / resolution) + 1e-6))
 
         origin = (min_x, min_y)
-        print(origin)
 
         grid = cls(width, height, origin, resolution)
+
+        # Initialize all cells as occupied
         grid.data = np.ones((height, width), dtype=np.uint8)
         for p in path:
             # Floor to ensure that points are in the cell containing them
@@ -95,3 +102,17 @@ class Grid:
             if 0 <= x < width and 0 <= y < height:
                 grid.data[y, x] = 0
         return grid
+
+    def distance_transform(self) -> Grid:
+        """
+        Compute the distance transform of the grid.
+        Returns:
+            Grid: A grid with the distance of each cell to the nearest free cell.
+        """
+        dist = cv2.distanceTransform(self.data, cv2.DIST_L2, 0)
+        dist *= self.resolution  # convert to meters
+
+        distance_grid = Grid(self.width, self.height, self.origin, self.resolution)
+        distance_grid.data = dist
+
+        return distance_grid

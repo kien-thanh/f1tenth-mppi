@@ -22,9 +22,18 @@ include_directories(include/mppi src)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(ackermann_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(interfaces REQUIRED)
 
 add_executable(mppi_node src/mppi_node.cu)
-ament_target_dependencies(mppi_node rclcpp ackermann_msgs)
+
+ament_target_dependencies(mppi_node
+  rclcpp
+  ackermann_msgs
+  nav_msgs
+  interfaces
+)
+
 
 target_include_directories(mppi_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

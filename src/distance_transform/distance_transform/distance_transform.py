@@ -7,9 +7,10 @@ import numpy as np
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy
 from nav_msgs.msg import Path
 from nav_msgs.msg import OccupancyGrid
-from std_msgs.msg import Float32MultiArray, MultiArrayDimension
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
+
+from interfaces.msg import DistanceMap
 
 import plot 
 from grid import Grid
@@ -29,7 +30,7 @@ class DistanceTransform(Node):
         self.map_sub = self.create_subscription(OccupancyGrid, 'map', self.map_sub_callback, qos)
         self.plan_sub = self.create_subscription(Path, 'plan', self.plan_sub_callback, 1)
 
-        self.distance_map = self.create_publisher(Float32MultiArray, 'distance_map', qos)
+        self.distance_map = self.create_publisher(DistanceMap, 'distance_map', qos)
 
     def map_sub_callback(self, msg: OccupancyGrid):
         """
@@ -62,33 +63,36 @@ class DistanceTransform(Node):
 
         resolution = 0.005  # 5mm per cell
 
-        grid = Grid.from_nav2_path(
+        path_grid = Grid.from_nav2_path(
             path=path,
             padding=(1.0, 1.0),
             resolution=resolution
         )
 
-        dist = cv2.distanceTransform(grid.data, cv2.DIST_L2, 0)
-        dist *= resolution  # convert to meters
+        distance_grid = path_grid.distance_transform()
 
-        self.publish_distance_map(dist)
+        self.distance_grid(distance_grid)
 
-        plot.heatmap(dist, title="Distance Transform Heatmap")
+        plot.heatmap(distance_grid.data, title="Distance Transform Heatmap")
 
-    def publish_distance_map(self, distance_map: np.ndarray):
+    def distance_grid(self, distance_grid: Grid):
         """
-        Publish the distance map as an Float32MultiArray message.
+        Publish the distance grid as an DistanceMap message.
 
         Args:
-            distance_map (np.ndarray): The distance map to publish
-            size (tuple): The size of the distance map (width, height).
+            distance_grid (Grid): The distance grid to publish
         """
-        msg = Float32MultiArray()
-        msg.data = distance_map.flatten().tolist()
-        msg.layout.dim.append(MultiArrayDimension(label="rows", size=distance_map.shape[0]))
-        msg.layout.dim.append(MultiArrayDimension(label="cols", size=distance_map.shape[1]))
+        msg = DistanceMap()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = "map"
+        msg.data = distance_grid.data.flatten().tolist()
+        msg.resolution = distance_grid.resolution
+        msg.origin_x = distance_grid.origin[0]
+        msg.origin_y = distance_grid.origin[1]
+        msg.width = distance_grid.width
+        msg.height = distance_grid.height
         self.distance_map.publish(msg)
-
+        
 def main(args=None):
     rclpy.init(args=args)
     minimal_subscriber = DistanceTransform()

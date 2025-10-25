@@ -9,6 +9,8 @@
 
   <depend>rclcpp</depend>
   <depend>ackermann_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>interfaces</depend>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

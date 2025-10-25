@@ -2,8 +2,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
-#include "std_msgs/msg/float32_multi_array.hpp"
 #include "ackermann_msgs/msg/ackermann_drive_stamped.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 
 #include <mppi/controllers/MPPI/mppi_controller.cuh>
 #include <mppi/cost_functions/quadratic_cost/quadratic_cost.cuh>
@@ -12,8 +12,11 @@
 #include <singletrack_cost.cuh>
 #include <plant.hpp>
 
-using AckermannDriveStamped = ackermann_msgs::msg::AckermannDriveStamped;
-using Float32MultiArray = std_msgs::msg::Float32MultiArray;
+#include <interfaces/msg/distance_map.hpp>
+
+using DriveMsg = ackermann_msgs::msg::AckermannDriveStamped;
+using DistanceMapMsg = interfaces::msg::DistanceMap;
+using OdomMsg = nav_msgs::msg::Odometry;
 
 using DYN_T = SingletrackDynamics;
 using COST_T = SingletrackCost;
@@ -43,23 +46,31 @@ class LocalTrajectoryPublisher : public rclcpp::Node
 public:
   LocalTrajectoryPublisher() : Node("mppi_node")
   {
-    drive_pub_ = this->create_publisher<AckermannDriveStamped>("/drive", 10);
-    distance_map_sub_ = this->create_subscription<Float32MultiArray>("/distance_map", 10, [this](const Float32MultiArray::SharedPtr msg) {
+    auto qos_distance_map = rclcpp::QoS(rclcpp::KeepLast(1));
+    qos_distance_map.transient_local();
+    qos_distance_map.reliable();
+
+    drive_pub_ = this->create_publisher<DriveMsg>("/drive", 10);
+    distance_map_sub_ = this->create_subscription<DistanceMapMsg>("/distance_map", 10, [this](const DistanceMapMsg::SharedPtr msg) {
       this->distanceMapCallback(msg);
+    });
+    odom_sub_ = this->create_subscription<OdomMsg>("/odom", qos_distance_map, [this](const OdomMsg::SharedPtr msg) {
+      this->odomCallback(msg);
     });
   }
 
 private:
-  rclcpp::Publisher<AckermannDriveStamped>::SharedPtr drive_pub_;
-  rclcpp::Subscription<Float32MultiArray>::SharedPtr distance_map_sub_;
+  rclcpp::Publisher<DriveMsg>::SharedPtr drive_pub_;
+  rclcpp::Subscription<DistanceMapMsg>::SharedPtr distance_map_sub_;
+  rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
 
-  void distanceMapCallback(const Float32MultiArray::SharedPtr msg)
+  void distanceMapCallback(const DistanceMapMsg::SharedPtr msg)
   {
     std::cout << "Received distance map of size: " << msg->data.size() << std::endl;
 
     // Dimensions of the distance map
-    size_t width = msg->layout.dim[1].size;
-    size_t height = msg->layout.dim[0].size;
+    size_t width = msg->width;
+    size_t height = msg->height;
 
     float* distMapHost = msg->data.data(); // Pointer to the first element of the distance map array on the host memory
 
@@ -160,6 +171,13 @@ private:
     cudaDestroyTextureObject(texObj);
     cudaFreeArray(cuArray);
     cudaFree(output);
+  }
+
+  void odomCallback(const OdomMsg::SharedPtr msg)
+  {
+    std::cout << "Received odometry: position (" << msg->pose.pose.position.x << ", " << msg->pose.pose.position.y << "), orientation ("
+              << msg->pose.pose.orientation.x << ", " << msg->pose.pose.orientation.y << ", "
+              << msg->pose.pose.orientation.z << ", " << msg->pose.pose.orientation.w << ")" << std::endl;
   }
 };
 

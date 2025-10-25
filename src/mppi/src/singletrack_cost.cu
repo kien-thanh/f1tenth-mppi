@@ -29,7 +29,7 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
 
     float state_cost = tex2D<float>(texObj_, x, y);
 
-    cost = 2.0f * (state_cost * state_cost) + (vel - 1.0f) * (vel - 1.0f) + 5.0f * (steer * steer) + 0.1f * yaw * yaw;
+    cost = 2.0f * (state_cost * state_cost) + (vel - 1.0f) * (vel - 1.0f) + 7.5f * (steer * steer) + 0.1f * yaw * yaw;
 
     return cost;
 }
