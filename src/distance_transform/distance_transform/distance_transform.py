@@ -29,7 +29,6 @@ class DistanceTransform(Node):
         self.map_sub = self.create_subscription(OccupancyGrid, 'map', self.map_sub_callback, qos)
         self.plan_sub = self.create_subscription(Path, 'plan', self.plan_sub_callback, 1)
 
-        self.distance_heatmap_pub = self.create_publisher(Image, 'distance_heatmap', qos)
         self.distance_map = self.create_publisher(Float32MultiArray, 'distance_map', qos)
 
     def map_sub_callback(self, msg: OccupancyGrid):
