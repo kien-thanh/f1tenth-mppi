@@ -24,6 +24,8 @@ find_package(rclcpp REQUIRED)
 find_package(ackermann_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(interfaces REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 add_executable(mppi_node src/mppi_node.cu)
 
@@ -32,6 +34,8 @@ ament_target_dependencies(mppi_node
   ackermann_msgs
   nav_msgs
   interfaces
+  tf2_ros
+  tf2_geometry_msgs
 )
 
 

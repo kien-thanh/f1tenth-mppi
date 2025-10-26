@@ -14,7 +14,7 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
 
     float distance = sampleDistance(texObj_, x, y, resolution_, origin_x_, origin_y_);
 
-    cost = 10.0f * (distance * distance) + (vel - 0.5f) * (vel - 0.5f) + (steer * steer);
+    cost = 10.0f * (distance * distance) + 10.0f * (vel - 0.5f) * (vel - 0.5f);
 
     return cost;
 }
@@ -38,7 +38,7 @@ float SingletrackCost::computeStateCost(const Eigen::Ref<const output_array> sta
 
     else 
     {
-        cost = 0.0f;
+        cost = (x - 5.0f) * (x - 5.0f) + (y - 0.0f) * (y - 0.0f) + (vel - 0.5f) * (vel - 0.5f) + (steer * steer);
     }
 
     return cost;
