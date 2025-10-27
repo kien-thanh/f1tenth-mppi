@@ -122,16 +122,16 @@ private:
       }
     }
 
-    // std::cout << "Avg Optimization time: " << plant->getAvgOptimizationTime() << " ms" << std::endl;
-    // std::cout << "Last Optimization time: " << plant->getLastOptimizationTime() << " ms" << std::endl;
-    // std::cout << "Avg Loop time: " << plant->getAvgLoopTime() << " ms" << std::endl;
-    // std::cout << "Avg Optimization Hz: " << 1.0 / (plant->getAvgOptimizationTime() * 1e-3) << " Hz" << std::endl;
+    std::cout << "Avg Optimization time: " << plant_->getAvgOptimizationTime() << " ms" << std::endl;
+    std::cout << "Last Optimization time: " << plant_->getLastOptimizationTime() << " ms" << std::endl;
+    std::cout << "Avg Loop time: " << plant_->getAvgLoopTime() << " ms" << std::endl;
+    std::cout << "Avg Optimization Hz: " << 1.0 / (plant_->getAvgOptimizationTime() * 1e-3) << " Hz" << std::endl;
 
-    // auto control_sequence = controller->getControlSeq();
-    // std::cout << "State: \n"
-    //           << plant->current_state_.transpose() << std::endl;
-    // std::cout << "Control Sequence:\n"
-    //           << control_sequence << std::endl;
+    auto control_sequence = controller_->getControlSeq();
+    std::cout << "State: \n"
+              << plant_->current_state_.transpose() << std::endl;
+    std::cout << "Control Sequence:\n"
+              << control_sequence << std::endl;
     // Allocate result of transformation in device memory    
     // float* output;
     // cudaMalloc(&output, sizeof(float));

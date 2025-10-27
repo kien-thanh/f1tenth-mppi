@@ -38,7 +38,7 @@ float SingletrackCost::computeStateCost(const Eigen::Ref<const output_array> sta
 
     else 
     {
-        cost = (x - 5.0f) * (x - 5.0f) + (y - 0.0f) * (y - 0.0f) + (vel - 0.5f) * (vel - 0.5f) + (steer * steer);
+        cost = 0.0f;
     }
 
     return cost;
