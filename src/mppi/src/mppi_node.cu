@@ -49,7 +49,10 @@ public:
 
     drive_pub_ = this->create_publisher<DriveMsg>("/drive", 10);
 
-    local_trajectory_pub_ = this->create_publisher<PathMsg>("/local_trajectory", 10);
+    auto qos_trajectory = rclcpp::QoS(rclcpp::KeepLast(1));
+    qos_trajectory.durability_volatile();
+    qos_trajectory.best_effort();
+    local_trajectory_pub_ = this->create_publisher<PathMsg>("/local_trajectory", qos_trajectory);
 
     distance_map_sub_ = this->create_subscription<DistanceFieldMsg>("/distance_map", qos_distance_map, [this](const DistanceFieldMsg::SharedPtr msg) {
       this->distanceMapCallback(msg);
@@ -116,10 +119,7 @@ private:
 
       std::this_thread::sleep_for(std::chrono::milliseconds(20)); // wait 0.02s
 
-      if (t % 5 == 0)
-      {
-        publishLocalTrajectory();
-      }
+      publishLocalTrajectory();
     }
 
     std::cout << "Avg Optimization time: " << plant_->getAvgOptimizationTime() << " ms" << std::endl;
