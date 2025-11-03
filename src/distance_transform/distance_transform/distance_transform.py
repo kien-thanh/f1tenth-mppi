@@ -61,7 +61,7 @@ class DistanceTransform(Node):
         
         plot.path(path)
 
-        resolution = 1.0 # 5mm per cell
+        resolution = 0.005 # 5mm per cell
 
         path_grid = Grid.from_nav2_path(
             path=path,
