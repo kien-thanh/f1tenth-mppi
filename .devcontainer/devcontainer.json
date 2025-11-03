@@ -6,7 +6,10 @@
     "-p", "8765:8765",
     "--gpus", "all",
   ],
-  "onCreateCommand": "rosdep init && rosdep update --rosdistro=humble && rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install --packages-skip mppi range_lib --cmake-args -GNinja",
+  "containerEnv": {
+    "ROS_DOMAIN_ID": "0"
+  },
+  "onCreateCommand": "rosdep init && rosdep update --rosdistro=humble && rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install --packages-skip range_lib --cmake-args -GNinja",
   "customizations": {
     "vscode": {
       "extensions": [
