@@ -34,7 +34,7 @@ RUN apt-get install -y zsh \
                        ninja-build \
                        ccache
 
-RUN pip3 install transforms3d scipy plotly pandas
+RUN pip3 install transforms3d scipy plotly pandas "numpy<2"
 
 RUN git lfs install
 
