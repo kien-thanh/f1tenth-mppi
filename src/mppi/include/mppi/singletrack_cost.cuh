@@ -9,8 +9,9 @@
 
 struct SingletrackCostParams : public CostParams<SingletrackDynamics::CONTROL_DIM>
 {
-    float width = 2.0f;  // width of the track
-    float coeff = 10.0f; // cost coefficient
+    float c_distance = 10.0f;   // Cost coefficient for distance to obstacles
+    float c_velocity = 10.0f;   // Cost coefficient for velocity tracking
+    float desired_velocity = 0.5f; // Desired velocity for the vehicle
 };
 
 class SingletrackCost : public Cost<SingletrackCost, SingletrackCostParams, SingletrackDynamicsParams>

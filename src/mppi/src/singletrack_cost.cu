@@ -8,13 +8,15 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
     float vel = state[O_IND_CLASS(DYN_P, VEL)];
     float yaw = state[O_IND_CLASS(DYN_P, YAW)];
 
-    float half_width = this->params_.width / 2.0f;
-
     float cost = 0.0f;
 
     float distance = sampleDistance(texObj_, x, y, resolution_, origin_x_, origin_y_);
 
-    cost = 10.0f * (distance * distance) + 10.0f * (vel - 0.5f) * (vel - 0.5f);
+    float c_dist = this->params_.c_distance;
+    float c_vel = this->params_.c_velocity;
+    float desired_vel = this->params_.desired_velocity;
+
+    cost = c_dist * (distance * distance) + c_vel * (vel - desired_vel) * (vel - desired_vel);
 
     return cost;
 }
@@ -27,19 +29,7 @@ float SingletrackCost::computeStateCost(const Eigen::Ref<const output_array> sta
     float vel = state[O_IND_CLASS(DYN_P, VEL)];
     float yaw = state[O_IND_CLASS(DYN_P, YAW)];
 
-    float half_width = this->params_.width / 2.0f;
-
     float cost = 0.0f;
-
-    if (abs(y) >= half_width)
-    {
-        cost = INFINITY;
-    }
-
-    else 
-    {
-        cost = 0.0f;
-    }
 
     return cost;
 }

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_CUDA_ARCHITECTURES 86 87)
+set(CMAKE_CUDA_ARCHITECTURES 86)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/MPPI-Generic/cmake")
 
 project(mppi LANGUAGES CXX CUDA)
@@ -27,6 +27,15 @@ find_package(interfaces REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
+# Speed up incremental builds: enable ccache if present
+find_program(CCACHE_PROGRAM ccache)
+if (CCACHE_PROGRAM)
+  message(STATUS "Enabling ccache for C/C++/CUDA via CMake compiler launcher: ${CCACHE_PROGRAM}")
+  set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+  set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+  set(CMAKE_CUDA_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+endif()
+
 add_executable(mppi_node src/mppi_node.cu)
 
 ament_target_dependencies(mppi_node
@@ -44,6 +53,9 @@ target_include_directories(mppi_node PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(mppi_node MPPI::MPPI)
+
+# Disable separable compilation to remove extra device link step (faster incremental builds)
+set_target_properties(mppi_node PROPERTIES CUDA_SEPARABLE_COMPILATION OFF)
 
 install(TARGETS mppi_node
   DESTINATION lib/${PROJECT_NAME})

@@ -22,6 +22,10 @@ def resample_path(path: np.array, spacing: float) -> np.array:
     x = path.T[0]
     y = path.T[1]
 
+    for i in range(1, len(x)):
+        if x[i] == x[i-1] and y[i] == y[i-1]:
+            print(f"Warning: Consecutive identical points found in path at index {i}. This may lead to issues in resampling.")
+
     # Create a B-spline representation of the path
     tck, _ = splprep([x, y], s=0)
 

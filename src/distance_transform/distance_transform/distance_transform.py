@@ -19,6 +19,24 @@ from grid import resample_path
 def distance_transform():
     pass
 
+def remove_duplicate_consecutive_points(path: np.array) -> np.array:
+    """
+    Remove consecutive duplicate points from the path.
+    Args:
+        path (np.array): The input path as an array of shape (N, 2).
+    Returns:
+        np.array: The path with consecutive duplicate points removed.
+    """
+    if len(path) == 0:
+        return path
+
+    unique_path = [path[0]]
+    for point in path[1:]:
+        if not np.array_equal(point, unique_path[-1]):
+            unique_path.append(point)
+    
+    return np.array(unique_path)
+
 class DistanceTransform(Node):
 
     def __init__(self):
@@ -56,6 +74,8 @@ class DistanceTransform(Node):
 
         # Creates path in the form [[x0, y0], [x1, y1], ...]
         path = np.column_stack((x, y))
+
+        path = remove_duplicate_consecutive_points(path)
 
         path = resample_path(path, spacing=0.001)
         
