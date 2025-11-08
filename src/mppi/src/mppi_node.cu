@@ -5,6 +5,7 @@
 #include "ackermann_msgs/msg/ackermann_drive_stamped.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "nav_msgs/msg/path.hpp"
+#include "nav_msgs/msg/occupancy_grid.hpp"
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
@@ -21,6 +22,7 @@
 
 using DriveMsg = ackermann_msgs::msg::AckermannDriveStamped;
 using DistanceFieldMsg = interfaces::msg::DistanceMap;
+using OccupancyGridMsg = nav_msgs::msg::OccupancyGrid;
 using OdomMsg = nav_msgs::msg::Odometry;
 using PathMsg = nav_msgs::msg::Path;
 
@@ -28,7 +30,7 @@ using DYN_T = SingletrackDynamics;
 using COST_T = SingletrackCost;
 
 const int NUM_TIMESTEPS = 100;
-const int NUM_ROLLOUTS = 1024;
+const int NUM_ROLLOUTS = 4096;
 const int DYN_BLOCK_X = 64;
 const int DYN_BLOCK_Y = DYN_T::STATE_DIM;
 
@@ -64,6 +66,34 @@ public:
       this->distanceMapCallback(msg);
     });
 
+    occupancy_grid_sub_ = this->create_subscription<OccupancyGridMsg>("/global_costmap/costmap", qos_distance_map, [this](const OccupancyGridMsg::SharedPtr msg) {
+      // Convert occupancy data from int8 to float
+      std::vector<float> occupancy_data;
+      occupancy_data.reserve(msg->data.size());
+      for (auto v : msg->data)
+      {
+        occupancy_data.push_back(static_cast<float>(v));
+      }
+
+      printf("Received occupancy grid of size: %zu\n", msg->data.size());
+
+      cost_.createCostmap(
+        occupancy_data.data(), 
+        msg->info.resolution, 
+        msg->info.width, 
+        msg->info.height, 
+        msg->info.origin.position.x, 
+        msg->info.origin.position.y
+      );
+
+      receivedCostmap_ = true;
+      
+      if (receivedDistanceMap_ && !initializedMPPI_)
+      {
+        initMPPI();
+      }
+    });
+
     odom_sub_ = this->create_subscription<OdomMsg>("/ego_racecar/odom", 10, [this](const OdomMsg::SharedPtr msg) {
       this->odomCallback(msg);
     });
@@ -72,6 +102,7 @@ public:
 private:
   rclcpp::Publisher<DriveMsg>::SharedPtr drive_pub_;
   rclcpp::Subscription<DistanceFieldMsg>::SharedPtr distance_map_sub_;
+  rclcpp::Subscription<OccupancyGridMsg>::SharedPtr occupancy_grid_sub_;
   rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
 
@@ -86,12 +117,37 @@ private:
   std::unique_ptr<PLANT_T> plant_;
   std::shared_ptr<CONTROLLER_T> controller_;
 
-  bool received_distance_map_ = false;
+  bool receivedDistanceMap_ = false;
+  bool receivedCostmap_ = false;
+  bool initializedMPPI_ = false;
 
   void distanceMapCallback(const DistanceFieldMsg::SharedPtr msg)
   {
     std::cout << "Received distance map of size: " << msg->data.size() << std::endl;
 
+    cost_.createDistanceField(msg->data.data(), msg->resolution, msg->width, msg->height, msg->origin_x, msg->origin_y);
+
+    receivedDistanceMap_ = true;
+
+    if (receivedCostmap_ && !initializedMPPI_)
+    {
+      initMPPI();
+    }
+
+    // std::cout << "Avg Optimization time: " << plant_->getAvgOptimizationTime() << " ms" << std::endl;
+    // std::cout << "Last Optimization time: " << plant_->getLastOptimizationTime() << " ms" << std::endl;
+    // std::cout << "Avg Loop time: " << plant_->getAvgLoopTime() << " ms" << std::endl;
+    // std::cout << "Avg Optimization Hz: " << 1.0 / (plant_->getAvgOptimizationTime() * 1e-3) << " Hz" << std::endl;
+
+    // auto control_sequence = controller_->getControlSeq();
+    // std::cout << "State: \n"
+    //           << plant_->current_state_.transpose() << std::endl;
+    // std::cout << "Control Sequence:\n"
+    //           << control_sequence << std::endl;
+  }
+
+  void initMPPI()
+  {
     float dt = 0.02;
 
     // Set cost parameters
@@ -100,8 +156,6 @@ private:
     cost_params.c_velocity = this->get_parameter("c_velocity").as_double();
     cost_params.desired_velocity = this->get_parameter("desired_velocity").as_double();
     cost_.setParams(cost_params);
-
-    cost_.createDistanceField(msg->data.data(), msg->resolution, msg->width, msg->height, msg->origin_x, msg->origin_y);
 
     fb_controller_ = std::make_unique<FB_T>(&dynamics_, dt); // set up feedback controller
 
@@ -119,23 +173,12 @@ private:
     // Create plant
     plant_ = std::make_unique<PLANT_T>(controller_, (1.0 / dt), 1);
 
-    received_distance_map_ = true;
-
-    // std::cout << "Avg Optimization time: " << plant_->getAvgOptimizationTime() << " ms" << std::endl;
-    // std::cout << "Last Optimization time: " << plant_->getLastOptimizationTime() << " ms" << std::endl;
-    // std::cout << "Avg Loop time: " << plant_->getAvgLoopTime() << " ms" << std::endl;
-    // std::cout << "Avg Optimization Hz: " << 1.0 / (plant_->getAvgOptimizationTime() * 1e-3) << " Hz" << std::endl;
-
-    // auto control_sequence = controller_->getControlSeq();
-    // std::cout << "State: \n"
-    //           << plant_->current_state_.transpose() << std::endl;
-    // std::cout << "Control Sequence:\n"
-    //           << control_sequence << std::endl;
+    initializedMPPI_ = true;
   }
 
   void odomCallback(const OdomMsg::SharedPtr msg)
   {
-    if (!received_distance_map_)
+    if (!initializedMPPI_)
     {
       return;
     }
