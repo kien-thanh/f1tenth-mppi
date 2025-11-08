@@ -1,14 +1,16 @@
 #include <cstdio>
 
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "ackermann_msgs/msg/ackermann_drive_stamped.hpp"
-#include "nav_msgs/msg/odometry.hpp"
-#include "nav_msgs/msg/path.hpp"
-#include "nav_msgs/msg/occupancy_grid.hpp"
+#include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/string.hpp>
+#include <ackermann_msgs/msg/ackermann_drive_stamped.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <nav_msgs/msg/path.hpp>
+#include <nav_msgs/msg/occupancy_grid.hpp>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <laser_geometry/laser_geometry.hpp>
 
 #include <mppi/controllers/MPPI/mppi_controller.cuh>
 #include <mppi/cost_functions/quadratic_cost/quadratic_cost.cuh>
@@ -66,31 +68,7 @@ public:
     });
 
     costmap_sub_ = this->create_subscription<OccupancyGridMsg>("/global_costmap/costmap", qos_texture, [this](const OccupancyGridMsg::SharedPtr msg) {
-      // Convert occupancy data from int8 to float
-      std::vector<float> occupancy_data;
-      occupancy_data.reserve(msg->data.size());
-      for (auto v : msg->data)
-      {
-        occupancy_data.push_back(static_cast<float>(v));
-      }
-
-      printf("Received occupancy grid of size: %zu\n", msg->data.size());
-
-      cost_.createCostmap(
-        occupancy_data.data(), 
-        msg->info.resolution, 
-        msg->info.width, 
-        msg->info.height, 
-        msg->info.origin.position.x, 
-        msg->info.origin.position.y
-      );
-
-      receivedCostmap_ = true;
-      
-      if (receivedDistanceMap_ && !initializedMPPI_)
-      {
-        initMPPI();
-      }
+      this->costmapCallback(msg);
     });
 
     odom_sub_ = this->create_subscription<OdomMsg>("/ego_racecar/odom", 10, [this](const OdomMsg::SharedPtr msg) {
@@ -142,34 +120,33 @@ private:
     }
   }
 
-  void initMPPI()
+  void costmapCallback(const OccupancyGridMsg::SharedPtr msg)
   {
-    float dt = 0.02;
+    // Convert occupancy data from int8 to float
+    std::vector<float> occupancy_data;
+    occupancy_data.reserve(msg->data.size());
+    for (auto v : msg->data)
+    {
+      occupancy_data.push_back(static_cast<float>(v));
+    }
 
-    // Set cost parameters
-    SingletrackCostParams cost_params;
-    cost_params.c_distance = this->get_parameter("c_distance").as_double();
-    cost_params.c_velocity = this->get_parameter("c_velocity").as_double();
-    cost_params.desired_velocity = this->get_parameter("desired_velocity").as_double();
-    cost_.setParams(cost_params);
+    printf("Received occupancy grid of size: %zu\n", msg->data.size());
 
-    fb_controller_ = std::make_unique<FB_T>(&dynamics_, dt); // set up feedback controller
+    cost_.createCostmap(
+      occupancy_data.data(), 
+      msg->info.resolution, 
+      msg->info.width, 
+      msg->info.height, 
+      msg->info.origin.position.x, 
+      msg->info.origin.position.y
+    );
 
-    auto sampler_params = sampler_.getParams();
-    std::fill(sampler_params.std_dev, sampler_params.std_dev + DYN_T::CONTROL_DIM, 1.0);
-    sampler_.setParams(sampler_params);
-
-    // set up MPPI Controller
-    controller_params_.dt_ = dt;
-    controller_params_.lambda_ = 1.0;
-    controller_params_.dynamics_rollout_dim_ = dim3(DYN_BLOCK_X, DYN_BLOCK_Y, 1);
-    controller_params_.cost_rollout_dim_ = dim3(96, 1, 1);
-    controller_ = std::make_shared<CONTROLLER_T>(&dynamics_, &cost_, fb_controller_.get(), &sampler_, controller_params_);
-
-    // Create plant
-    plant_ = std::make_unique<PLANT_T>(controller_, (1.0 / dt), 1);
-
-    initializedMPPI_ = true;
+    receivedCostmap_ = true;
+    
+    if (receivedDistanceMap_ && !initializedMPPI_)
+    {
+      initMPPI();
+    }
   }
 
   void odomCallback(const OdomMsg::SharedPtr msg)
@@ -227,6 +204,36 @@ private:
     driveMsg.drive.steering_angle = plant_->current_state_(2);
     drive_pub_->publish(driveMsg);
 
+  }
+
+  void initMPPI()
+  {
+    float dt = 0.02;
+
+    // Set cost parameters
+    SingletrackCostParams cost_params;
+    cost_params.c_distance = this->get_parameter("c_distance").as_double();
+    cost_params.c_velocity = this->get_parameter("c_velocity").as_double();
+    cost_params.desired_velocity = this->get_parameter("desired_velocity").as_double();
+    cost_.setParams(cost_params);
+
+    fb_controller_ = std::make_unique<FB_T>(&dynamics_, dt); // set up feedback controller
+
+    auto sampler_params = sampler_.getParams();
+    std::fill(sampler_params.std_dev, sampler_params.std_dev + DYN_T::CONTROL_DIM, 1.0);
+    sampler_.setParams(sampler_params);
+
+    // set up MPPI Controller
+    controller_params_.dt_ = dt;
+    controller_params_.lambda_ = 1.0;
+    controller_params_.dynamics_rollout_dim_ = dim3(DYN_BLOCK_X, DYN_BLOCK_Y, 1);
+    controller_params_.cost_rollout_dim_ = dim3(96, 1, 1);
+    controller_ = std::make_shared<CONTROLLER_T>(&dynamics_, &cost_, fb_controller_.get(), &sampler_, controller_params_);
+
+    // Create plant
+    plant_ = std::make_unique<PLANT_T>(controller_, (1.0 / dt), 1);
+
+    initializedMPPI_ = true;
   }
 
   void publishLocalTrajectory()
