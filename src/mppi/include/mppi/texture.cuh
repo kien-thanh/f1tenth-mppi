@@ -1,22 +1,22 @@
-#ifndef DISTANCE_FIELD_CUH
-#define DISTANCE_FIELD_CUH
+#ifndef TEXTURE_CUH
+#define TEXTURE_CUH
 
 #include <stdexcept>
 #include <iostream>
 
-class DistanceField {
+class Texture {
 public:
-    DistanceField(const float* data, float resolution, size_t width, size_t height, float origin_x, float origin_y) 
+    Texture(const float* data, float resolution, size_t width, size_t height, float origin_x, float origin_y) 
         : resolution_(resolution), width_(width), height_(height), origin_x_(origin_x), origin_y_(origin_y) 
     {
         if (!data || width <= 0 || height <= 0 || resolution <= 0.0f) {
-            throw std::invalid_argument("Invalid parameters for DistanceField initialization.");
+            throw std::invalid_argument("Invalid parameters for Texture initialization.");
         }
 
         allocateTexture(data);
     }
 
-    ~DistanceField() {
+    ~Texture() {
         cleanup();
     }
 
@@ -96,7 +96,7 @@ private:
     cudaTextureObject_t texObj_;
 };
 
-__device__ float sampleDistance(cudaTextureObject_t texObj, float x , float y, float resolution, float origin_x, float origin_y) {
+__device__ float sampleTexture(cudaTextureObject_t texObj, float x , float y, float resolution, float origin_x, float origin_y) {
     float offset = resolution / 2.0f;
 
     float u = (x - origin_x + offset) / resolution;
@@ -105,4 +105,4 @@ __device__ float sampleDistance(cudaTextureObject_t texObj, float x , float y, f
     return tex2D<float>(texObj, u, v);
 }
 
-#endif // DISTANCE_FIELD_CUH
+#endif // TEXTURE_CUH

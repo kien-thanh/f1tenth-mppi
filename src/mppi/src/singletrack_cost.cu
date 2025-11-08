@@ -10,8 +10,8 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
 
     float cost = 0.0f;
 
-    float crash = sampleDistance(cm_texObj_, x, y, cm_resolution_, cm_origin_x_, cm_origin_y_);
-    if (crash > 0.0f) {
+    float crash = sampleTexture(cm_texObj_, x, y, cm_resolution_, cm_origin_x_, cm_origin_y_);
+    if (crash >= 100.0f) {
         cost = 1e6f; // High cost for crashing
         if (crash_status != nullptr) {
             *crash_status = 1;
@@ -19,7 +19,7 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
         return cost;
     }
 
-    float distance = sampleDistance(df_texObj_, x, y, df_resolution_, df_origin_x_, df_origin_y_);
+    float distance = sampleTexture(df_texObj_, x, y, df_resolution_, df_origin_x_, df_origin_y_);
 
     float c_dist = this->params_.c_distance;
     float c_vel = this->params_.c_velocity;

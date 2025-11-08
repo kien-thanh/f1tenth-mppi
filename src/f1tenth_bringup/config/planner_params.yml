@@ -36,6 +36,6 @@ planner_server:
 global_costmap:
   global_costmap:
     ros__parameters:
-      robot_radius: 0.2 # in meters
+      robot_radius: 0.15 # in meters
       # footprint: "[[3.33, 0.121], [0.33, -0.121], [0.0, -0.121], [0.0, 0.121]]"
       # footprint_padding: 2.0

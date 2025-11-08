@@ -5,7 +5,7 @@
 
 #include <mppi/cost_functions/cost.cuh>
 #include <singletrack_dynamics.cuh>
-#include <distance_field.cuh>
+#include <texture.cuh>
 
 struct SingletrackCostParams : public CostParams<SingletrackDynamics::CONTROL_DIM>
 {
@@ -34,7 +34,7 @@ public:
 
     void createDistanceField(const float* data, float resolution, int width, int height, float origin_x, float origin_y)
     {
-        distance_field_ = std::make_unique<DistanceField>(data, resolution, width, height, origin_x, origin_y);
+        distance_field_ = std::make_unique<Texture>(data, resolution, width, height, origin_x, origin_y);
         df_texObj_ = distance_field_->getTextureObject();
         df_resolution_ = distance_field_->getResolution();
         df_origin_x_ = distance_field_->getOriginX();
@@ -45,7 +45,7 @@ public:
 
     void createCostmap(const float* data, float resolution, int width, int height, float origin_x, float origin_y)
     {
-        costmap_ =  std::make_unique<DistanceField>(data, resolution, width, height, origin_x, origin_y);
+        costmap_ =  std::make_unique<Texture>(data, resolution, width, height, origin_x, origin_y);
         cm_texObj_ = costmap_->getTextureObject();
         cm_resolution_ = costmap_->getResolution();
         cm_origin_x_ = costmap_->getOriginX();
@@ -55,11 +55,11 @@ public:
     }
 
 private:
-    std::unique_ptr<DistanceField> distance_field_;
+    std::unique_ptr<Texture> distance_field_;
     cudaTextureObject_t df_texObj_;
     float df_resolution_, df_origin_x_, df_origin_y_;
 
-    std::unique_ptr<DistanceField> costmap_;
+    std::unique_ptr<Texture> costmap_;
     cudaTextureObject_t cm_texObj_;
     float cm_resolution_, cm_origin_x_, cm_origin_y_;
 };

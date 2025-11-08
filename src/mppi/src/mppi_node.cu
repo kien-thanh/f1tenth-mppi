@@ -10,7 +10,6 @@
 #include <tf2_ros/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-
 #include <mppi/controllers/MPPI/mppi_controller.cuh>
 #include <mppi/cost_functions/quadratic_cost/quadratic_cost.cuh>
 #include <mppi/feedback_controllers/DDP/ddp.cuh>
@@ -51,9 +50,9 @@ public:
     this->declare_parameter("desired_velocity", 2.0f);  // desired velocity
 
     // Initialize publishers
-    auto qos_distance_map = rclcpp::QoS(rclcpp::KeepLast(1));
-    qos_distance_map.transient_local();
-    qos_distance_map.reliable();
+    auto qos_texture = rclcpp::QoS(rclcpp::KeepLast(1));
+    qos_texture.transient_local();
+    qos_texture.reliable();
     drive_pub_ = this->create_publisher<DriveMsg>("/drive", 10);
 
     auto qos_trajectory = rclcpp::QoS(rclcpp::KeepLast(1));
@@ -62,11 +61,11 @@ public:
     local_trajectory_pub_ = this->create_publisher<PathMsg>("/local_trajectory", qos_trajectory);
 
     // Initialize subscribers
-    distance_map_sub_ = this->create_subscription<DistanceFieldMsg>("/distance_map", qos_distance_map, [this](const DistanceFieldMsg::SharedPtr msg) {
+    distance_map_sub_ = this->create_subscription<DistanceFieldMsg>("/distance_map", qos_texture, [this](const DistanceFieldMsg::SharedPtr msg) {
       this->distanceMapCallback(msg);
     });
 
-    occupancy_grid_sub_ = this->create_subscription<OccupancyGridMsg>("/global_costmap/costmap", qos_distance_map, [this](const OccupancyGridMsg::SharedPtr msg) {
+    costmap_sub_ = this->create_subscription<OccupancyGridMsg>("/global_costmap/costmap", qos_texture, [this](const OccupancyGridMsg::SharedPtr msg) {
       // Convert occupancy data from int8 to float
       std::vector<float> occupancy_data;
       occupancy_data.reserve(msg->data.size());
@@ -110,7 +109,7 @@ public:
 private:
   rclcpp::Publisher<DriveMsg>::SharedPtr drive_pub_;
   rclcpp::Subscription<DistanceFieldMsg>::SharedPtr distance_map_sub_;
-  rclcpp::Subscription<OccupancyGridMsg>::SharedPtr occupancy_grid_sub_;
+  rclcpp::Subscription<OccupancyGridMsg>::SharedPtr costmap_sub_;
   rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
 
