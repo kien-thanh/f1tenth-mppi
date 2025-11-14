@@ -204,6 +204,7 @@ private:
     driveMsg.drive.steering_angle = plant_->current_state_(2);
     drive_pub_->publish(driveMsg);
 
+    publishLocalTrajectory();
   }
 
   void initMPPI()
