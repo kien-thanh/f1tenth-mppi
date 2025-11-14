@@ -9,8 +9,12 @@
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include <tf2_sensor_msgs/tf2_sensor_msgs.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
+#include <sensor_msgs/point_cloud2_iterator.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
 #include <laser_geometry/laser_geometry.hpp>
+
 
 #include <mppi/controllers/MPPI/mppi_controller.cuh>
 #include <mppi/cost_functions/quadratic_cost/quadratic_cost.cuh>
@@ -26,6 +30,7 @@ using DistanceFieldMsg = interfaces::msg::DistanceMap;
 using OccupancyGridMsg = nav_msgs::msg::OccupancyGrid;
 using OdomMsg = nav_msgs::msg::Odometry;
 using PathMsg = nav_msgs::msg::Path;
+using LaserScanMsg = sensor_msgs::msg::LaserScan;
 
 using DYN_T = SingletrackDynamics;
 using COST_T = SingletrackCost;
@@ -71,6 +76,10 @@ public:
       this->costmapCallback(msg);
     });
 
+    scan_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>("/scan", 10, [this](const sensor_msgs::msg::LaserScan::SharedPtr msg) {
+      this->scanCallback(msg);
+    });
+
     odom_sub_ = this->create_subscription<OdomMsg>("/ego_racecar/odom", 10, [this](const OdomMsg::SharedPtr msg) {
       this->odomCallback(msg);
     });
@@ -88,8 +97,10 @@ private:
   rclcpp::Publisher<DriveMsg>::SharedPtr drive_pub_;
   rclcpp::Subscription<DistanceFieldMsg>::SharedPtr distance_map_sub_;
   rclcpp::Subscription<OccupancyGridMsg>::SharedPtr costmap_sub_;
+  rclcpp::Subscription<LaserScanMsg>::SharedPtr scan_sub_;
   rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
+
 
   tf2_ros::Buffer tfBuffer_;
   tf2_ros::TransformListener tfListener_;
@@ -105,6 +116,7 @@ private:
   bool receivedDistanceMap_ = false;
   bool receivedCostmap_ = false;
   bool initializedMPPI_ = false;
+  bool receivedFirstScan_ = false;
 
   void distanceMapCallback(const DistanceFieldMsg::SharedPtr msg)
   {
@@ -204,6 +216,44 @@ private:
     driveMsg.drive.steering_angle = plant_->current_state_(2);
     drive_pub_->publish(driveMsg);
 
+  }
+
+  void scanCallback(const LaserScanMsg::SharedPtr msg)
+  {
+    // if (!initializedMPPI_)
+    // {
+    //   return;
+    // }
+
+    static laser_geometry::LaserProjection projector;
+    sensor_msgs::msg::PointCloud2 cloud;
+
+    auto transformStamped = tfBuffer_.lookupTransform("map", msg->header.frame_id, tf2::TimePointZero);
+
+    projector.projectLaser(*msg, cloud);
+
+    tf2::doTransform(cloud, cloud, transformStamped);
+
+    std::vector<Eigen::Vector3f> points;
+
+    sensor_msgs::PointCloud2ConstIterator<float> iter_x(cloud, "x");
+    sensor_msgs::PointCloud2ConstIterator<float> iter_y(cloud, "y");
+
+    for (; iter_x != iter_x.end(); ++iter_x, ++iter_y)
+    {
+      Eigen::Vector3f point;
+      point(0) = *iter_x;
+      point(1) = *iter_y;
+      points.push_back(point);
+    }
+
+    if (!receivedFirstScan_)
+    {
+      cost_.createScanMap(0.05f, 2048, 2048, -51.224998f, -51.224998f);
+      receivedFirstScan_ = true;
+    }
+
+    cost_.updateScanMap(points);
   }
 
   void initMPPI()
