@@ -30,7 +30,7 @@ using PathMsg = nav_msgs::msg::Path;
 using DYN_T = SingletrackDynamics;
 using COST_T = SingletrackCost;
 
-const int NUM_TIMESTEPS = 100;
+const int NUM_TIMESTEPS = 64;
 const int NUM_ROLLOUTS = 4096;
 const int DYN_BLOCK_X = 64;
 const int DYN_BLOCK_Y = DYN_T::STATE_DIM;
@@ -228,7 +228,7 @@ private:
     controller_params_.dt_ = dt;
     controller_params_.lambda_ = 1.0;
     controller_params_.dynamics_rollout_dim_ = dim3(DYN_BLOCK_X, DYN_BLOCK_Y, 1);
-    controller_params_.cost_rollout_dim_ = dim3(96, 1, 1);
+    controller_params_.cost_rollout_dim_ = dim3(64, 1, 1);
     controller_ = std::make_shared<CONTROLLER_T>(&dynamics_, &cost_, fb_controller_.get(), &sampler_, controller_params_);
 
     // Create plant
