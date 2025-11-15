@@ -11,7 +11,7 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
     float cost = 0.0f;
 
     float crash = sampleTexture(cm_texObj_, x, y, cm_resolution_, cm_origin_x_, cm_origin_y_);
-    if (crash >= 100.0f) {
+    if (crash >= 50.0f) {
         cost = 1e6f; // High cost for crashing
         if (crash_status != nullptr) {
             *crash_status = 1;
