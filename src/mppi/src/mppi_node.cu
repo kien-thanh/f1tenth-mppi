@@ -235,26 +235,26 @@ private:
 
     tf2::doTransform(cloud, cloud, transformStamped);
 
-    std::vector<Eigen::Vector3f> points;
+    std::vector<float2> h_points;
 
     sensor_msgs::PointCloud2ConstIterator<float> iter_x(cloud, "x");
     sensor_msgs::PointCloud2ConstIterator<float> iter_y(cloud, "y");
 
     for (; iter_x != iter_x.end(); ++iter_x, ++iter_y)
     {
-      Eigen::Vector3f point;
-      point(0) = *iter_x;
-      point(1) = *iter_y;
-      points.push_back(point);
+      float2 point;
+      point.x = *iter_x;
+      point.y = *iter_y;
+      h_points.push_back(point);
     }
 
     if (!receivedFirstScan_)
     {
-      cost_.createScanMap(0.05f, 2048, 2048, -51.224998f, -51.224998f);
+      cost_.createScanMap(0.05f, 130, 113, 0.387, -4.08);
       receivedFirstScan_ = true;
     }
 
-    cost_.updateScanMap(points);
+    cost_.updateScanMap(h_points);
   }
 
   void initMPPI()

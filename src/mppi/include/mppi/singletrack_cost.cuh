@@ -7,10 +7,47 @@
 #include <singletrack_dynamics.cuh>
 #include <texture.cuh>
 
+__global__ void updateScanMapKernel(const float2 *points, cudaSurfaceObject_t surfObj, float origin_x, float origin_y, float resolution)
+{
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
+
+    if (i >= 1080)
+        return;
+
+    int x_idx = static_cast<int>((points[i].x - origin_x) / resolution);
+    int y_idx = static_cast<int>((points[i].y - origin_y) / resolution);
+
+    if (x_idx < 0 || y_idx < 0 || x_idx >= 130 || y_idx >= 113)
+        return;
+
+    // printf("Updating scan map at (%d, %d)\n", x_idx, y_idx);
+
+    unsigned char occupied_value = 100;
+    
+    for (int offset_x = -2; offset_x <= 2; ++offset_x) {
+        for (int offset_y = -2; offset_y <= 2; ++offset_y) {
+            if (x_idx + offset_x >= 0 && y_idx + offset_y >= 0 && x_idx + offset_x < 130 && y_idx + offset_y < 113) {
+                surf2Dwrite(occupied_value, surfObj, (x_idx + offset_x) * sizeof(unsigned char), y_idx + offset_y);
+            }
+        }
+    }
+}
+
+__global__ void debugReadSurface(cudaSurfaceObject_t surfObj,
+                                 unsigned char *out,
+                                 int x,
+                                 int y)
+{
+    unsigned char value;
+    surf2Dread(&value, surfObj, x * sizeof(unsigned char), y);
+
+    out[0] = value;
+}
+
 struct SingletrackCostParams : public CostParams<SingletrackDynamics::CONTROL_DIM>
 {
-    float c_distance = 10.0f;   // Cost coefficient for distance to obstacles
-    float c_velocity = 10.0f;   // Cost coefficient for velocity tracking
+    float c_distance = 10.0f;      // Cost coefficient for distance to obstacles
+    float c_velocity = 10.0f;      // Cost coefficient for velocity tracking
     float desired_velocity = 0.5f; // Desired velocity for the vehicle
 };
 
@@ -32,7 +69,7 @@ public:
 
     float terminalCost(const Eigen::Ref<const output_array> s);
 
-    void createDistanceField(const float* data, float resolution, int width, int height, float origin_x, float origin_y)
+    void createDistanceField(const float *data, float resolution, int width, int height, float origin_x, float origin_y)
     {
         distance_field_ = std::make_unique<Texture>(data, resolution, width, height, origin_x, origin_y);
         df_texObj_ = distance_field_->getTextureObject();
@@ -43,9 +80,9 @@ public:
         printf("Distance field created with resolution: %f, origin: (%f, %f)\n", df_resolution_, df_origin_x_, df_origin_y_);
     }
 
-    void createCostmap(const float* data, float resolution, int width, int height, float origin_x, float origin_y)
+    void createCostmap(const float *data, float resolution, int width, int height, float origin_x, float origin_y)
     {
-        costmap_ =  std::make_unique<Texture>(data, resolution, width, height, origin_x, origin_y);
+        costmap_ = std::make_unique<Texture>(data, resolution, width, height, origin_x, origin_y);
         cm_texObj_ = costmap_->getTextureObject();
         cm_resolution_ = costmap_->getResolution();
         cm_origin_x_ = costmap_->getOriginX();
@@ -60,7 +97,7 @@ public:
 
         // Intilialize unoccupied scanmap
         std::vector<unsigned char> scanmap_data(width * height, 0);
-        
+
         // Allocate CUDA array in device memory
         cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<unsigned char>();
         cudaMallocArray(&surfArray_, &channelDesc, width, height, cudaArraySurfaceLoadStore);
@@ -75,31 +112,57 @@ public:
         resDesc.res.array.array = surfArray_;
         cudaCreateSurfaceObject(&surfObj_, &resDesc);
 
-        auto end =  std::chrono::high_resolution_clock::now();
+        auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-      
+
         std::cout << "Scanmap created with resolution: " << resolution << ", origin: (" << origin_x << ", " << origin_y << ") in " << duration << " ms" << std::endl;
     }
 
-    void updateScanMap(const std::vector<Eigen::Vector3f>& points)
+    void updateScanMap(const std::vector<float2> &h_points)
     {
         auto start = std::chrono::high_resolution_clock::now();
 
-        // Update scanmap based on the provided points
-        for (const auto& point : points) {
-            // Convert world coordinates to scanmap indices
-            int x_idx = static_cast<int>((point(0) - cm_origin_x_) / cm_resolution_);
-            int y_idx = static_cast<int>((point(1) - cm_origin_y_) / cm_resolution_);
+        float2 *d_points;
+        cudaMalloc(&d_points, 1080 * sizeof(float2));
+        cudaMemcpy(d_points, h_points.data(), 1080 * sizeof(float2), cudaMemcpyHostToDevice);
 
-            // Write occupied value (e.g., 255) to the surface object at the calculated indices
-            unsigned char occupied_value = 255;
-            surf2Dwrite(occupied_value, surfObj_, x_idx * sizeof(unsigned char), y_idx);
-        }
+        updateScanMapKernel<<<9, 128>>>(d_points, surfObj_, 0.387, -4.08, 0.05f);
 
-        auto end =  std::chrono::high_resolution_clock::now();
+        cudaDeviceSynchronize();
+
+        auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-        std::cout << "Scanmap updated with " << points.size() << " points in " << duration << " ms" << std::endl;
+        cudaFree(d_points);
+
+        // unsigned char* d_debug_output;
+        // cudaMalloc(&d_debug_output, sizeof(unsigned char));
+        // debugReadSurface<<<1, 1>>>(surfObj_, d_debug_output, 57, 46);
+        // cudaDeviceSynchronize();
+
+        // unsigned char debug_value;
+        // cudaMemcpy(&debug_value, d_debug_output, sizeof(unsigned char), cudaMemcpyDeviceToHost);
+        // cudaFree(d_debug_output);
+
+        // std::vector<unsigned char> h_buffer(130 * 113);
+        // cudaMemcpy2DFromArray(
+        //     h_buffer.data(),             // dst pointer
+        //     130 * sizeof(unsigned char), // dst pitch
+        //     surfArray_,                  // src array
+        //     0, 0,                        // offset inside the array
+        //     130 * sizeof(unsigned char), // width in bytes
+        //     113,                         // height
+        //     cudaMemcpyDeviceToHost);
+
+        // for (int y = 0; y < 113; ++y)
+        // {
+        //     for (int x = 0; x < 130; ++x)
+        //         std::cout << (h_buffer[y * 130 + x] ? "#" : ".");
+        //     std::cout << std::endl;
+        // }
+
+        // std::cout << "Debug value from surface: " << static_cast<int>(debug_value) << std::endl;
+        // std::cout << "Scanmap updated with " << h_points.size() << " points in " << duration << " ms" << std::endl;
     }
 
 private:

@@ -19,6 +19,25 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
         return cost;
     }
 
+    int x_idx = static_cast<int>((x - 0.387) / 0.05f);
+    int y_idx = static_cast<int>((y - (-4.08)) / 0.05f);
+
+    if (x_idx < 0 || y_idx < 0 || x_idx >= 130 || y_idx >= 113) {
+        cost = 1e6f;
+        return cost;
+    }
+
+    unsigned char scanCrash;
+    surf2Dread(&scanCrash, surfObj_, x_idx * sizeof(unsigned char), y_idx);
+
+    if (scanCrash >= 50) {
+        cost = 1e6f; // High cost for crashing
+        if (crash_status != nullptr) {
+            *crash_status = 1;
+        }
+        return cost;
+    }
+
     float distance = sampleTexture(df_texObj_, x, y, df_resolution_, df_origin_x_, df_origin_y_);
 
     float c_dist = this->params_.c_distance;
