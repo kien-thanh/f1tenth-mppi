@@ -14,7 +14,7 @@
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <laser_geometry/laser_geometry.hpp>
-
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 
 #include <mppi/controllers/MPPI/mppi_controller.cuh>
 #include <mppi/cost_functions/quadratic_cost/quadratic_cost.cuh>
@@ -31,12 +31,13 @@ using OccupancyGridMsg = nav_msgs::msg::OccupancyGrid;
 using OdomMsg = nav_msgs::msg::Odometry;
 using PathMsg = nav_msgs::msg::Path;
 using LaserScanMsg = sensor_msgs::msg::LaserScan;
+using PoseMsg = geometry_msgs::msg::PoseWithCovarianceStamped;
 
 using DYN_T = SingletrackDynamics;
 using COST_T = SingletrackCost;
 
 const int NUM_TIMESTEPS = 64;
-const int NUM_ROLLOUTS = 4096;
+const int NUM_ROLLOUTS = 2048;
 const int DYN_BLOCK_X = 64;
 const int DYN_BLOCK_Y = DYN_T::STATE_DIM;
 
@@ -52,9 +53,10 @@ public:
   LocalTrajectoryPublisher() : Node("mppi_node"), tfBuffer_(this->get_clock()), tfListener_(tfBuffer_)
   {
     // Initialize parameters
-    this->declare_parameter("c_distance", 10.0f);       // cost coefficient for distance to centerline
-    this->declare_parameter("c_velocity", 10.0f);       // cost coefficient for velocity tracking
-    this->declare_parameter("desired_velocity", 2.0f);  // desired velocity
+    this->declare_parameter("c_distance", 10.0f);      // cost coefficient for distance to centerline
+    this->declare_parameter("c_velocity", 10.0f);      // cost coefficient for velocity tracking
+    this->declare_parameter("desired_velocity", 2.0f); // desired velocity
+    this->declare_parameter("sim", false);             // whether to run in simulation mode
 
     // Initialize publishers
     auto qos_texture = rclcpp::QoS(rclcpp::KeepLast(1));
@@ -68,21 +70,25 @@ public:
     local_trajectory_pub_ = this->create_publisher<PathMsg>("/local_trajectory", qos_trajectory);
 
     // Initialize subscribers
-    distance_map_sub_ = this->create_subscription<DistanceFieldMsg>("/distance_map", qos_texture, [this](const DistanceFieldMsg::SharedPtr msg) {
-      this->distanceMapCallback(msg);
-    });
+    distance_map_sub_ = this->create_subscription<DistanceFieldMsg>("/distance_map", qos_texture, [this](const DistanceFieldMsg::SharedPtr msg)
+                                                                    { this->distanceMapCallback(msg); });
 
-    costmap_sub_ = this->create_subscription<OccupancyGridMsg>("/global_costmap/costmap", qos_texture, [this](const OccupancyGridMsg::SharedPtr msg) {
-      this->costmapCallback(msg);
-    });
+    costmap_sub_ = this->create_subscription<OccupancyGridMsg>("/global_costmap/costmap", qos_texture, [this](const OccupancyGridMsg::SharedPtr msg)
+                                                               { this->costmapCallback(msg); });
 
-    scan_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>("/scan", 10, [this](const sensor_msgs::msg::LaserScan::SharedPtr msg) {
-      this->scanCallback(msg);
-    });
+    scan_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>("/scan", 10, [this](const sensor_msgs::msg::LaserScan::SharedPtr msg)
+                                                                       { this->scanCallback(msg); });
 
-    odom_sub_ = this->create_subscription<OdomMsg>("/ego_racecar/odom", 10, [this](const OdomMsg::SharedPtr msg) {
-      this->odomCallback(msg);
-    });
+    if (this->get_parameter("sim").as_bool())
+    {
+      odom_sub_ = this->create_subscription<OdomMsg>("/odom", 10, [this](const OdomMsg::SharedPtr msg)
+                                                     { this->odomCallback(msg); });
+    }
+    else
+    {
+      pose_sub_ = this->create_subscription<PoseMsg>("/amcl_pose", 10, [this](const PoseMsg::SharedPtr msg)
+                                                     { this->poseCallback(msg); });
+    }
   }
 
   ~LocalTrajectoryPublisher()
@@ -99,8 +105,10 @@ private:
   rclcpp::Subscription<OccupancyGridMsg>::SharedPtr costmap_sub_;
   rclcpp::Subscription<LaserScanMsg>::SharedPtr scan_sub_;
   rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
+  rclcpp::Subscription<PoseMsg>::SharedPtr pose_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
 
+  double current_velocity_ = 0.0;
 
   tf2_ros::Buffer tfBuffer_;
   tf2_ros::TransformListener tfListener_;
@@ -145,16 +153,15 @@ private:
     printf("Received occupancy grid of size: %zu\n", msg->data.size());
 
     cost_.createCostmap(
-      occupancy_data.data(), 
-      msg->info.resolution, 
-      msg->info.width, 
-      msg->info.height, 
-      msg->info.origin.position.x, 
-      msg->info.origin.position.y
-    );
+        occupancy_data.data(),
+        msg->info.resolution,
+        msg->info.width,
+        msg->info.height,
+        msg->info.origin.position.x,
+        msg->info.origin.position.y);
 
     receivedCostmap_ = true;
-    
+
     if (receivedDistanceMap_ && !initializedMPPI_)
     {
       initMPPI();
@@ -169,10 +176,12 @@ private:
     }
 
     geometry_msgs::msg::TransformStamped transformStamped;
-    try {
+    try
+    {
       transformStamped = tfBuffer_.lookupTransform("map", "base_link", tf2::TimePointZero);
     }
-    catch (tf2::TransformException &ex) {
+    catch (tf2::TransformException &ex)
+    {
       RCLCPP_WARN(this->get_logger(), "Could not transform base_link to map: %s", ex.what());
       return;
     }
@@ -199,7 +208,54 @@ private:
 
     double vx = msg->twist.twist.linear.x;
     double vy = msg->twist.twist.linear.y;
-    current_state(3) = std::sqrt(vx*vx + vy*vy);
+    current_state(3) = std::sqrt(vx * vx + vy * vy);
+
+    tf2::Quaternion q;
+    tf2::fromMsg(msg->pose.pose.orientation, q); // convert geometry_msgs -> tf2
+    double roll, pitch, yaw;
+    tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
+
+    current_state(4) = yaw;
+
+    plant_->updateState(current_state, msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9);
+    plant_->runControlIteration(&alive);
+
+    ackermann_msgs::msg::AckermannDriveStamped driveMsg;
+    driveMsg.drive.speed = plant_->current_state_(3);
+    driveMsg.drive.steering_angle = plant_->current_state_(2);
+    drive_pub_->publish(driveMsg);
+
+    publishLocalTrajectory();
+  }
+
+  void poseCallback(const PoseMsg::SharedPtr msg)
+  {
+    if (!initializedMPPI_)
+    {
+      return;
+    }
+
+    std::atomic<bool> alive(true);
+
+    Eigen::Matrix<float, 5, 1> current_state;
+
+    current_state(0) = msg->pose.pose.position.x;
+    current_state(1) = msg->pose.pose.position.y;
+
+    if (plant_->current_state_(2) > 0.47)
+    {
+      current_state(2) = 0.47;
+    }
+    else if (plant_->current_state_(2) < -0.47)
+    {
+      current_state(2) = -0.47;
+    }
+    else
+    {
+      current_state(2) = plant_->current_state_(2);
+    }
+
+    current_state(3) = current_velocity_;
 
     tf2::Quaternion q;
     tf2::fromMsg(msg->pose.pose.orientation, q); // convert geometry_msgs -> tf2
@@ -229,7 +285,15 @@ private:
     static laser_geometry::LaserProjection projector;
     sensor_msgs::msg::PointCloud2 cloud;
 
-    auto transformStamped = tfBuffer_.lookupTransform("map", msg->header.frame_id, tf2::TimePointZero);
+    geometry_msgs::msg::TransformStamped transformStamped;
+    try {
+      transformStamped = tfBuffer_.lookupTransform("map", "laser", tf2::TimePointZero);
+    }
+    catch (tf2::TransformException &ex)
+    {
+      RCLCPP_WARN(this->get_logger(), "Could not transform laser to map: %s", ex.what());
+      return;
+    }
 
     projector.projectLaser(*msg, cloud);
 
@@ -311,7 +375,12 @@ private:
 int main(int argc, char **argv)
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<LocalTrajectoryPublisher>());
+
+  auto node = std::make_shared<LocalTrajectoryPublisher>();
+
+  rclcpp::executors::MultiThreadedExecutor executor;
+  executor.add_node(node);
+  executor.spin();
   rclcpp::shutdown();
   return 0;
 }

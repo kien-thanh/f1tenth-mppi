@@ -3,3 +3,9 @@ amcl:
     update_min_d: 0.01
     update_min_a: 0.01
     update_min_time: 0.01
+    initial_pose:
+      x: 2.67
+      y: -1.0
+      z: 0.0
+      yaw: 0.5
+    set_initial_pose: true
