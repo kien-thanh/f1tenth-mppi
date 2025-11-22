@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.18)
 
 set(CMAKE_CUDA_ARCHITECTURES 86)
 set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
+set(CUDA_PARALLEL_BUILD ON)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/MPPI-Generic/cmake")
 
@@ -52,7 +53,7 @@ target_include_directories(mppi_custom PUBLIC
 
 target_link_libraries(mppi_custom MPPI::MPPI)
 
-add_executable(mppi_node src/mppi_node.cu)
+add_executable(mppi_node src/mppi_node.cu src/scan_processor.cu)
 
 target_link_libraries(mppi_node mppi_custom)
 

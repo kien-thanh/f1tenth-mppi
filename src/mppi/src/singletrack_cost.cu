@@ -147,7 +147,7 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
     unsigned char scanCrash = 0;
     surf2Dread(&scanCrash, surfObj_, x_idx * sizeof(unsigned char), y_idx);
 
-    if (scanCrash >= 50) {
+    if (scanCrash >= 50.0f) {
         return 1e6f;
     }
 

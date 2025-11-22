@@ -1,5 +1,7 @@
 #include <cstdio>
 
+#include "scan_processor.cuh"
+
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <ackermann_msgs/msg/ackermann_drive_stamped.hpp>
@@ -10,10 +12,6 @@
 #include <tf2_ros/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include <tf2_sensor_msgs/tf2_sensor_msgs.hpp>
-#include <sensor_msgs/msg/point_cloud2.hpp>
-#include <sensor_msgs/point_cloud2_iterator.hpp>
-#include <sensor_msgs/msg/laser_scan.hpp>
-#include <laser_geometry/laser_geometry.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 
 #include <mppi/controllers/MPPI/mppi_controller.cuh>
@@ -57,6 +55,8 @@ public:
     this->declare_parameter("desired_velocity", 2.0f); // desired velocity
     this->declare_parameter("sim", false);             // whether to run in simulation mode
 
+    scan_processor_ = std::make_unique<ScanProcessor>(cost_, tfBuffer_);
+
     // Initialize publishers
     auto qos_texture = rclcpp::QoS(rclcpp::KeepLast(1));
     qos_texture.transient_local();
@@ -75,8 +75,13 @@ public:
     costmap_sub_ = this->create_subscription<OccupancyGridMsg>("/global_costmap/costmap", qos_texture, [this](const OccupancyGridMsg::SharedPtr msg)
                                                                { this->costmapCallback(msg); });
 
-    scan_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>("/scan", 10, [this](const sensor_msgs::msg::LaserScan::SharedPtr msg)
-                                                                       { this->scanCallback(msg); });
+    scan_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
+        "/scan",
+        10,
+        [this](const sensor_msgs::msg::LaserScan::SharedPtr msg)
+        {
+          scan_processor_->scanCallback(msg);
+        });
 
     if (this->get_parameter("sim").as_bool())
     {
@@ -107,6 +112,8 @@ private:
   rclcpp::Subscription<PoseMsg>::SharedPtr pose_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
 
+  std::unique_ptr<ScanProcessor> scan_processor_;
+
   double current_velocity_ = 0.0;
 
   tf2_ros::Buffer tfBuffer_;
@@ -123,7 +130,6 @@ private:
   bool receivedDistanceMap_ = false;
   bool receivedCostmap_ = false;
   bool initializedMPPI_ = false;
-  bool receivedFirstScan_ = false;
 
   void distanceMapCallback(const DistanceFieldMsg::SharedPtr msg)
   {
@@ -272,53 +278,6 @@ private:
     drive_pub_->publish(driveMsg);
 
     publishLocalTrajectory();
-  }
-
-  void scanCallback(const LaserScanMsg::SharedPtr msg)
-  {
-    // if (!initializedMPPI_)
-    // {
-    //   return;
-    // }
-
-    static laser_geometry::LaserProjection projector;
-    sensor_msgs::msg::PointCloud2 cloud;
-
-    geometry_msgs::msg::TransformStamped transformStamped;
-    try {
-      transformStamped = tfBuffer_.lookupTransform("map", "laser", tf2::TimePointZero);
-      // RCLCPP_INFO(this->get_logger(), "Transform found from laser to map");
-    }
-    catch (tf2::TransformException &ex)
-    {
-      // RCLCPP_WARN(this->get_logger(), "Could not transform laser to map: %s", ex.what());
-      return;
-    }
-
-    projector.projectLaser(*msg, cloud);
-
-    tf2::doTransform(cloud, cloud, transformStamped);
-
-    std::vector<float2> h_points;
-
-    sensor_msgs::PointCloud2ConstIterator<float> iter_x(cloud, "x");
-    sensor_msgs::PointCloud2ConstIterator<float> iter_y(cloud, "y");
-
-    for (; iter_x != iter_x.end(); ++iter_x, ++iter_y)
-    {
-      float2 point;
-      point.x = *iter_x;
-      point.y = *iter_y;
-      h_points.push_back(point);
-    }
-
-    if (!receivedFirstScan_)
-    {
-      cost_.createScanMap(0.05f, 130, 113, 0.387, -4.08);
-      receivedFirstScan_ = true;
-    }
-
-    cost_.updateScanMap(h_points);
   }
 
   void initMPPI()
