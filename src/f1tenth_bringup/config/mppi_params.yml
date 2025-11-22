@@ -1,0 +1,6 @@
+mppi_node:
+  ros__parameters:
+    desired_velocity: 2.0
+    c_distance: 50.0
+    c_velocity: 10.0
+    sim: true
