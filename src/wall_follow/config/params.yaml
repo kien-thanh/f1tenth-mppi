@@ -1,6 +1,0 @@
-wall_follow:
-  ros__parameters:
-    kp: 1.0
-    ki: 0.01
-    kd: 0.05
-    desired_distance: 0.5
