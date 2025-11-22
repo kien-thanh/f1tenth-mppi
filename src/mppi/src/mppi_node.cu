@@ -17,7 +17,6 @@
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 
 #include <mppi/controllers/MPPI/mppi_controller.cuh>
-#include <mppi/cost_functions/quadratic_cost/quadratic_cost.cuh>
 #include <mppi/feedback_controllers/DDP/ddp.cuh>
 #include <singletrack_dynamics.cuh>
 #include <singletrack_cost.cuh>
@@ -81,7 +80,7 @@ public:
 
     if (this->get_parameter("sim").as_bool())
     {
-      odom_sub_ = this->create_subscription<OdomMsg>("/odom", 10, [this](const OdomMsg::SharedPtr msg)
+      odom_sub_ = this->create_subscription<OdomMsg>("/ego_racecar/odom", 10, [this](const OdomMsg::SharedPtr msg)
                                                      { this->odomCallback(msg); });
     }
     else
@@ -288,10 +287,11 @@ private:
     geometry_msgs::msg::TransformStamped transformStamped;
     try {
       transformStamped = tfBuffer_.lookupTransform("map", "laser", tf2::TimePointZero);
+      // RCLCPP_INFO(this->get_logger(), "Transform found from laser to map");
     }
     catch (tf2::TransformException &ex)
     {
-      RCLCPP_WARN(this->get_logger(), "Could not transform laser to map: %s", ex.what());
+      // RCLCPP_WARN(this->get_logger(), "Could not transform laser to map: %s", ex.what());
       return;
     }
 

@@ -96,7 +96,7 @@ private:
     cudaTextureObject_t texObj_;
 };
 
-__device__ float sampleTexture(cudaTextureObject_t texObj, float x , float y, float resolution, float origin_x, float origin_y) {
+__device__ __forceinline__ float sampleTexture(cudaTextureObject_t texObj, float x , float y, float resolution, float origin_x, float origin_y) {
     float offset = resolution / 2.0f;
 
     float u = (x - origin_x + offset) / resolution;

@@ -1,5 +1,4 @@
-#ifndef SINGLETRACK_CUH_
-#define SINGLETRACK_CUH_
+#pragma once
 
 #include <mppi/dynamics/dynamics.cuh>
 
@@ -82,9 +81,3 @@ public:
 protected:
     const float gravity_ = 9.81;
 };
-
-#if __CUDACC__
-#include "singletrack_dynamics.cu"
-#endif
-
-#endif

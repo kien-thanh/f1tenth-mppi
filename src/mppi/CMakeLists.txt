@@ -1,6 +1,8 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.18)
 
 set(CMAKE_CUDA_ARCHITECTURES 86)
+set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
+
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/MPPI-Generic/cmake")
 
 project(mppi LANGUAGES CXX CUDA)
@@ -38,7 +40,21 @@ if (CCACHE_PROGRAM)
   set(CMAKE_CUDA_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
 endif()
 
+add_library(mppi_custom STATIC
+  src/singletrack_cost.cu
+  src/singletrack_dynamics.cu
+)
+
+target_include_directories(mppi_custom PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(mppi_custom MPPI::MPPI)
+
 add_executable(mppi_node src/mppi_node.cu)
+
+target_link_libraries(mppi_node mppi_custom)
 
 ament_target_dependencies(mppi_node
   rclcpp
@@ -50,16 +66,6 @@ ament_target_dependencies(mppi_node
   sensor_msgs
   laser_geometry
 )
-
-
-target_include_directories(mppi_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-
-target_link_libraries(mppi_node MPPI::MPPI)
-
-# Disable separable compilation to remove extra device link step (faster incremental builds)
-set_target_properties(mppi_node PROPERTIES CUDA_SEPARABLE_COMPILATION OFF)
 
 install(TARGETS mppi_node
   DESTINATION lib/${PROJECT_NAME})
