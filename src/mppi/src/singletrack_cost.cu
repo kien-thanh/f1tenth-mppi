@@ -122,6 +122,12 @@ void SingletrackCost::updateScanMap(const std::vector<float2> &h_points)
         cudaFree(d_points);
 }
 
+void SingletrackCost::getScanMapData(std::vector<unsigned char> &out_data, int width, int height)
+{
+    out_data.resize(width * height);
+    cudaMemcpy2DFromArray(out_data.data(), width * sizeof(unsigned char), surfArray_, 0, 0, width * sizeof(unsigned char), height, cudaMemcpyDeviceToHost);
+}
+
 __device__ float SingletrackCost::computeStateCost(float *state, int timestep, float *theta_c, int *crash_status)
 {
     float x = state[O_IND_CLASS(DYN_P, X_POS)];

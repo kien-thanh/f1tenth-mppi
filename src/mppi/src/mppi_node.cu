@@ -55,8 +55,6 @@ public:
     this->declare_parameter("desired_velocity", 2.0f); // desired velocity
     this->declare_parameter("sim", false);             // whether to run in simulation mode
 
-    scan_processor_ = std::make_unique<ScanProcessor>(cost_, tfBuffer_);
-
     // Initialize publishers
     auto qos_texture = rclcpp::QoS(rclcpp::KeepLast(1));
     qos_texture.transient_local();
@@ -75,13 +73,7 @@ public:
     costmap_sub_ = this->create_subscription<OccupancyGridMsg>("/global_costmap/costmap", qos_texture, [this](const OccupancyGridMsg::SharedPtr msg)
                                                                { this->costmapCallback(msg); });
 
-    scan_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
-        "/scan",
-        10,
-        [this](const sensor_msgs::msg::LaserScan::SharedPtr msg)
-        {
-          scan_processor_->scanCallback(msg);
-        });
+    scan_processor_ = std::make_unique<ScanProcessor>(this, cost_, tfBuffer_);
 
     if (this->get_parameter("sim").as_bool())
     {
@@ -107,7 +99,6 @@ private:
   rclcpp::Publisher<DriveMsg>::SharedPtr drive_pub_;
   rclcpp::Subscription<DistanceFieldMsg>::SharedPtr distance_map_sub_;
   rclcpp::Subscription<OccupancyGridMsg>::SharedPtr costmap_sub_;
-  rclcpp::Subscription<LaserScanMsg>::SharedPtr scan_sub_;
   rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
   rclcpp::Subscription<PoseMsg>::SharedPtr pose_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;

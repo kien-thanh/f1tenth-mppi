@@ -39,6 +39,8 @@ public:
 
     void updateScanMap(const std::vector<float2> &h_points);
 
+    void getScanMapData(std::vector<unsigned char> &out_data, int width, int height);
+
 private:
     std::unique_ptr<Texture> distance_field_;
     cudaTextureObject_t df_texObj_ = 0;
