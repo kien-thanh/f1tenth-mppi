@@ -37,7 +37,7 @@ public:
     void createCostmap(const float *data, float resolution, int width, int height, float origin_x, float origin_y);
     void createScanMap(float resolution, int width, int height, float origin_x, float origin_y);
 
-    void updateScanMap(const std::vector<float2> &h_points);
+    void updateScanMap(const std::vector<float2> &h_points, int width, int height, float resolution, float origin_x, float origin_y);
 
     void getScanMapData(std::vector<unsigned char> &out_data, int width, int height);
 

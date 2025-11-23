@@ -21,6 +21,8 @@ public:
 
     void publishProcessedScan();
 
+    void publishScanProcessingTime(float time_ms);
+
 private:
     bool debug_ = true;
 
@@ -35,8 +37,6 @@ private:
     float map_resolution_;
     float map_origin_x_;
     float map_origin_y_;
-
-    std::vector<float2> scan_points_in_map_frame_;
 
     // Use flag to ensure we only process scans after receiving the map
     bool map_received_ = false;

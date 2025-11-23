@@ -52,12 +52,6 @@ void ScanProcessor::scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr ms
     return;
   }
 
-  if (!receivedFirstScan_)
-  {
-    RCLCPP_INFO(node_->get_logger(), "Received first scan, allocating space for scan points.");
-    scan_points_in_map_frame_.reserve(msg->ranges.size());
-  }
-
   sensor_msgs::msg::PointCloud2 cloud;
 
   geometry_msgs::msg::TransformStamped transformStamped;
@@ -78,13 +72,14 @@ void ScanProcessor::scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr ms
   sensor_msgs::PointCloud2ConstIterator<float> iter_x(cloud, "x");
   sensor_msgs::PointCloud2ConstIterator<float> iter_y(cloud, "y");
 
-  scan_points_in_map_frame_.clear();
+  std::vector<float2> scan_in_map_frame;
+
   for (; iter_x != iter_x.end(); ++iter_x, ++iter_y)
   {
     float2 point;
     point.x = *iter_x;
     point.y = *iter_y;
-    scan_points_in_map_frame_.push_back(point);
+    scan_in_map_frame.push_back(point);
   }
 
   if (!receivedFirstScan_)
@@ -93,21 +88,24 @@ void ScanProcessor::scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr ms
     receivedFirstScan_ = true;
   }
 
-  cost_.updateScanMap(scan_points_in_map_frame_);
+  cost_.updateScanMap(scan_in_map_frame, map_width_, map_height_, map_resolution_, map_origin_x_, map_origin_y_);
 
   if (debug_)
   {
     publishProcessedScan();
+
+    float duration_ms = std::chrono::duration<float, std::milli>(std::chrono::steady_clock::now() - start).count();
+
+    publishScanProcessingTime(duration_ms);
   }
-
-  float duration_ms = std::chrono::duration<float, std::milli>(std::chrono::steady_clock::now() - start).count();
-
-  std_msgs::msg::Float32 msg_out;
-  msg_out.data = duration_ms;
-  scan_processing_time_pub_->publish(msg_out);
 }
 
-
+void ScanProcessor::publishScanProcessingTime(float time_ms)
+{
+  std_msgs::msg::Float32 msg;
+  msg.data = time_ms;
+  scan_processing_time_pub_->publish(msg);
+}
 
 void ScanProcessor::publishProcessedScan()
 {

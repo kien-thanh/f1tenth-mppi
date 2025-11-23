@@ -1,7 +1,16 @@
 #include "singletrack_cost.cuh"
 
-__global__ void updateScanMapKernel(const float2 *points, cudaSurfaceObject_t surfObj,
-                                    float origin_x, float origin_y, float resolution)
+__global__ void clearSurfaceKernel(cudaSurfaceObject_t surfObj, int width, int height, unsigned char value = 0)
+{
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (x >= width || y >= height) return;
+
+    surf2Dwrite(value, surfObj, x * sizeof(unsigned char), y);
+}
+
+__global__ void updateScanMapKernel(const float2 *points, cudaSurfaceObject_t surfObj, float resolution, float origin_x, float origin_y)
 {
     int i = threadIdx.x + blockIdx.x * blockDim.x;
     // caller expects 1080 points (you can pass fewer and adjust)
@@ -16,11 +25,14 @@ __global__ void updateScanMapKernel(const float2 *points, cudaSurfaceObject_t su
 
     unsigned char occupied_value = 100;
 
-    for (int offset_x = -2; offset_x <= 2; ++offset_x) {
-        for (int offset_y = -2; offset_y <= 2; ++offset_y) {
+    for (int offset_x = -2; offset_x <= 2; ++offset_x)
+    {
+        for (int offset_y = -2; offset_y <= 2; ++offset_y)
+        {
             int xx = x_idx + offset_x;
             int yy = y_idx + offset_y;
-            if (xx >= 0 && yy >= 0 && xx < 130 && yy < 113) {
+            if (xx >= 0 && yy >= 0 && xx < 130 && yy < 113)
+            {
                 // surf2Dwrite takes byte offset horizontally
                 surf2Dwrite(occupied_value, surfObj, xx * sizeof(unsigned char), yy);
             }
@@ -45,11 +57,13 @@ SingletrackCost::SingletrackCost(cudaStream_t stream)
 
 SingletrackCost::~SingletrackCost()
 {
-    if (surfObj_) {
+    if (surfObj_)
+    {
         cudaDestroySurfaceObject(surfObj_);
         surfObj_ = 0;
     }
-    if (surfArray_) {
+    if (surfArray_)
+    {
         cudaFreeArray(surfArray_);
         surfArray_ = nullptr;
     }
@@ -57,13 +71,13 @@ SingletrackCost::~SingletrackCost()
 
 void SingletrackCost::createDistanceField(const float *data, float resolution, int width, int height, float origin_x, float origin_y)
 {
-        distance_field_ = std::make_unique<Texture>(data, resolution, width, height, origin_x, origin_y);
-        df_texObj_ = distance_field_->getTextureObject();
-        df_resolution_ = distance_field_->getResolution();
-        df_origin_x_ = distance_field_->getOriginX();
-        df_origin_y_ = distance_field_->getOriginY();
+    distance_field_ = std::make_unique<Texture>(data, resolution, width, height, origin_x, origin_y);
+    df_texObj_ = distance_field_->getTextureObject();
+    df_resolution_ = distance_field_->getResolution();
+    df_origin_x_ = distance_field_->getOriginX();
+    df_origin_y_ = distance_field_->getOriginY();
 
-        printf("Distance field created with resolution: %f, origin: (%f, %f)\n", df_resolution_, df_origin_x_, df_origin_y_);
+    printf("Distance field created with resolution: %f, origin: (%f, %f)\n", df_resolution_, df_origin_x_, df_origin_y_);
 }
 
 void SingletrackCost::createCostmap(const float *data, float resolution, int width, int height, float origin_x, float origin_y)
@@ -79,47 +93,52 @@ void SingletrackCost::createCostmap(const float *data, float resolution, int wid
 
 void SingletrackCost::createScanMap(float resolution, int width, int height, float origin_x, float origin_y)
 {
-        auto start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
 
-        // Intilialize unoccupied scanmap
-        std::vector<unsigned char> scanmap_data(width * height, 0);
+    // Intilialize unoccupied scanmap
+    std::vector<unsigned char> scanmap_data(width * height, 0);
 
-        // Allocate CUDA array in device memory
-        cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<unsigned char>();
-        cudaMallocArray(&surfArray_, &channelDesc, width, height, cudaArraySurfaceLoadStore);
+    // Allocate CUDA array in device memory
+    cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<unsigned char>();
+    cudaMallocArray(&surfArray_, &channelDesc, width, height, cudaArraySurfaceLoadStore);
 
-        cudaMemcpy2DToArray(surfArray_, 0, 0, scanmap_data.data(), width * sizeof(unsigned char), width * sizeof(unsigned char), height, cudaMemcpyHostToDevice);
+    cudaMemcpy2DToArray(surfArray_, 0, 0, scanmap_data.data(), width * sizeof(unsigned char), width * sizeof(unsigned char), height, cudaMemcpyHostToDevice);
 
-        // Create surface object for the CUDA array
-        struct cudaResourceDesc resDesc;
-        memset(&resDesc, 0, sizeof(resDesc));
-        resDesc.resType = cudaResourceTypeArray;
+    // Create surface object for the CUDA array
+    struct cudaResourceDesc resDesc;
+    memset(&resDesc, 0, sizeof(resDesc));
+    resDesc.resType = cudaResourceTypeArray;
 
-        resDesc.res.array.array = surfArray_;
-        cudaCreateSurfaceObject(&surfObj_, &resDesc);
+    resDesc.res.array.array = surfArray_;
+    cudaCreateSurfaceObject(&surfObj_, &resDesc);
 
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-        std::cout << "Scanmap created with resolution: " << resolution << ", origin: (" << origin_x << ", " << origin_y << ") in " << duration << " ms" << std::endl;
+    std::cout << "Scanmap created with resolution: " << resolution << ", origin: (" << origin_x << ", " << origin_y << ") in " << duration << " ms" << std::endl;
 }
 
-void SingletrackCost::updateScanMap(const std::vector<float2> &h_points)
+void SingletrackCost::updateScanMap(const std::vector<float2> &h_points, int width, int height, float resolution, float origin_x, float origin_y)
 {
-        auto start = std::chrono::high_resolution_clock::now();
+    dim3 block(16, 16);
+    dim3 grid((width + block.x - 1) / block.x, (height + block.y - 1) / block.y);
+    clearSurfaceKernel<<<grid, block>>>(surfObj_, width, height, 0);
+    cudaError_t err = cudaDeviceSynchronize();
+    if (err != cudaSuccess) {
+        std::cerr << "CUDA error in clearSurfaceKernel: " << cudaGetErrorString(err) << std::endl;
+        return;
+    }
 
-        float2 *d_points;
-        cudaMalloc(&d_points, 1080 * sizeof(float2));
-        cudaMemcpy(d_points, h_points.data(), 1080 * sizeof(float2), cudaMemcpyHostToDevice);
+    int nrScanPoints = h_points.size();
 
-        updateScanMapKernel<<<9, 128>>>(d_points, surfObj_, 0.387, -4.08, 0.05f);
+    float2 *d_points;
+    cudaMalloc(&d_points, nrScanPoints * sizeof(float2));
+    cudaMemcpy(d_points, h_points.data(), nrScanPoints * sizeof(float2), cudaMemcpyHostToDevice);
+    updateScanMapKernel<<<9, 128>>>(d_points, surfObj_, resolution, origin_x, origin_y);
 
-        cudaDeviceSynchronize();
+    cudaDeviceSynchronize();
 
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-
-        cudaFree(d_points);
+    cudaFree(d_points);
 }
 
 void SingletrackCost::getScanMapData(std::vector<unsigned char> &out_data, int width, int height)
@@ -139,21 +158,24 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
     float cost = 0.0f;
 
     float crash = sampleTexture(cm_texObj_, x, y, cm_resolution_, cm_origin_x_, cm_origin_y_);
-    if (crash >= 50.0f) {
+    if (crash >= 50.0f)
+    {
         return 1e6f;
     }
 
     int x_idx = static_cast<int>((x - 0.387) / 0.05f);
     int y_idx = static_cast<int>((y - (-4.08)) / 0.05f);
 
-    if (x_idx < 0 || y_idx < 0 || x_idx >= 130 || y_idx >= 113) {
+    if (x_idx < 0 || y_idx < 0 || x_idx >= 130 || y_idx >= 113)
+    {
         return 1e6f;
     }
 
     unsigned char scanCrash = 0;
     surf2Dread(&scanCrash, surfObj_, x_idx * sizeof(unsigned char), y_idx);
 
-    if (scanCrash >= 50.0f) {
+    if (scanCrash >= 50.0f)
+    {
         return 1e6f;
     }
 
@@ -170,24 +192,25 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
 
 float SingletrackCost::computeStateCost(const Eigen::Ref<const output_array> state, int timestep, int *crash_status)
 {
-    (void) timestep;
-    (void) crash_status;
+    (void)timestep;
+    (void)crash_status;
 
     float x = state[O_IND_CLASS(DYN_P, X_POS)];
     float y = state[O_IND_CLASS(DYN_P, Y_POS)];
-    (void)x; (void)y;
+    (void)x;
+    (void)y;
     return 0.0f;
 }
 
 __device__ float SingletrackCost::terminalCost(float *state, float *theta_c)
 {
-    (void) state;
-    (void) theta_c;
+    (void)state;
+    (void)theta_c;
     return 0.0f;
 }
 
 float SingletrackCost::terminalCost(const Eigen::Ref<const output_array> state)
 {
-    (void) state;
+    (void)state;
     return 0.0f;
 }
