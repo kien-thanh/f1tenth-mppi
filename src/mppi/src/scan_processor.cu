@@ -122,8 +122,6 @@ void ScanProcessor::publishProcessedScan()
   grid.info.height = map_height_;
   grid.info.origin.position.x = map_origin_x_;
   grid.info.origin.position.y = map_origin_y_;
-  grid.info.origin.position.z = 0.0f;
-  grid.info.origin.orientation.w = 1.0f;
 
   grid.data.resize(scan_map_data.size());
   for (size_t i = 0; i < scan_map_data.size(); i++)
