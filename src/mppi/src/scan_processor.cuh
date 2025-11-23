@@ -25,9 +25,21 @@ private:
     bool debug_ = true;
 
     rclcpp::Node *const node_;
+    rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
     rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr scan_sub_;
     rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr scan_processing_time_pub_;
     rclcpp::Publisher<nav_msgs::msg::OccupancyGrid>::SharedPtr scan_map_pub_;
+
+    unsigned char map_width_;
+    unsigned char map_height_;
+    float map_resolution_;
+    float map_origin_x_;
+    float map_origin_y_;
+
+    std::vector<float2> scan_points_in_map_frame_;
+
+    // Use flag to ensure we only process scans after receiving the map
+    bool map_received_ = false;
 
     SingletrackCost &cost_;
 
@@ -36,5 +48,6 @@ private:
     laser_geometry::LaserProjection projector_;
     std::string laser_frame_;
 
+    // Use flag to create scan map only once
     bool receivedFirstScan_ = false;
 };
