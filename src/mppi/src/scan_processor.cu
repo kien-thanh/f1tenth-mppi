@@ -89,13 +89,11 @@ void ScanProcessor::scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr ms
   }
 
   cost_.updateScanMap(scan_in_map_frame, map_width_, map_height_, map_resolution_, map_origin_x_, map_origin_y_);
-
+  float duration_ms = std::chrono::duration<float, std::milli>(std::chrono::steady_clock::now() - start).count();
+  
   if (debug_)
   {
     publishProcessedScan();
-
-    float duration_ms = std::chrono::duration<float, std::milli>(std::chrono::steady_clock::now() - start).count();
-
     publishScanProcessingTime(duration_ms);
   }
 }

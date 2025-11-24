@@ -131,14 +131,15 @@ void SingletrackCost::updateScanMap(const std::vector<float2> &h_points, int wid
 
     int nrScanPoints = h_points.size();
 
-    float2 *d_points;
-    cudaMalloc(&d_points, nrScanPoints * sizeof(float2));
-    cudaMemcpy(d_points, h_points.data(), nrScanPoints * sizeof(float2), cudaMemcpyHostToDevice);
-    updateScanMapKernel<<<9, 128>>>(d_points, surfObj_, resolution, origin_x, origin_y);
+    if (d_scanPoints_ == nullptr)
+    {
+        cudaMalloc(&d_scanPoints_, nrScanPoints * sizeof(float2));
+    }
+
+    cudaMemcpy(d_scanPoints_, h_points.data(), nrScanPoints * sizeof(float2), cudaMemcpyHostToDevice);
+    updateScanMapKernel<<<9, 128>>>(d_scanPoints_, surfObj_, resolution, origin_x, origin_y);
 
     cudaDeviceSynchronize();
-
-    cudaFree(d_points);
 }
 
 void SingletrackCost::getScanMapData(std::vector<unsigned char> &out_data, int width, int height)

@@ -52,4 +52,6 @@ private:
 
     cudaArray_t surfArray_ = nullptr;
     cudaSurfaceObject_t surfObj_ = 0;
+
+    float2* d_scanPoints_ = nullptr;
 };

@@ -84,6 +84,8 @@ public:
     {
       pose_sub_ = this->create_subscription<PoseMsg>("/amcl_pose", 10, [this](const PoseMsg::SharedPtr msg)
                                                      { this->poseCallback(msg); });
+      real_odom_sub_ = this->create_subscription<OdomMsg>("/odom", 10, [this](const OdomMsg::SharedPtr msg)
+                                                         { this->realOdomCallback(msg); });
     }
   }
 
@@ -99,6 +101,7 @@ private:
   rclcpp::Publisher<DriveMsg>::SharedPtr drive_pub_;
   rclcpp::Subscription<DistanceFieldMsg>::SharedPtr distance_map_sub_;
   rclcpp::Subscription<OccupancyGridMsg>::SharedPtr costmap_sub_;
+  rclcpp::Subscription<OdomMsg>::SharedPtr real_odom_sub_;
   rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
   rclcpp::Subscription<PoseMsg>::SharedPtr pose_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
@@ -224,6 +227,13 @@ private:
     publishLocalTrajectory();
   }
 
+  void realOdomCallback(const OdomMsg::SharedPtr msg)
+  {
+    double vx = msg->twist.twist.linear.x;
+    double vy = msg->twist.twist.linear.y;
+    current_velocity_ = std::sqrt(vx * vx + vy * vy);
+  }
+
   void poseCallback(const PoseMsg::SharedPtr msg)
   {
     if (!initializedMPPI_)
@@ -264,7 +274,7 @@ private:
     plant_->runControlIteration(&alive);
 
     ackermann_msgs::msg::AckermannDriveStamped driveMsg;
-    driveMsg.drive.speed = plant_->current_state_(3);
+    driveMsg.drive.speed = plant_->current_state_(3) >= 2.0f ? 2.0 : plant_->current_state_(3);
     driveMsg.drive.steering_angle = plant_->current_state_(2);
     drive_pub_->publish(driveMsg);
 
@@ -280,6 +290,10 @@ private:
     cost_params.c_distance = this->get_parameter("c_distance").as_double();
     cost_params.c_velocity = this->get_parameter("c_velocity").as_double();
     cost_params.desired_velocity = this->get_parameter("desired_velocity").as_double();
+
+    RCLCPP_INFO(this->get_logger(), "Setting cost parameters: c_distance=%.2f, c_velocity=%.2f, desired_velocity=%.2f",
+                cost_params.c_distance, cost_params.c_velocity, cost_params.desired_velocity);
+
     cost_.setParams(cost_params);
 
     fb_controller_ = std::make_unique<FB_T>(&dynamics_, dt); // set up feedback controller
