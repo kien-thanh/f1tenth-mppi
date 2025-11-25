@@ -10,7 +10,7 @@ __global__ void clearSurfaceKernel(cudaSurfaceObject_t surfObj, int width, int h
     surf2Dwrite(value, surfObj, x * sizeof(unsigned char), y);
 }
 
-__global__ void updateScanMapKernel(const float2 *points, cudaSurfaceObject_t surfObj, float resolution, float origin_x, float origin_y)
+__global__ void updateScanMapKernel(const float2 *points, cudaSurfaceObject_t surfObj, int width, int height, float resolution, float origin_x, float origin_y)
 {
     int i = threadIdx.x + blockIdx.x * blockDim.x;
     // caller expects 1080 points (you can pass fewer and adjust)
@@ -20,7 +20,7 @@ __global__ void updateScanMapKernel(const float2 *points, cudaSurfaceObject_t su
     int x_idx = static_cast<int>((points[i].x - origin_x) / resolution);
     int y_idx = static_cast<int>((points[i].y - origin_y) / resolution);
 
-    if (x_idx < 0 || y_idx < 0 || x_idx >= 130 || y_idx >= 113)
+    if (x_idx < 0 || y_idx < 0 || x_idx >= width || y_idx >= height)
         return;
 
     unsigned char occupied_value = 100;
@@ -31,7 +31,7 @@ __global__ void updateScanMapKernel(const float2 *points, cudaSurfaceObject_t su
         {
             int xx = x_idx + offset_x;
             int yy = y_idx + offset_y;
-            if (xx >= 0 && yy >= 0 && xx < 130 && yy < 113)
+            if (xx >= 0 && yy >= 0 && xx < width && yy < height)
             {
                 // surf2Dwrite takes byte offset horizontally
                 surf2Dwrite(occupied_value, surfObj, xx * sizeof(unsigned char), yy);
@@ -91,9 +91,15 @@ void SingletrackCost::createCostmap(const float *data, float resolution, int wid
     printf("Costmap created with resolution: %f, origin: (%f, %f)\n", cm_resolution_, cm_origin_x_, cm_origin_y_);
 }
 
-void SingletrackCost::createScanMap(float resolution, int width, int height, float origin_x, float origin_y)
+void SingletrackCost::createScanMap(int width, int height, float resolution, float origin_x, float origin_y)
 {
     auto start = std::chrono::high_resolution_clock::now();
+
+    sm_width_ = width;
+    sm_height_ = height;
+    sm_resolution_ = resolution;
+    sm_origin_x_ = origin_x;
+    sm_origin_y_ = origin_y;
 
     // Intilialize unoccupied scanmap
     std::vector<unsigned char> scanmap_data(width * height, 0);
@@ -118,11 +124,11 @@ void SingletrackCost::createScanMap(float resolution, int width, int height, flo
     std::cout << "Scanmap created with resolution: " << resolution << ", origin: (" << origin_x << ", " << origin_y << ") in " << duration << " ms" << std::endl;
 }
 
-void SingletrackCost::updateScanMap(const std::vector<float2> &h_points, int width, int height, float resolution, float origin_x, float origin_y)
+void SingletrackCost::updateScanMap(const std::vector<float2> &h_points)
 {
     dim3 block(16, 16);
-    dim3 grid((width + block.x - 1) / block.x, (height + block.y - 1) / block.y);
-    clearSurfaceKernel<<<grid, block>>>(surfObj_, width, height, 0);
+    dim3 grid((sm_width_ + block.x - 1) / block.x, (sm_height_ + block.y - 1) / block.y);
+    clearSurfaceKernel<<<grid, block>>>(surfObj_, sm_width_, sm_height_, 0);
     cudaError_t err = cudaDeviceSynchronize();
     if (err != cudaSuccess) {
         std::cerr << "CUDA error in clearSurfaceKernel: " << cudaGetErrorString(err) << std::endl;
@@ -137,7 +143,7 @@ void SingletrackCost::updateScanMap(const std::vector<float2> &h_points, int wid
     }
 
     cudaMemcpy(d_scanPoints_, h_points.data(), nrScanPoints * sizeof(float2), cudaMemcpyHostToDevice);
-    updateScanMapKernel<<<9, 128>>>(d_scanPoints_, surfObj_, resolution, origin_x, origin_y);
+    updateScanMapKernel<<<9, 128>>>(d_scanPoints_, surfObj_, sm_width_, sm_height_, sm_resolution_, sm_origin_x_, sm_origin_y_);
 
     cudaDeviceSynchronize();
 }
@@ -164,10 +170,10 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
         return 1e6f;
     }
 
-    int x_idx = static_cast<int>((x - 0.387) / 0.05f);
-    int y_idx = static_cast<int>((y - (-4.08)) / 0.05f);
+    int x_idx = static_cast<int>((x - sm_origin_x_) / sm_resolution_);
+    int y_idx = static_cast<int>((y - sm_origin_y_) / sm_resolution_);
 
-    if (x_idx < 0 || y_idx < 0 || x_idx >= 130 || y_idx >= 113)
+    if (x_idx < 0 || y_idx < 0 || x_idx >= sm_width_ || y_idx >= sm_height_)
     {
         return 1e6f;
     }
@@ -177,7 +183,7 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
 
     if (scanCrash >= 50.0f)
     {
-        return 1e6f;
+        // return 1e6f;
     }
 
     float distance = sampleTexture(df_texObj_, x, y, df_resolution_, df_origin_x_, df_origin_y_);

@@ -32,8 +32,8 @@ private:
     rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr scan_processing_time_pub_;
     rclcpp::Publisher<nav_msgs::msg::OccupancyGrid>::SharedPtr scan_map_pub_;
 
-    unsigned char map_width_;
-    unsigned char map_height_;
+    int map_width_;
+    int map_height_;
     float map_resolution_;
     float map_origin_x_;
     float map_origin_y_;

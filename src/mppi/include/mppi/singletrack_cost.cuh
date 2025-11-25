@@ -35,9 +35,9 @@ public:
 
     void createDistanceField(const float *data, float resolution, int width, int height, float origin_x, float origin_y);
     void createCostmap(const float *data, float resolution, int width, int height, float origin_x, float origin_y);
-    void createScanMap(float resolution, int width, int height, float origin_x, float origin_y);
+    void createScanMap(int width, int height, float resolution, float origin_x, float origin_y);
 
-    void updateScanMap(const std::vector<float2> &h_points, int width, int height, float resolution, float origin_x, float origin_y);
+    void updateScanMap(const std::vector<float2> &h_points);
 
     void getScanMapData(std::vector<unsigned char> &out_data, int width, int height);
 
@@ -54,4 +54,9 @@ private:
     cudaSurfaceObject_t surfObj_ = 0;
 
     float2* d_scanPoints_ = nullptr;
+    int sm_width_;
+    int sm_height_;
+    float sm_resolution_;
+    float sm_origin_x_;
+    float sm_origin_y_;
 };

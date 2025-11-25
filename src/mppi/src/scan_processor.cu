@@ -84,11 +84,11 @@ void ScanProcessor::scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr ms
 
   if (!receivedFirstScan_)
   {
-    cost_.createScanMap(map_resolution_, map_width_, map_height_, map_origin_x_, map_origin_y_);
+    cost_.createScanMap(map_width_, map_height_, map_resolution_, map_origin_x_, map_origin_y_);
     receivedFirstScan_ = true;
   }
 
-  cost_.updateScanMap(scan_in_map_frame, map_width_, map_height_, map_resolution_, map_origin_x_, map_origin_y_);
+  cost_.updateScanMap(scan_in_map_frame);
   float duration_ms = std::chrono::duration<float, std::milli>(std::chrono::steady_clock::now() - start).count();
   
   if (debug_)
