@@ -13,6 +13,7 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include <tf2_sensor_msgs/tf2_sensor_msgs.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 
 #include <mppi/controllers/MPPI/mppi_controller.cuh>
 #include <mppi/feedback_controllers/DDP/ddp.cuh>
@@ -82,10 +83,12 @@ public:
     }
     else
     {
-      pose_sub_ = this->create_subscription<PoseMsg>("/amcl_pose", 10, [this](const PoseMsg::SharedPtr msg)
-                                                     { this->poseCallback(msg); });
+      // pose_sub_ = this->create_subscription<PoseMsg>("/amcl_pose", 10, [this](const PoseMsg::SharedPtr msg)
+      //                                                { this->poseCallback(msg); });
+      particle_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>("/pf/viz/inferred_pose", 10, [this](const geometry_msgs::msg::PoseStamped::SharedPtr msg)
+                                                                                      { this->particlePoseCallback(msg); });
       real_odom_sub_ = this->create_subscription<OdomMsg>("/odom", 10, [this](const OdomMsg::SharedPtr msg)
-                                                         { this->realOdomCallback(msg); });
+                                                          { this->realOdomCallback(msg); });
     }
   }
 
@@ -104,6 +107,7 @@ private:
   rclcpp::Subscription<OdomMsg>::SharedPtr real_odom_sub_;
   rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
   rclcpp::Subscription<PoseMsg>::SharedPtr pose_sub_;
+  rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr particle_pose_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
 
   std::unique_ptr<ScanProcessor> scan_processor_;
@@ -265,6 +269,53 @@ private:
 
     tf2::Quaternion q;
     tf2::fromMsg(msg->pose.pose.orientation, q); // convert geometry_msgs -> tf2
+    double roll, pitch, yaw;
+    tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
+
+    current_state(4) = yaw;
+
+    plant_->updateState(current_state, msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9);
+    plant_->runControlIteration(&alive);
+
+    ackermann_msgs::msg::AckermannDriveStamped driveMsg;
+    driveMsg.drive.speed = plant_->current_state_(3) >= 2.0f ? 2.0 : plant_->current_state_(3);
+    driveMsg.drive.steering_angle = plant_->current_state_(2);
+    drive_pub_->publish(driveMsg);
+
+    publishLocalTrajectory();
+  }
+
+  void particlePoseCallback(const geometry_msgs::msg::PoseStamped::SharedPtr msg)
+  {
+    if (!initializedMPPI_)
+    {
+      return;
+    }
+
+    std::atomic<bool> alive(true);
+
+    Eigen::Matrix<float, 5, 1> current_state;
+
+    current_state(0) = msg->pose.position.x;
+    current_state(1) = msg->pose.position.y;
+
+    if (plant_->current_state_(2) > 0.47)
+    {
+      current_state(2) = 0.47;
+    }
+    else if (plant_->current_state_(2) < -0.47)
+    {
+      current_state(2) = -0.47;
+    }
+    else
+    {
+      current_state(2) = plant_->current_state_(2);
+    }
+
+    current_state(3) = current_velocity_;
+
+    tf2::Quaternion q;
+    tf2::fromMsg(msg->pose.orientation, q); // convert geometry_msgs -> tf2
     double roll, pitch, yaw;
     tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
 
