@@ -49,7 +49,7 @@ __device__ void SingletrackDynamics::computeDynamics(float *state, float *contro
 // {
 //   next_state = state + state_der * dt;
 //   next_state(S_INDEX(YAW)) = angle_utils::normalizeAngle(next_state(S_INDEX(YAW)));
-//   next_state(S_INDEX(STEER)) = max(min(next_state(S_INDEX(STEER)), 0.47f), -0.47f);
+//   next_state(S_INDEX(STEER)) = max(min(next_state(S_INDEX(STEER)), 0.44f), -0.44f);
 // }
 
 // __device__ void SingletrackDynamics::updateState(float *state, float *next_state, float *state_der, const float dt)
@@ -63,7 +63,7 @@ __device__ void SingletrackDynamics::computeDynamics(float *state, float *contro
 //         next_state[i] = angle_utils::normalizeAngle(next_state[i]);
 //         break;
 //       case S_INDEX(STEER):
-//         next_state[S_INDEX(STEER)] = max(min(next_state[S_INDEX(STEER)], 0.47f), -0.47f);
+//         next_state[S_INDEX(STEER)] = max(min(next_state[S_INDEX(STEER)], 0.44f), -0.44f);
 //         break;
 //     }
 //   }

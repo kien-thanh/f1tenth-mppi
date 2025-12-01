@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <algorithm>
 
 #include "scan_processor.cuh"
 
@@ -57,39 +58,74 @@ public:
     this->declare_parameter("sim", false);             // whether to run in simulation mode
 
     // Initialize publishers
-    auto qos_texture = rclcpp::QoS(rclcpp::KeepLast(1));
-    qos_texture.transient_local();
-    qos_texture.reliable();
-    drive_pub_ = this->create_publisher<DriveMsg>("/drive", 10);
+    drive_pub_ = this->create_publisher<DriveMsg>(
+        "/drive",
+        10);
 
-    auto qos_trajectory = rclcpp::QoS(rclcpp::KeepLast(1));
-    qos_trajectory.durability_volatile();
-    qos_trajectory.best_effort();
-    local_trajectory_pub_ = this->create_publisher<PathMsg>("/local_trajectory", qos_trajectory);
+    local_trajectory_pub_ = this->create_publisher<PathMsg>(
+        "/local_trajectory",
+        rclcpp::QoS(1).durability_volatile().best_effort());
+
+    debug_drive_unclamped_pub_ = this->create_publisher<DriveMsg>(
+        "/debug/drive",
+        10);
 
     // Initialize subscribers
-    distance_map_sub_ = this->create_subscription<DistanceFieldMsg>("/distance_map", qos_texture, [this](const DistanceFieldMsg::SharedPtr msg)
-                                                                    { this->distanceMapCallback(msg); });
+    distance_map_sub_ = this->create_subscription<DistanceFieldMsg>(
+        "/distance_map",
+        rclcpp::QoS(1).transient_local().reliable(),
+        [this](const DistanceFieldMsg::SharedPtr msg)
+        {
+          this->distanceMapCallback(msg);
+        });
 
-    costmap_sub_ = this->create_subscription<OccupancyGridMsg>("/global_costmap/costmap", qos_texture, [this](const OccupancyGridMsg::SharedPtr msg)
-                                                               { this->costmapCallback(msg); });
-
-    scan_processor_ = std::make_unique<ScanProcessor>(this, cost_, tfBuffer_);
+    costmap_sub_ = this->create_subscription<OccupancyGridMsg>(
+        "/global_costmap/costmap",
+        rclcpp::QoS(1).transient_local().reliable(),
+        [this](const OccupancyGridMsg::SharedPtr msg)
+        {
+          this->costmapCallback(msg);
+        });
 
     if (this->get_parameter("sim").as_bool())
     {
-      odom_sub_ = this->create_subscription<OdomMsg>("/ego_racecar/odom", 10, [this](const OdomMsg::SharedPtr msg)
-                                                     { this->odomCallback(msg); });
+      odom_sub_ = this->create_subscription<OdomMsg>(
+          "/ego_racecar/odom",
+          10,
+          [this](const OdomMsg::SharedPtr msg)
+          {
+            this->odomCallback(msg);
+          });
     }
     else
     {
-      // pose_sub_ = this->create_subscription<PoseMsg>("/amcl_pose", 10, [this](const PoseMsg::SharedPtr msg)
-      //                                                { this->poseCallback(msg); });
-      particle_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>("/pf/viz/inferred_pose", 10, [this](const geometry_msgs::msg::PoseStamped::SharedPtr msg)
-                                                                                      { this->particlePoseCallback(msg); });
-      real_odom_sub_ = this->create_subscription<OdomMsg>("/odom", 10, [this](const OdomMsg::SharedPtr msg)
-                                                          { this->realOdomCallback(msg); });
+      pose_sub_ = this->create_subscription<PoseMsg>(
+          "/amcl_pose",
+          10,
+          [this](const PoseMsg::SharedPtr msg)
+          {
+            this->poseCallback(msg);
+          });
+
+      particle_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>(
+          "/pf/viz/inferred_pose",
+          10,
+          [this](const geometry_msgs::msg::PoseStamped::SharedPtr msg)
+          {
+            this->particlePoseCallback(msg);
+          });
+
+      real_odom_sub_ = this->create_subscription<OdomMsg>(
+          "/odom",
+          10,
+          [this](const OdomMsg::SharedPtr msg)
+          {
+            this->realOdomCallback(msg);
+          });
     }
+
+    scan_processor_ = std::make_unique<ScanProcessor>(this, cost_, tfBuffer_);
+
   }
 
   ~LocalTrajectoryPublisher()
@@ -100,6 +136,31 @@ public:
     std::cout << "Avg Optimization Hz: " << 1.0 / (plant_->getAvgOptimizationTime() * 1e-3) << " Hz" << std::endl;
   }
 
+  void publishDrive(float velocity, float steering_angle)
+  {
+    const float velocity_max = 3.0f;
+    const float steering_angle_min = -0.44f;
+    const float steering_angle_max = 0.44f;
+
+    float velocity_limited = std::clamp(velocity, 0.0f, velocity_max);
+    float steering_angle_limited = std::clamp(steering_angle, steering_angle_min, steering_angle_max);
+
+    // Publish clamped drive messages for actual drive
+    ackermann_msgs::msg::AckermannDriveStamped drive_msg;
+    drive_msg.header.stamp = now();
+    drive_msg.drive.speed = velocity_limited;
+    drive_msg.drive.steering_angle = steering_angle_limited;
+    drive_pub_->publish(drive_msg);
+
+    // Publish unclamped drive messages for debugging
+    ackermann_msgs::msg::AckermannDriveStamped debug_drive_msg;
+    debug_drive_msg.header.stamp = now();
+    debug_drive_msg.drive.speed = velocity;
+    debug_drive_msg.drive.steering_angle = steering_angle;
+    debug_drive_unclamped_pub_->publish(debug_drive_msg);
+  }
+
+
 private:
   rclcpp::Publisher<DriveMsg>::SharedPtr drive_pub_;
   rclcpp::Subscription<DistanceFieldMsg>::SharedPtr distance_map_sub_;
@@ -109,6 +170,8 @@ private:
   rclcpp::Subscription<PoseMsg>::SharedPtr pose_sub_;
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr particle_pose_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
+
+  rclcpp::Publisher<DriveMsg>::SharedPtr debug_drive_unclamped_pub_;
 
   std::unique_ptr<ScanProcessor> scan_processor_;
 
@@ -223,10 +286,9 @@ private:
     plant_->updateState(current_state, msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9);
     plant_->runControlIteration(&alive);
 
-    ackermann_msgs::msg::AckermannDriveStamped driveMsg;
-    driveMsg.drive.speed = plant_->current_state_(3);
-    driveMsg.drive.steering_angle = plant_->current_state_(2);
-    drive_pub_->publish(driveMsg);
+    auto velocity = plant_->current_state_(3);
+    auto steering_angle = plant_->current_state_(2);
+    publishDrive(velocity, steering_angle);
 
     publishLocalTrajectory();
   }
@@ -277,10 +339,9 @@ private:
     plant_->updateState(current_state, msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9);
     plant_->runControlIteration(&alive);
 
-    ackermann_msgs::msg::AckermannDriveStamped driveMsg;
-    driveMsg.drive.speed = plant_->current_state_(3) >= 2.0f ? 2.0 : plant_->current_state_(3);
-    driveMsg.drive.steering_angle = plant_->current_state_(2);
-    drive_pub_->publish(driveMsg);
+    auto velocity = plant_->current_state_(3);
+    auto steering_angle = plant_->current_state_(2);
+    publishDrive(velocity, steering_angle);
 
     publishLocalTrajectory();
   }
@@ -324,10 +385,9 @@ private:
     plant_->updateState(current_state, msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9);
     plant_->runControlIteration(&alive);
 
-    ackermann_msgs::msg::AckermannDriveStamped driveMsg;
-    driveMsg.drive.speed = plant_->current_state_(3) >= 2.0f ? 2.0 : plant_->current_state_(3);
-    driveMsg.drive.steering_angle = plant_->current_state_(2);
-    drive_pub_->publish(driveMsg);
+    auto velocity = plant_->current_state_(3);
+    auto steering_angle = plant_->current_state_(2);
+    publishDrive(velocity, steering_angle);
 
     publishLocalTrajectory();
   }
@@ -392,7 +452,6 @@ int main(int argc, char **argv)
   rclcpp::init(argc, argv);
 
   auto node = std::make_shared<LocalTrajectoryPublisher>();
-
   rclcpp::executors::MultiThreadedExecutor executor;
   executor.add_node(node);
   executor.spin();
