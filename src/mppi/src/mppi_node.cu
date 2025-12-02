@@ -130,6 +130,7 @@ public:
 
     scan_processor_ = std::make_unique<ScanProcessor>(this, cost_, tfBuffer_);
 
+    initializedScanMap_ = true;
   }
 
   ~LocalTrajectoryPublisher()
@@ -171,6 +172,7 @@ private:
   bool receivedDistanceMap_ = false;
   bool receivedCostmap_ = false;
   bool initializedMPPI_ = false;
+  bool initializedScanMap_ = false;
 
   void distanceMapCallback(const DistanceFieldMsg::SharedPtr msg)
   {
@@ -180,7 +182,7 @@ private:
 
     receivedDistanceMap_ = true;
 
-    if (receivedCostmap_ && !initializedMPPI_)
+    if (receivedCostmap_  && initializedScanMap_ && !initializedMPPI_)
     {
       initMPPI();
     }
@@ -208,7 +210,7 @@ private:
 
     receivedCostmap_ = true;
 
-    if (receivedDistanceMap_ && !initializedMPPI_)
+    if (receivedDistanceMap_ && initializedScanMap_ && !initializedMPPI_)
     {
       initMPPI();
     }
