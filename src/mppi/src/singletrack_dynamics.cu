@@ -12,8 +12,8 @@ bool SingletrackDynamics::computeGrad(const Eigen::Ref<const state_array> &state
   A(0, 4) = -state(S_INDEX(VEL)) * sin(state(S_INDEX(YAW)));
   A(1, 3) = sin(state(S_INDEX(YAW)));
   A(1, 4) = state(S_INDEX(VEL)) * cos(state(S_INDEX(YAW)));
-  A(4, 2) = (state(S_INDEX(VEL))/this->params_.wheelbase ) / (cos(state(S_INDEX(STEER))) * cos(state(S_INDEX(STEER))));
-  A(4, 3) = (1.0f/this->params_.wheelbase) * tan(state(S_INDEX(STEER)));
+  A(4, 2) = (state(S_INDEX(VEL)) / this->params_.wheelbase) / (cos(state(S_INDEX(STEER))) * cos(state(S_INDEX(STEER))));
+  A(4, 3) = (1.0f / this->params_.wheelbase) * tan(state(S_INDEX(STEER)));
 
   B(2, 0) = 1.0f;
   B(3, 1) = 1.0f;
@@ -45,31 +45,31 @@ __device__ void SingletrackDynamics::computeDynamics(float *state, float *contro
   state_der[S_INDEX(YAW)] = (state[S_INDEX(VEL)] / l_wb) * tanf(steer);
 }
 
-// void SingletrackDynamics::updateState(const Eigen::Ref<const state_array> state, Eigen::Ref<state_array> next_state, Eigen::Ref<state_array> state_der, const float dt)
-// {
-//   next_state = state + state_der * dt;
-//   next_state(S_INDEX(YAW)) = angle_utils::normalizeAngle(next_state(S_INDEX(YAW)));
-//   next_state(S_INDEX(STEER)) = max(min(next_state(S_INDEX(STEER)), 0.44f), -0.44f);
-// }
+void SingletrackDynamics::updateState(const Eigen::Ref<const state_array> state, Eigen::Ref<state_array> next_state, Eigen::Ref<state_array> state_der, const float dt)
+{
+  next_state = state + state_der * dt;
+  next_state(S_INDEX(YAW)) = angle_utils::normalizeAngle(next_state(S_INDEX(YAW)));
+  next_state(S_INDEX(STEER)) = max(min(next_state(S_INDEX(STEER)), 0.44f), -0.44f);
+}
 
-// __device__ void SingletrackDynamics::updateState(float *state, float *next_state, float *state_der, const float dt)
-// {
-//   for (int i = threadIdx.y; i < 5; i += blockDim.y)
-//   {
-//     next_state[i] = state[i] + state_der[i] * dt;
-//     switch (i)
-//     {
-//       case S_INDEX(YAW):
-//         next_state[i] = angle_utils::normalizeAngle(next_state[i]);
-//         break;
-//       case S_INDEX(STEER):
-//         next_state[S_INDEX(STEER)] = max(min(next_state[S_INDEX(STEER)], 0.44f), -0.44f);
-//         break;
-//     }
-//   }
+__device__ void SingletrackDynamics::updateState(float *state, float *next_state, float *state_der, const float dt)
+{
+  for (int i = threadIdx.y; i < 5; i += blockDim.y)
+  {
+    next_state[i] = state[i] + state_der[i] * dt;
+    switch (i)
+    {
+    case S_INDEX(YAW):
+      next_state[i] = angle_utils::normalizeAngle(next_state[i]);
+      break;
+    case S_INDEX(STEER):
+      next_state[S_INDEX(STEER)] = max(min(next_state[S_INDEX(STEER)], 0.44f), -0.44f);
+      break;
+    }
+  }
 
-//   __syncthreads();
-//   }
+  __syncthreads();
+}
 
 void SingletrackDynamics::printState(const Eigen::Ref<const state_array> &state)
 {

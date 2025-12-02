@@ -55,7 +55,7 @@ public:
 
     bool computeGrad(const Eigen::Ref<const state_array> &state, const Eigen::Ref<const control_array> &control, Eigen::Ref<dfdx> A, Eigen::Ref<dfdu> B);
 
-    // void updateState(const Eigen::Ref<const state_array> state, Eigen::Ref<state_array> next_state, Eigen::Ref<state_array> state_der, const float dt);
+    void updateState(const Eigen::Ref<const state_array> state, Eigen::Ref<state_array> next_state, Eigen::Ref<state_array> state_der, const float dt);
 
     __host__ __device__ float getWheelbase()
     {
@@ -74,7 +74,7 @@ public:
 
     __device__ void computeDynamics(float* state, float* control, float* state_der, float* theta = nullptr);
 
-    // __device__ void updateState(float* state, float* next_state,float* state_der, const float dt);
+    __device__ void updateState(float* state, float* next_state,float* state_der, const float dt);
 
     state_array stateFromMap(const std::map<std::string, float>& map) override;
 

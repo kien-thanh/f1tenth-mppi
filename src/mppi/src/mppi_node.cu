@@ -70,6 +70,10 @@ public:
         "/debug/drive",
         10);
 
+    debug_state_pub_ = this->create_publisher<PoseMsg>(
+        "/debug/mppi_state",
+        10);
+
     // Initialize subscribers
     distance_map_sub_ = this->create_subscription<DistanceFieldMsg>(
         "/distance_map",
@@ -136,31 +140,6 @@ public:
     std::cout << "Avg Optimization Hz: " << 1.0 / (plant_->getAvgOptimizationTime() * 1e-3) << " Hz" << std::endl;
   }
 
-  void publishDrive(float velocity, float steering_angle)
-  {
-    const float velocity_max = 3.0f;
-    const float steering_angle_min = -0.44f;
-    const float steering_angle_max = 0.44f;
-
-    float velocity_limited = std::clamp(velocity, 0.0f, velocity_max);
-    float steering_angle_limited = std::clamp(steering_angle, steering_angle_min, steering_angle_max);
-
-    // Publish clamped drive messages for actual drive
-    ackermann_msgs::msg::AckermannDriveStamped drive_msg;
-    drive_msg.header.stamp = now();
-    drive_msg.drive.speed = velocity_limited;
-    drive_msg.drive.steering_angle = steering_angle_limited;
-    drive_pub_->publish(drive_msg);
-
-    // Publish unclamped drive messages for debugging
-    ackermann_msgs::msg::AckermannDriveStamped debug_drive_msg;
-    debug_drive_msg.header.stamp = now();
-    debug_drive_msg.drive.speed = velocity;
-    debug_drive_msg.drive.steering_angle = steering_angle;
-    debug_drive_unclamped_pub_->publish(debug_drive_msg);
-  }
-
-
 private:
   rclcpp::Publisher<DriveMsg>::SharedPtr drive_pub_;
   rclcpp::Subscription<DistanceFieldMsg>::SharedPtr distance_map_sub_;
@@ -172,6 +151,7 @@ private:
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
 
   rclcpp::Publisher<DriveMsg>::SharedPtr debug_drive_unclamped_pub_;
+  rclcpp::Publisher<PoseMsg>::SharedPtr debug_state_pub_;
 
   std::unique_ptr<ScanProcessor> scan_processor_;
 
@@ -286,8 +266,13 @@ private:
     plant_->updateState(current_state, msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9);
     plant_->runControlIteration(&alive);
 
+    auto x = plant_->getStateTraj()(0,0);
+    auto y = plant_->getStateTraj()(1,0);
+    auto steering_angle = plant_->getStateTraj()(2,0);
     auto velocity = plant_->current_state_(3);
-    auto steering_angle = plant_->current_state_(2);
+    auto yaw_after = plant_->getStateTraj()(4,0);
+    publishDebugState(x, y, yaw_after);
+
     publishDrive(velocity, steering_angle);
 
     publishLocalTrajectory();
@@ -316,11 +301,11 @@ private:
 
     if (plant_->current_state_(2) > 0.47)
     {
-      current_state(2) = 0.47;
+      current_state(2) = 0.44;
     }
     else if (plant_->current_state_(2) < -0.47)
     {
-      current_state(2) = -0.47;
+      current_state(2) = -0.44;
     }
     else
     {
@@ -445,14 +430,56 @@ private:
 
     local_trajectory_pub_->publish(path_msg);
   }
+
+  void publishDrive(float velocity, float steering_angle)
+  {
+    const float velocity_max = 5.0f;
+    const float steering_angle_min = -0.44f;
+    const float steering_angle_max = 0.44f;
+
+    float velocity_limited = std::clamp(velocity, 0.0f, velocity_max);
+    float steering_angle_limited = std::clamp(steering_angle, steering_angle_min, steering_angle_max);
+
+    // Publish clamped drive messages for actual drive
+    ackermann_msgs::msg::AckermannDriveStamped drive_msg;
+    drive_msg.header.stamp = now();
+    drive_msg.drive.speed = velocity_limited;
+    drive_msg.drive.steering_angle = steering_angle_limited;
+    drive_pub_->publish(drive_msg);
+
+    // Publish unclamped drive messages for debugging
+    ackermann_msgs::msg::AckermannDriveStamped debug_drive_msg;
+    debug_drive_msg.header.stamp = now();
+    debug_drive_msg.drive.speed = velocity;
+    debug_drive_msg.drive.steering_angle = steering_angle;
+    debug_drive_unclamped_pub_->publish(debug_drive_msg);
+  }
+
+  void publishDebugState(float x, float y, float yaw)
+  {
+    geometry_msgs::msg::PoseWithCovarianceStamped state_msg;
+    state_msg.header.stamp = now();
+    state_msg.header.frame_id = "map";
+    state_msg.pose.pose.position.x = x;
+    state_msg.pose.pose.position.y = y;
+    state_msg.pose.pose.position.z = 0.0;
+
+    tf2::Quaternion q;
+    q.setRPY(0.0, 0.0, yaw);
+    state_msg.pose.pose.orientation = tf2::toMsg(q);
+
+    debug_state_pub_->publish(state_msg);
+  }
 };
+
+
 
 int main(int argc, char **argv)
 {
   rclcpp::init(argc, argv);
 
   auto node = std::make_shared<LocalTrajectoryPublisher>();
-  rclcpp::executors::MultiThreadedExecutor executor;
+  rclcpp::executors::SingleThreadedExecutor executor;
   executor.add_node(node);
   executor.spin();
   rclcpp::shutdown();
