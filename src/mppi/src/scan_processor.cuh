@@ -22,6 +22,8 @@ public:
     void publishProcessedScan();
 
     void publishScanProcessingTime(float time_ms);
+    
+    bool receivedFirstScan() const { return receivedFirstScan_; }
 
 private:
     bool debug_ = true;

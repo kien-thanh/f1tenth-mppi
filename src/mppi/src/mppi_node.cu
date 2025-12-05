@@ -56,6 +56,10 @@ public:
     this->declare_parameter("c_velocity", 10.0f);      // cost coefficient for velocity tracking
     this->declare_parameter("desired_velocity", 2.0f); // desired velocity
     this->declare_parameter("sim", false);             // whether to run in simulation mode
+    this->declare_parameter("delay_constant", 1.0f);   // constant delay term
+    this->declare_parameter("delay_factor", 0.0f);     // delay factor
+
+    scan_processor_ = std::make_unique<ScanProcessor>(this, cost_, tfBuffer_);
 
     // Initialize publishers
     drive_pub_ = this->create_publisher<DriveMsg>(
@@ -127,10 +131,27 @@ public:
             this->realOdomCallback(msg);
           });
     }
+    
+    steering_angle_sub_ = this->create_subscription<std_msgs::msg::Float32>(
+        "/steering_angle",
+        10,
+        [this](const std_msgs::msg::Float32::SharedPtr msg)
+        {
+          this->steeringAngleCallback(msg);
+        });
 
-    scan_processor_ = std::make_unique<ScanProcessor>(this, cost_, tfBuffer_);
-
-    initializedScanMap_ = true;
+    mppi_init_timer_ = this->create_wall_timer(
+        std::chrono::milliseconds(100),
+        [this]()
+        {
+          if (!initializedMPPI_ && receivedDistanceMap_ && receivedCostmap_ && scan_processor_->receivedFirstScan())
+          {
+            RCLCPP_INFO(this->get_logger(), "Initializing MPPI...");
+            initMPPI();
+            mppi_init_timer_->cancel();
+            RCLCPP_INFO(this->get_logger(), "MPPI Initialized.");
+          }
+        });
   }
 
   ~LocalTrajectoryPublisher()
@@ -148,15 +169,18 @@ private:
   rclcpp::Subscription<OdomMsg>::SharedPtr real_odom_sub_;
   rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
   rclcpp::Subscription<PoseMsg>::SharedPtr pose_sub_;
+  rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr steering_angle_sub_;
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr particle_pose_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
-
   rclcpp::Publisher<DriveMsg>::SharedPtr debug_drive_unclamped_pub_;
   rclcpp::Publisher<PoseMsg>::SharedPtr debug_state_pub_;
 
+  rclcpp::TimerBase::SharedPtr mppi_init_timer_;
+
   std::unique_ptr<ScanProcessor> scan_processor_;
 
-  double current_velocity_ = 0.0;
+  float current_velocity_ = 0.0f;
+  float current_steering_angle_ = 0.0f;
 
   tf2_ros::Buffer tfBuffer_;
   tf2_ros::TransformListener tfListener_;
@@ -172,7 +196,6 @@ private:
   bool receivedDistanceMap_ = false;
   bool receivedCostmap_ = false;
   bool initializedMPPI_ = false;
-  bool initializedScanMap_ = false;
 
   void distanceMapCallback(const DistanceFieldMsg::SharedPtr msg)
   {
@@ -181,15 +204,13 @@ private:
     cost_.createDistanceField(msg->data.data(), msg->resolution, msg->width, msg->height, msg->origin_x, msg->origin_y);
 
     receivedDistanceMap_ = true;
-
-    if (receivedCostmap_  && initializedScanMap_ && !initializedMPPI_)
-    {
-      initMPPI();
-    }
   }
 
   void costmapCallback(const OccupancyGridMsg::SharedPtr msg)
   {
+    // Wait 2 seconds
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
     // Convert occupancy data from int8 to float
     std::vector<float> occupancy_data;
     occupancy_data.reserve(msg->data.size());
@@ -209,11 +230,6 @@ private:
         msg->info.origin.position.y);
 
     receivedCostmap_ = true;
-
-    if (receivedDistanceMap_ && initializedScanMap_ && !initializedMPPI_)
-    {
-      initMPPI();
-    }
   }
 
   void odomCallback(const OdomMsg::SharedPtr msg)
@@ -268,11 +284,11 @@ private:
     plant_->updateState(current_state, msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9);
     plant_->runControlIteration(&alive);
 
-    auto x = plant_->getStateTraj()(0,0);
-    auto y = plant_->getStateTraj()(1,0);
-    auto steering_angle = plant_->getStateTraj()(2,0);
+    auto x = plant_->getStateTraj()(0, 0);
+    auto y = plant_->getStateTraj()(1, 0);
+    auto steering_angle = plant_->getStateTraj()(2, 0);
     auto velocity = plant_->current_state_(3);
-    auto yaw_after = plant_->getStateTraj()(4,0);
+    auto yaw_after = plant_->getStateTraj()(4, 0);
     publishDebugState(x, y, yaw_after);
 
     publishDrive(velocity, steering_angle);
@@ -282,9 +298,15 @@ private:
 
   void realOdomCallback(const OdomMsg::SharedPtr msg)
   {
-    double vx = msg->twist.twist.linear.x;
-    double vy = msg->twist.twist.linear.y;
+    float vx = msg->twist.twist.linear.x;
+    float vy = msg->twist.twist.linear.y;
     current_velocity_ = std::sqrt(vx * vx + vy * vy);
+  }
+
+  void steeringAngleCallback(const std_msgs::msg::Float32::SharedPtr msg)
+  {
+    float servo_position = msg->data;
+    current_steering_angle_ = (servo_position - 0.511f) / -0.851f; // steering angle = servo value (0 to 1) / gain
   }
 
   void poseCallback(const PoseMsg::SharedPtr msg)
@@ -294,40 +316,54 @@ private:
       return;
     }
 
+    rclcpp::Duration delay = now() - msg->header.stamp;
+    RCLCPP_INFO(this->get_logger(), "Time difference: %.6f seconds", delay.seconds());
+
     std::atomic<bool> alive(true);
 
     Eigen::Matrix<float, 5, 1> current_state;
 
-    current_state(0) = msg->pose.pose.position.x;
-    current_state(1) = msg->pose.pose.position.y;
-
-    if (plant_->current_state_(2) > 0.47)
-    {
-      current_state(2) = 0.44;
-    }
-    else if (plant_->current_state_(2) < -0.47)
-    {
-      current_state(2) = -0.44;
-    }
-    else
-    {
-      current_state(2) = plant_->current_state_(2);
-    }
-
-    current_state(3) = current_velocity_;
+    float x = msg->pose.pose.position.x;
+    float y = msg->pose.pose.position.y;
+    float v = current_velocity_;
 
     tf2::Quaternion q;
     tf2::fromMsg(msg->pose.pose.orientation, q); // convert geometry_msgs -> tf2
     double roll, pitch, yaw;
     tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
 
+    // forward projection
+    float delay_constant = this->get_parameter("delay_constant").as_double();
+    float delay_factor = this->get_parameter("delay_factor").as_double();
+    float delay_total = delay_constant + delay_factor * delay.seconds();
+
+    x += v * std::cos(yaw) * delay_total;
+    y += v * std::sin(yaw) * delay_total;
+
+    current_state(0) = x;
+    current_state(1) = y;
+    current_state(2) = plant_->current_state_(2);
+    current_state(3) = v;
     current_state(4) = yaw;
 
-    plant_->updateState(current_state, msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9);
+    // if (plant_->current_state_(2) > 0.47)
+    // {
+    //   current_state(2) = 0.44;
+    // }
+    // else if (plant_->current_state_(2) < -0.47)
+    // {
+    //   current_state(2) = -0.44;
+    // }
+    // else
+    // {
+    //   current_state(2) = plant_->current_state_(2);
+    // }
+
+    plant_->updateState(current_state, now().seconds());
     plant_->runControlIteration(&alive);
 
     auto velocity = plant_->current_state_(3);
-    auto steering_angle = plant_->current_state_(2);
+    auto steering_angle = plant_->getStateTraj()(2, 0);
     publishDrive(velocity, steering_angle);
 
     publishLocalTrajectory();
@@ -372,9 +408,12 @@ private:
     plant_->updateState(current_state, msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9);
     plant_->runControlIteration(&alive);
 
+    auto x = plant_->getStateTraj()(0, 0);
+    auto y = plant_->getStateTraj()(1, 0);
+    auto steering_angle = plant_->getStateTraj()(2, 0);
     auto velocity = plant_->current_state_(3);
-    auto steering_angle = plant_->current_state_(2);
-    publishDrive(velocity, steering_angle);
+    auto yaw_after = plant_->getStateTraj()(4, 0);
+    publishDebugState(x, y, yaw_after);
 
     publishLocalTrajectory();
   }
@@ -473,8 +512,6 @@ private:
     debug_state_pub_->publish(state_msg);
   }
 };
-
-
 
 int main(int argc, char **argv)
 {

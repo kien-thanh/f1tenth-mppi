@@ -86,6 +86,7 @@ void ScanProcessor::scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr ms
   {
     cost_.createScanMap(map_width_, map_height_, map_resolution_, map_origin_x_, map_origin_y_);
     receivedFirstScan_ = true;
+    RCLCPP_INFO(node_->get_logger(), "Received first scan, initialized scan map.");
   }
 
   cost_.updateScanMap(scan_in_map_frame);

@@ -1,8 +1,10 @@
 mppi_node:
   ros__parameters:
-    desired_velocity: 2.0
-    c_distance: 100.0
+    desired_velocity: 1.8
+    c_distance: 30.0
     c_velocity: 10.0
     real_laser_frame: "laser"
     sim_laser_frame: "ego_racecar/laser"
-    sim: true
+    delay_constant: 0.01
+    delay_factor: 1.0
+    sim: false
