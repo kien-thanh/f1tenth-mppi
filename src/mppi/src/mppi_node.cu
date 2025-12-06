@@ -55,6 +55,7 @@ public:
     this->declare_parameter("c_distance", 10.0f);      // cost coefficient for distance to centerline
     this->declare_parameter("c_velocity", 10.0f);      // cost coefficient for velocity tracking
     this->declare_parameter("desired_velocity", 2.0f); // desired velocity
+    this->declare_parameter("c_costmap", 1.0f);       // cost coefficient for costmap
     this->declare_parameter("sim", false);             // whether to run in simulation mode
     this->declare_parameter("delay_constant", 1.0f);   // constant delay term
     this->declare_parameter("delay_factor", 0.0f);     // delay factor
@@ -208,6 +209,11 @@ private:
 
   void costmapCallback(const OccupancyGridMsg::SharedPtr msg)
   {
+    if (initializedMPPI_)
+    {
+      return;
+    }
+
     // Wait 2 seconds
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
@@ -427,9 +433,10 @@ private:
     cost_params.c_distance = this->get_parameter("c_distance").as_double();
     cost_params.c_velocity = this->get_parameter("c_velocity").as_double();
     cost_params.desired_velocity = this->get_parameter("desired_velocity").as_double();
+    cost_params.c_costmap = this->get_parameter("c_costmap").as_double();
 
-    RCLCPP_INFO(this->get_logger(), "Setting cost parameters: c_distance=%.2f, c_velocity=%.2f, desired_velocity=%.2f",
-                cost_params.c_distance, cost_params.c_velocity, cost_params.desired_velocity);
+    RCLCPP_INFO(this->get_logger(), "Setting cost parameters: c_distance=%.2f, c_velocity=%.2f, desired_velocity=%.2f, c_costmap=%.2f",
+                cost_params.c_distance, cost_params.c_velocity, cost_params.desired_velocity, cost_params.c_costmap);
 
     cost_.setParams(cost_params);
 

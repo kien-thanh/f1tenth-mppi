@@ -15,6 +15,7 @@ struct SingletrackCostParams : public CostParams<SingletrackDynamics::CONTROL_DI
     float c_distance = 10.0f;      // Cost coefficient for distance to obstacles
     float c_velocity = 10.0f;      // Cost coefficient for velocity tracking
     float desired_velocity = 0.5f; // Desired velocity for the vehicle
+    float c_costmap = 10.0f;      // Cost coefficient for costmap
 };
 
 class SingletrackCost : public Cost<SingletrackCost, SingletrackCostParams, SingletrackDynamicsParams>

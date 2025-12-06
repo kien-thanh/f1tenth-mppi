@@ -164,15 +164,24 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
 
     float cost = 0.0f;
 
-    float crash = sampleTexture(cm_texObj_, x, y, cm_resolution_, cm_origin_x_, cm_origin_y_);
-    if (crash >= 50.0f)
+    // --------------
+    // Cost map
+    // --------------
+    float cm_cost = sampleTexture(cm_texObj_, x, y, cm_resolution_, cm_origin_x_, cm_origin_y_);
+
+    // Crash condition
+    if (cm_cost >= 99.0f)
     {
         return 1e6f;
     }
 
+    // --------------
+    // Scan
+    // --------------
     int x_idx = static_cast<int>((x - sm_origin_x_) / sm_resolution_);
     int y_idx = static_cast<int>((y - sm_origin_y_) / sm_resolution_);
 
+    // Out of bounds check
     if (x_idx < 0 || y_idx < 0 || x_idx >= sm_width_ || y_idx >= sm_height_)
     {
         return 1e6f;
@@ -191,8 +200,9 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
     float c_dist = this->params_.c_distance;
     float c_vel = this->params_.c_velocity;
     float desired_vel = this->params_.desired_velocity;
+    float c_costmap = this->params_.c_costmap;
 
-    cost = c_dist * (distance * distance) + c_vel * (vel - desired_vel) * (vel - desired_vel);
+    cost = c_dist * (distance * distance) + c_vel * (vel - desired_vel) * (vel - desired_vel) + c_costmap * cm_cost;
 
     return cost;
 }
