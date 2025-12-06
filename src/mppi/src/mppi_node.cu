@@ -56,6 +56,7 @@ public:
     this->declare_parameter("c_velocity", 10.0f);      // cost coefficient for velocity tracking
     this->declare_parameter("desired_velocity", 2.0f); // desired velocity
     this->declare_parameter("c_costmap", 1.0f);       // cost coefficient for costmap
+    this->declare_parameter("c_angle", 5.0f);         // cost coefficient for angle alignment
     this->declare_parameter("sim", false);             // whether to run in simulation mode
     this->declare_parameter("delay_constant", 1.0f);   // constant delay term
     this->declare_parameter("delay_factor", 0.0f);     // delay factor
@@ -86,6 +87,14 @@ public:
         [this](const DistanceFieldMsg::SharedPtr msg)
         {
           this->distanceMapCallback(msg);
+        });
+
+    angle_grid_sub_ = this->create_subscription<DistanceFieldMsg>(
+        "/angle_grid",
+        rclcpp::QoS(1).transient_local().reliable(),
+        [this](const DistanceFieldMsg::SharedPtr msg)
+        {
+          this->angleGridCallback(msg);
         });
 
     costmap_sub_ = this->create_subscription<OccupancyGridMsg>(
@@ -145,7 +154,7 @@ public:
         std::chrono::milliseconds(100),
         [this]()
         {
-          if (!initializedMPPI_ && receivedDistanceMap_ && receivedCostmap_ && scan_processor_->receivedFirstScan())
+          if (!initializedMPPI_ && receivedDistanceMap_ && receivedAngleGrid_ && receivedCostmap_ && scan_processor_->receivedFirstScan())
           {
             RCLCPP_INFO(this->get_logger(), "Initializing MPPI...");
             initMPPI();
@@ -166,6 +175,7 @@ public:
 private:
   rclcpp::Publisher<DriveMsg>::SharedPtr drive_pub_;
   rclcpp::Subscription<DistanceFieldMsg>::SharedPtr distance_map_sub_;
+  rclcpp::Subscription<DistanceFieldMsg>::SharedPtr angle_grid_sub_;
   rclcpp::Subscription<OccupancyGridMsg>::SharedPtr costmap_sub_;
   rclcpp::Subscription<OdomMsg>::SharedPtr real_odom_sub_;
   rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
@@ -195,6 +205,7 @@ private:
   std::shared_ptr<CONTROLLER_T> controller_;
 
   bool receivedDistanceMap_ = false;
+  bool receivedAngleGrid_ = false;
   bool receivedCostmap_ = false;
   bool initializedMPPI_ = false;
 
@@ -205,6 +216,15 @@ private:
     cost_.createDistanceField(msg->data.data(), msg->resolution, msg->width, msg->height, msg->origin_x, msg->origin_y);
 
     receivedDistanceMap_ = true;
+  }
+
+  void angleGridCallback(const DistanceFieldMsg::SharedPtr msg)
+  {
+    std::cout << "Received angle grid of size: " << msg->data.size() << std::endl;
+
+    cost_.createAngleGrid(msg->data.data(), msg->resolution, msg->width, msg->height, msg->origin_x, msg->origin_y);
+
+    receivedAngleGrid_ = true;
   }
 
   void costmapCallback(const OccupancyGridMsg::SharedPtr msg)
@@ -434,9 +454,10 @@ private:
     cost_params.c_velocity = this->get_parameter("c_velocity").as_double();
     cost_params.desired_velocity = this->get_parameter("desired_velocity").as_double();
     cost_params.c_costmap = this->get_parameter("c_costmap").as_double();
+    cost_params.c_angle = this->get_parameter("c_angle").as_double();
 
-    RCLCPP_INFO(this->get_logger(), "Setting cost parameters: c_distance=%.2f, c_velocity=%.2f, desired_velocity=%.2f, c_costmap=%.2f",
-                cost_params.c_distance, cost_params.c_velocity, cost_params.desired_velocity, cost_params.c_costmap);
+    RCLCPP_INFO(this->get_logger(), "Setting cost parameters: c_distance=%.2f, c_velocity=%.2f, desired_velocity=%.2f, c_costmap=%.2f, c_angle=%.2f",
+                cost_params.c_distance, cost_params.c_velocity, cost_params.desired_velocity, cost_params.c_costmap, cost_params.c_angle);
 
     cost_.setParams(cost_params);
 

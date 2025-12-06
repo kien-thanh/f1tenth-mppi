@@ -62,7 +62,8 @@ class Grid:
         self.height = height
         self.origin = origin
         self.resolution = resolution
-        self.data = None
+        self.path = None    # 2D numpy array representing the grid (0: path, 1: not path)
+        self.angles = None  # 2D numpy array representing the angles of the path at each cell containing path
 
     @classmethod
     def from_nav2_path(cls, path: np.array, padding: tuple, resolution: float):
@@ -82,7 +83,6 @@ class Grid:
         xs = path.T[0]
         ys = path.T[1]
 
-
         min_x = min(xs) - padding[0]
         max_x = max(xs) + padding[0]
         min_y = min(ys) - padding[1]
@@ -97,14 +97,24 @@ class Grid:
         grid = cls(width, height, origin, resolution)
 
         # Initialize all cells as occupied
-        grid.data = np.ones((height, width), dtype=np.uint8)
+        grid.path = np.ones((height, width), dtype=np.uint8)
         for p in path:
             # Floor to ensure that points are in the cell containing them
             # Could happen that that two points are mapped to the same cell if resolution not low enough
             x = int(np.floor((p[0] - origin[0]) / resolution))
             y = int(np.floor((p[1] - origin[1]) / resolution))
             if 0 <= x < width and 0 <= y < height:
-                grid.data[y, x] = 0
+                grid.path[y, x] = 0
+
+        # Calculate angle of path at this cell
+        angles = np.arctan2(np.gradient(ys), np.gradient(xs))
+        grid.angles = np.full((height, width), np.nan)
+        for i, p in enumerate(path):
+            x = int(np.floor((p[0] - origin[0]) / resolution))
+            y = int(np.floor((p[1] - origin[1]) / resolution))
+            if 0 <= x < width and 0 <= y < height:
+                grid.angles[y, x] = angles[i]
+
         return grid
 
     def distance_transform(self) -> Grid:
@@ -113,10 +123,26 @@ class Grid:
         Returns:
             Grid: A grid with the distance of each cell to the nearest free cell.
         """
-        dist = cv2.distanceTransform(self.data, cv2.DIST_L2, 0)
+        dist, labels = cv2.distanceTransformWithLabels(self.path, cv2.DIST_L2, cv2.DIST_MASK_5, labelType=cv2.DIST_LABEL_PIXEL)
         dist *= self.resolution  # convert to meters
 
+        label_to_coord = {}
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.path[y, x] == 0:
+                    label = labels[y, x]
+                    label_to_coord[label] = (x, y)
+
+        angle_grid = np.full((self.height, self.width), np.nan)
+        for y in range(self.height):
+            for x in range(self.width):
+                label = labels[y, x]
+                nearest_coords = label_to_coord[label]
+                angle_grid[y, x] = self.angles[nearest_coords[1], nearest_coords[0]]
+
         distance_grid = Grid(self.width, self.height, self.origin, self.resolution)
-        distance_grid.data = dist
+        distance_grid.path = dist
+        distance_grid.angles = angle_grid
 
         return distance_grid
+    

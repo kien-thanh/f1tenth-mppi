@@ -48,7 +48,9 @@ class DistanceTransform(Node):
         self.map_sub = self.create_subscription(OccupancyGrid, 'map', self.map_sub_callback, qos)
         self.plan_sub = self.create_subscription(Path, 'plan', self.plan_sub_callback, 1)
 
-        self.distance_map = self.create_publisher(DistanceMap, 'distance_map', qos)
+        self.distance_grid_pub = self.create_publisher(DistanceMap, 'distance_map', qos)
+        self.angle_grid_pub = self.create_publisher(DistanceMap, 'angle_grid', qos)
+
 
     def map_sub_callback(self, msg: OccupancyGrid):
         """
@@ -91,11 +93,12 @@ class DistanceTransform(Node):
 
         distance_grid = path_grid.distance_transform()
 
-        self.distance_grid(distance_grid)
+        self.publish_grid(distance_grid)
 
-        plot.heatmap(distance_grid.data, title="Distance Transform Heatmap")
+        plot.heatmap(distance_grid.path, title="Distance Transform Heatmap")
+        plot.heatmap(distance_grid.angles, title="Angle Grid Heatmap")
 
-    def distance_grid(self, distance_grid: Grid):
+    def publish_grid(self, grid: Grid):
         """
         Publish the distance grid as an DistanceMap message.
 
@@ -105,13 +108,17 @@ class DistanceTransform(Node):
         msg = DistanceMap()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = "map"
-        msg.data = distance_grid.data.flatten().tolist()
-        msg.resolution = distance_grid.resolution
-        msg.origin_x = distance_grid.origin[0]
-        msg.origin_y = distance_grid.origin[1]
-        msg.width = distance_grid.width
-        msg.height = distance_grid.height
-        self.distance_map.publish(msg)
+        msg.data = grid.path.flatten().tolist()
+        msg.resolution = grid.resolution
+        msg.origin_x = grid.origin[0]
+        msg.origin_y = grid.origin[1]
+        msg.width = grid.width
+        msg.height = grid.height
+        self.distance_grid_pub.publish(msg)
+
+        msg.data = grid.angles.flatten().tolist()
+        self.angle_grid_pub.publish(msg)
+
         
 def main(args=None):
     rclpy.init(args=args)

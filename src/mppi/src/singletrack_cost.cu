@@ -80,6 +80,17 @@ void SingletrackCost::createDistanceField(const float *data, float resolution, i
     printf("Distance field created with resolution: %f, origin: (%f, %f)\n", df_resolution_, df_origin_x_, df_origin_y_);
 }
 
+void SingletrackCost::createAngleGrid(const float *data, float resolution, int width, int height, float origin_x, float origin_y)
+{
+    angle_grid_ = std::make_unique<Texture>(data, resolution, width, height, origin_x, origin_y);
+    ag_texObj_ = angle_grid_->getTextureObject();
+    ag_resolution_ = angle_grid_->getResolution();
+    ag_origin_x_ = angle_grid_->getOriginX();
+    ag_origin_y_ = angle_grid_->getOriginY();
+
+    printf("Angle grid created with resolution: %f, origin: (%f, %f)\n", ag_resolution_, ag_origin_x_, ag_origin_y_);
+}
+
 void SingletrackCost::createCostmap(const float *data, float resolution, int width, int height, float origin_x, float origin_y)
 {
     costmap_ = std::make_unique<Texture>(data, resolution, width, height, origin_x, origin_y);
@@ -196,13 +207,15 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
     }
 
     float distance = sampleTexture(df_texObj_, x, y, df_resolution_, df_origin_x_, df_origin_y_);
+    float angle = sampleTexture(ag_texObj_, x, y, ag_resolution_, ag_origin_x_, ag_origin_y_);
 
     float c_dist = this->params_.c_distance;
     float c_vel = this->params_.c_velocity;
     float desired_vel = this->params_.desired_velocity;
     float c_costmap = this->params_.c_costmap;
+    float c_angle = this->params_.c_angle;
 
-    cost = c_dist * (distance * distance) + c_vel * (vel - desired_vel) * (vel - desired_vel) + c_costmap * cm_cost;
+    cost = c_dist * (distance * distance) + c_vel * (vel - desired_vel) * (vel - desired_vel) + c_costmap * cm_cost + c_angle * (fabsf(yaw - angle));
 
     return cost;
 }

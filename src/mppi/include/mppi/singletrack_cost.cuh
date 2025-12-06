@@ -16,6 +16,7 @@ struct SingletrackCostParams : public CostParams<SingletrackDynamics::CONTROL_DI
     float c_velocity = 10.0f;      // Cost coefficient for velocity tracking
     float desired_velocity = 0.5f; // Desired velocity for the vehicle
     float c_costmap = 10.0f;      // Cost coefficient for costmap
+    float c_angle = 5.0f;         // Cost coefficient for angle alignment
 };
 
 class SingletrackCost : public Cost<SingletrackCost, SingletrackCostParams, SingletrackDynamicsParams>
@@ -35,6 +36,7 @@ public:
     float terminalCost(const Eigen::Ref<const output_array> s);
 
     void createDistanceField(const float *data, float resolution, int width, int height, float origin_x, float origin_y);
+    void createAngleGrid(const float *data, float resolution, int width, int height, float origin_x, float origin_y);
     void createCostmap(const float *data, float resolution, int width, int height, float origin_x, float origin_y);
     void createScanMap(int width, int height, float resolution, float origin_x, float origin_y);
 
@@ -46,6 +48,10 @@ private:
     std::unique_ptr<Texture> distance_field_;
     cudaTextureObject_t df_texObj_ = 0;
     float df_resolution_ = 0.0f, df_origin_x_ = 0.0f, df_origin_y_ = 0.0f;
+
+    std::unique_ptr<Texture> angle_grid_;
+    cudaTextureObject_t ag_texObj_ = 0;
+    float ag_resolution_ = 0.0f, ag_origin_x_ = 0.0f, ag_origin_y_ = 0.0f;
 
     std::unique_ptr<Texture> costmap_;
     cudaTextureObject_t cm_texObj_ = 0;
