@@ -58,6 +58,7 @@ public:
     this->declare_parameter("c_costmap", 1.0f);       // cost coefficient for costmap
     this->declare_parameter("c_angle", 5.0f);         // cost coefficient for angle alignment
     this->declare_parameter("sim", false);             // whether to run in simulation mode
+    this->declare_parameter("v_max", 3.0f);            // maximum velocity
     this->declare_parameter("delay_constant", 1.0f);   // constant delay term
     this->declare_parameter("delay_factor", 0.0f);     // delay factor
 
@@ -506,11 +507,11 @@ private:
 
   void publishDrive(float velocity, float steering_angle)
   {
-    const float velocity_max = 2.5f;
+    const float v_max = this->get_parameter("v_max").as_double();
     const float steering_angle_min = -0.44f;
     const float steering_angle_max = 0.44f;
 
-    float velocity_limited = std::clamp(velocity, 0.0f, velocity_max);
+    float velocity_limited = std::clamp(velocity, 0.0f, v_max);
     float steering_angle_limited = std::clamp(steering_angle, steering_angle_min, steering_angle_max);
 
     // Publish clamped drive messages for actual drive
