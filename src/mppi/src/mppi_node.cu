@@ -35,9 +35,9 @@ using PoseMsg = geometry_msgs::msg::PoseWithCovarianceStamped;
 using DYN_T = SingletrackDynamics;
 using COST_T = SingletrackCost;
 
-const int NUM_TIMESTEPS = 32;
+const int NUM_TIMESTEPS = 64;
 const int NUM_ROLLOUTS = 2048;
-const int DYN_BLOCK_X = 32;
+const int DYN_BLOCK_X = 64;
 const int DYN_BLOCK_Y = DYN_T::STATE_DIM;
 
 using FB_T = DDPFeedback<DYN_T, NUM_TIMESTEPS>;
@@ -343,7 +343,6 @@ private:
     }
 
     rclcpp::Duration delay = now() - msg->header.stamp;
-    RCLCPP_INFO(this->get_logger(), "Time difference: %.6f seconds", delay.seconds());
 
     std::atomic<bool> alive(true);
 
@@ -368,7 +367,7 @@ private:
 
     current_state(0) = x;
     current_state(1) = y;
-    current_state(2) = plant_->current_state_(2);
+    current_state(2) = plant_->getStateTraj()(2, 1);
     current_state(3) = v;
     current_state(4) = yaw;
 
@@ -387,9 +386,14 @@ private:
 
     plant_->updateState(current_state, now().seconds());
     plant_->runControlIteration(&alive);
+    x = plant_->getStateTraj()(0, 0);
+    y = plant_->getStateTraj()(1, 0);
+    auto steering_angle = plant_->getStateTraj()(2, 1);
+    auto velocity = plant_->getStateTraj()(3, 1);
+    auto yaw_after = plant_->getStateTraj()(4, 0);
 
-    auto velocity = plant_->current_state_(3);
-    auto steering_angle = plant_->getStateTraj()(2, 0);
+    publishDebugState(x, y, yaw_after);
+
     publishDrive(velocity, steering_angle);
 
     publishLocalTrajectory();
@@ -471,7 +475,7 @@ private:
     controller_params_.dt_ = dt;
     controller_params_.lambda_ = 1.0;
     controller_params_.dynamics_rollout_dim_ = dim3(DYN_BLOCK_X, DYN_BLOCK_Y, 1);
-    controller_params_.cost_rollout_dim_ = dim3(32, 1, 1);
+    controller_params_.cost_rollout_dim_ = dim3(64, 1, 1);
     controller_ = std::make_shared<CONTROLLER_T>(&dynamics_, &cost_, fb_controller_.get(), &sampler_, controller_params_);
 
     // Create plant
@@ -502,7 +506,7 @@ private:
 
   void publishDrive(float velocity, float steering_angle)
   {
-    const float velocity_max = 5.0f;
+    const float velocity_max = 2.5f;
     const float steering_angle_min = -0.44f;
     const float steering_angle_max = 0.44f;
 
