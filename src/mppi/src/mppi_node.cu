@@ -35,9 +35,9 @@ using PoseMsg = geometry_msgs::msg::PoseWithCovarianceStamped;
 using DYN_T = SingletrackDynamics;
 using COST_T = SingletrackCost;
 
-const int NUM_TIMESTEPS = 64;
+const int NUM_TIMESTEPS = 32;
 const int NUM_ROLLOUTS = 2048;
-const int DYN_BLOCK_X = 64;
+const int DYN_BLOCK_X = 32;
 const int DYN_BLOCK_Y = DYN_T::STATE_DIM;
 
 using FB_T = DDPFeedback<DYN_T, NUM_TIMESTEPS>;
@@ -312,8 +312,8 @@ private:
 
     auto x = plant_->getStateTraj()(0, 0);
     auto y = plant_->getStateTraj()(1, 0);
-    auto steering_angle = plant_->getStateTraj()(2, 0);
-    auto velocity = plant_->current_state_(3);
+    auto steering_angle = plant_->getStateTraj()(2, 1);
+    auto velocity = plant_->getStateTraj()(3, 1);
     auto yaw_after = plant_->getStateTraj()(4, 0);
     publishDebugState(x, y, yaw_after);
 
@@ -471,7 +471,7 @@ private:
     controller_params_.dt_ = dt;
     controller_params_.lambda_ = 1.0;
     controller_params_.dynamics_rollout_dim_ = dim3(DYN_BLOCK_X, DYN_BLOCK_Y, 1);
-    controller_params_.cost_rollout_dim_ = dim3(64, 1, 1);
+    controller_params_.cost_rollout_dim_ = dim3(32, 1, 1);
     controller_ = std::make_shared<CONTROLLER_T>(&dynamics_, &cost_, fb_controller_.get(), &sampler_, controller_params_);
 
     // Create plant
@@ -492,7 +492,7 @@ private:
       pose_stamped.header = path_msg.header;
       pose_stamped.pose.position.x = state_traj(0, i);
       pose_stamped.pose.position.y = state_traj(1, i);
-      pose_stamped.pose.position.z = 0.0;
+      pose_stamped.pose.position.z = state_traj(3, i);
 
       path_msg.poses.push_back(pose_stamped);
     }
