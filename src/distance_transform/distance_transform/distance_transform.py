@@ -95,8 +95,8 @@ class DistanceTransform(Node):
 
         self.publish_grid(distance_grid)
 
-        plot.heatmap(distance_grid.path, title="Distance Transform Heatmap")
-        plot.heatmap(distance_grid.angles, title="Angle Grid Heatmap")
+        # plot.heatmap(distance_grid.path, title="Distance Transform Heatmap")
+        # plot.heatmap(distance_grid.angles, title="Angle Grid Heatmap")
 
     def publish_grid(self, grid: Grid):
         """
