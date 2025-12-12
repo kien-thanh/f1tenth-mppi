@@ -43,16 +43,6 @@ __device__ void SingletrackDynamics::computeDynamics(float *state, float *contro
   state_der[S_INDEX(STEER)] = fminf(fmaxf(control[C_INDEX(STEER_SPEED)], -2.0f), 2.0f);;
   state_der[S_INDEX(VEL)] = control[C_INDEX(ACCELERATION)];
   state_der[S_INDEX(YAW)] = (state[S_INDEX(VEL)] / l_wb) * tanf(steer);
-
-  // float steer_cmd = control[C_INDEX(STEER_SPEED)]; // is actually desired steer angle, not rate
-
-  // float tau = 0.05f;  // 5 ms
-  // float max_rate = 5.0f; // rad/s limit
-
-  // float rate = (steer_cmd - steer) / tau;
-  // rate = fminf(fmaxf(rate, -max_rate), max_rate);
-
-  // state_der[S_INDEX(STEER)] = rate;
 }
 
 void SingletrackDynamics::updateState(const Eigen::Ref<const state_array> state, Eigen::Ref<state_array> next_state, Eigen::Ref<state_array> state_der, const float dt)

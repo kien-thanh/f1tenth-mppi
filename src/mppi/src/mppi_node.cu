@@ -126,14 +126,6 @@ public:
             this->poseCallback(msg);
           });
 
-      particle_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>(
-          "/pf/viz/inferred_pose",
-          10,
-          [this](const geometry_msgs::msg::PoseStamped::SharedPtr msg)
-          {
-            this->particlePoseCallback(msg);
-          });
-
       real_odom_sub_ = this->create_subscription<OdomMsg>(
           "/odom",
           10,
@@ -182,7 +174,6 @@ private:
   rclcpp::Subscription<OdomMsg>::SharedPtr odom_sub_;
   rclcpp::Subscription<PoseMsg>::SharedPtr pose_sub_;
   rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr steering_angle_sub_;
-  rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr particle_pose_sub_;
   rclcpp::Publisher<PathMsg>::SharedPtr local_trajectory_pub_;
   rclcpp::Publisher<DriveMsg>::SharedPtr debug_drive_unclamped_pub_;
   rclcpp::Publisher<PoseMsg>::SharedPtr debug_state_pub_;
@@ -372,19 +363,6 @@ private:
     current_state(3) = v;
     current_state(4) = yaw;
 
-    // if (plant_->current_state_(2) > 0.47)
-    // {
-    //   current_state(2) = 0.44;
-    // }
-    // else if (plant_->current_state_(2) < -0.47)
-    // {
-    //   current_state(2) = -0.44;
-    // }
-    // else
-    // {
-    //   current_state(2) = plant_->current_state_(2);
-    // }
-
     plant_->updateState(current_state, now().seconds());
     plant_->runControlIteration(&alive);
     x = plant_->getStateTraj()(0, 0);
@@ -396,55 +374,6 @@ private:
     publishDebugState(x, y, yaw_after);
 
     publishDrive(velocity, steering_angle);
-
-    publishLocalTrajectory();
-  }
-
-  void particlePoseCallback(const geometry_msgs::msg::PoseStamped::SharedPtr msg)
-  {
-    if (!initializedMPPI_)
-    {
-      return;
-    }
-
-    std::atomic<bool> alive(true);
-
-    Eigen::Matrix<float, 5, 1> current_state;
-
-    current_state(0) = msg->pose.position.x;
-    current_state(1) = msg->pose.position.y;
-
-    if (plant_->current_state_(2) > 0.47)
-    {
-      current_state(2) = 0.47;
-    }
-    else if (plant_->current_state_(2) < -0.47)
-    {
-      current_state(2) = -0.47;
-    }
-    else
-    {
-      current_state(2) = plant_->current_state_(2);
-    }
-
-    current_state(3) = current_velocity_;
-
-    tf2::Quaternion q;
-    tf2::fromMsg(msg->pose.orientation, q); // convert geometry_msgs -> tf2
-    double roll, pitch, yaw;
-    tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
-
-    current_state(4) = yaw;
-
-    plant_->updateState(current_state, msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9);
-    plant_->runControlIteration(&alive);
-
-    auto x = plant_->getStateTraj()(0, 0);
-    auto y = plant_->getStateTraj()(1, 0);
-    auto steering_angle = plant_->getStateTraj()(2, 0);
-    auto velocity = plant_->current_state_(3);
-    auto yaw_after = plant_->getStateTraj()(4, 0);
-    publishDebugState(x, y, yaw_after);
 
     publishLocalTrajectory();
   }

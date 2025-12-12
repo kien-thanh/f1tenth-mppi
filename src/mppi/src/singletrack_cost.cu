@@ -203,7 +203,7 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
 
     if (scanCrash >= 50.0f)
     {
-        // return 1e6f;
+        return 1e6f;
     }
 
     float distance = sampleTexture(df_texObj_, x, y, df_resolution_, df_origin_x_, df_origin_y_);
