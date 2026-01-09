@@ -17,6 +17,7 @@ struct SingletrackCostParams : public CostParams<SingletrackDynamics::CONTROL_DI
     float desired_velocity = 0.5f; // Desired velocity for the vehicle
     float c_costmap = 10.0f;      // Cost coefficient for costmap
     float c_angle = 5.0f;         // Cost coefficient for angle alignment
+    float c_latacc = 1.0f;       // Cost coefficient for lateral acceleration
 };
 
 class SingletrackCost : public Cost<SingletrackCost, SingletrackCostParams, SingletrackDynamicsParams>

@@ -214,9 +214,15 @@ __device__ float SingletrackCost::computeStateCost(float *state, int timestep, f
     float desired_vel = this->params_.desired_velocity;
     float c_costmap = this->params_.c_costmap;
     float c_angle = this->params_.c_angle;
+    float c_latacc = this->params_.c_latacc; // lateral acceleration cost coefficient
 
-    cost = c_dist * (distance * distance) + c_vel * (vel - desired_vel) * (vel - desired_vel) + c_costmap * cm_cost + c_angle * (fabsf(yaw - angle));
+    float ay = (vel * vel) * tanf(steer) / 0.33f;   // lateral acceleration
 
+    cost = c_dist * (distance * distance) 
+    + c_vel * (vel - desired_vel) * (vel - desired_vel) 
+    + c_costmap * cm_cost 
+    + c_angle * (fabsf(yaw - angle))
+    + c_latacc * (ay * ay);
     return cost;
 }
 

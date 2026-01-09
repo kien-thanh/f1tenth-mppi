@@ -61,6 +61,7 @@ public:
     this->declare_parameter("v_max", 3.0f);            // maximum velocity
     this->declare_parameter("delay_constant", 1.0f);   // constant delay term
     this->declare_parameter("delay_factor", 0.0f);     // delay factor
+    this->declare_parameter("c_latacc", 1.0f);        // cost coefficient for lateral acceleration
 
     scan_processor_ = std::make_unique<ScanProcessor>(this, cost_, tfBuffer_);
 
@@ -389,9 +390,10 @@ private:
     cost_params.desired_velocity = this->get_parameter("desired_velocity").as_double();
     cost_params.c_costmap = this->get_parameter("c_costmap").as_double();
     cost_params.c_angle = this->get_parameter("c_angle").as_double();
+    cost_params.c_latacc = this->get_parameter("c_latacc").as_double();
 
-    RCLCPP_INFO(this->get_logger(), "Setting cost parameters: c_distance=%.2f, c_velocity=%.2f, desired_velocity=%.2f, c_costmap=%.2f, c_angle=%.2f",
-                cost_params.c_distance, cost_params.c_velocity, cost_params.desired_velocity, cost_params.c_costmap, cost_params.c_angle);
+    RCLCPP_INFO(this->get_logger(), "Setting cost parameters: c_distance=%.2f, c_velocity=%.2f, desired_velocity=%.2f, c_costmap=%.2f, c_angle=%.2f, c_latacc=%.2f",
+                cost_params.c_distance, cost_params.c_velocity, cost_params.desired_velocity, cost_params.c_costmap, cost_params.c_angle, cost_params.c_latacc);
 
     cost_.setParams(cost_params);
 
