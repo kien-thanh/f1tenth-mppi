@@ -306,7 +306,7 @@ private:
     auto x = plant_->getStateTraj()(0, 0);
     auto y = plant_->getStateTraj()(1, 0);
     auto steering_angle = plant_->getStateTraj()(2, 1);
-    auto velocity = plant_->getStateTraj()(3, 1);
+    auto velocity = plant_->getStateTraj()(3, 3);
     auto yaw_after = plant_->getStateTraj()(4, 0);
     publishDebugState(x, y, yaw_after);
 
@@ -369,7 +369,7 @@ private:
     x = plant_->getStateTraj()(0, 0);
     y = plant_->getStateTraj()(1, 0);
     auto steering_angle = plant_->getStateTraj()(2, 1);
-    auto velocity = plant_->getStateTraj()(3, 1);
+    auto velocity = plant_->getStateTraj()(3, 3);
     auto yaw_after = plant_->getStateTraj()(4, 0);
 
     publishDebugState(x, y, yaw_after);
