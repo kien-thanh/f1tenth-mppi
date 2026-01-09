@@ -305,7 +305,7 @@ private:
 
     auto x = plant_->getStateTraj()(0, 0);
     auto y = plant_->getStateTraj()(1, 0);
-    auto steering_angle = plant_->getStateTraj()(2, 1);
+    auto steering_angle = plant_->getStateTraj()(2, 3);
     auto velocity = plant_->getStateTraj()(3, 3);
     auto yaw_after = plant_->getStateTraj()(4, 0);
     publishDebugState(x, y, yaw_after);
@@ -368,7 +368,7 @@ private:
     plant_->runControlIteration(&alive);
     x = plant_->getStateTraj()(0, 0);
     y = plant_->getStateTraj()(1, 0);
-    auto steering_angle = plant_->getStateTraj()(2, 1);
+    auto steering_angle = plant_->getStateTraj()(2, 3);
     auto velocity = plant_->getStateTraj()(3, 3);
     auto yaw_after = plant_->getStateTraj()(4, 0);
 
@@ -482,7 +482,7 @@ int main(int argc, char **argv)
   rclcpp::init(argc, argv);
 
   auto node = std::make_shared<LocalTrajectoryPublisher>();
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::executors::MultiThreadedExecutor executor;
   executor.add_node(node);
   executor.spin();
   rclcpp::shutdown();
