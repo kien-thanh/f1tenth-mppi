@@ -3,7 +3,7 @@ FROM nvcr.io/nvidia/12.6.11-devel:12.6.11-devel-aarch64-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update --fix-missing && apt-get dist-upgrade -y
+RUN apt-get update --fix-missing -y
 
 RUN apt-get install software-properties-common curl -y && \
     add-apt-repository universe -y && \
@@ -17,7 +17,8 @@ RUN apt-get install software-properties-common curl -y && \
                         ros-humble-foxglove-bridge \
                         ros-humble-urg-node-msgs \
                         ros-humble-slam-toolbox \
-                        ros-humble-navigation2 
+                        ros-humble-navigation2 \
+                        ros-humble-ackermann-msgs
 
 RUN apt-get install -y zsh \
                        git \

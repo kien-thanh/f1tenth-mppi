@@ -4,7 +4,7 @@
   "runArgs": [
     "--network=f1tenth",
     "-p", "8765:8765",
-    // "--gpus", "all",
+    "--gpus", "all",
   ],
   "containerEnv": {
     "ROS_DOMAIN_ID": "0"

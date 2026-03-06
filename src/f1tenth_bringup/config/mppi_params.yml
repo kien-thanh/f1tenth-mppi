@@ -3,7 +3,7 @@ mppi_node:
     desired_velocity: 3.0
     c_distance: 80.0
     c_velocity: 20.0
-    c_costmap: 2.0
+    c_costmap: 1.0
     c_angle: 0.0
     v_max: 3.5
     c_latacc: 1.0
