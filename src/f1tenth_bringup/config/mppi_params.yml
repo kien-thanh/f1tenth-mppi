@@ -1,6 +1,6 @@
 mppi_node:
   ros__parameters:
-    desired_velocity: 3.0
+    desired_velocity: 2.0
     c_distance: 80.0
     c_velocity: 20.0
     c_costmap: 1.0

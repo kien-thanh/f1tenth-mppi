@@ -9,7 +9,7 @@
   "containerEnv": {
     "ROS_DOMAIN_ID": "0"
   },
-  "onCreateCommand": "rosdep init && rosdep update --rosdistro=humble && rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install --packages-skip range_lib --cmake-args -GNinja",
+  "onCreateCommand": "rosdep init && rosdep update --rosdistro=humble && rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install --cmake-args -GNinja -DCMAKE_CUDA_ARCHITECTURES=87",
   "customizations": {
     "vscode": {
       "extensions": [
