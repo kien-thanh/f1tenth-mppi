@@ -13,10 +13,10 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='root',
+    maintainer='Kien-Thanh Tran',
     maintainer_email='kien-thanh.tran@outlook.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    description='Converts the global reference path into distance and heading grids that the MPPI cost function samples on the GPU.',
+    license='MIT',
     extras_require={
         'test': [
             'pytest',

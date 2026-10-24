@@ -3,9 +3,9 @@
 <package format="3">
   <name>safety_node</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Emergency braking based on the instantaneous time-to-collision from LiDAR scans.</description>
   <maintainer email="st176111@stud.uni-stuttgart.com">secret-base</maintainer>
-  <license>TODO: License declaration</license>
+  <license>MIT</license>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

@@ -17,9 +17,9 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='Kien-Thanh Tran',
-    maintainer_email='st146130@stud.uni-stuttgart.de',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    maintainer_email='kien-thanh.tran@outlook.com',
+    description='Launch files and parameters for MPPI, AMCL localization, EKF, the nav2 global planner and the map server.',
+    license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

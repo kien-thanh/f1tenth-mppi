@@ -3,9 +3,9 @@
 <package format="3">
   <name>path_augment</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="st146130@stud.uni-stuttgart.de">root</maintainer>
-  <license>TODO: License declaration</license>
+  <description>Converts a nav2 path into a vehicle-state trajectory (position, heading, speed, steering).</description>
+  <maintainer email="kien-thanh.tran@outlook.com">Kien-Thanh Tran</maintainer>
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

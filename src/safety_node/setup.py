@@ -15,8 +15,8 @@ setup(
     zip_safe=True,
     maintainer='secret-base',
     maintainer_email='st176111@stud.uni-stuttgart.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    description='Emergency braking based on the instantaneous time-to-collision from LiDAR scans.',
+    license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
