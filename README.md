@@ -146,3 +146,7 @@ This repository started from the F1TENTH team project at IFS, University of
 Stuttgart. That shared history is squashed into the first commit, and everything
 after it is my thesis work. The particle filter and safety node come from the
 team project. The MPPI implementation builds on MPPI-Generic (Vlahov et al.).
+
+## License
+
+[MIT](LICENSE). The `MPPI-Generic` submodule and `vesc_msgs` keep their own licenses.
