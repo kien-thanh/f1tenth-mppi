@@ -43,15 +43,15 @@ global_path*.yaml        pre-computed global paths for the lab track
 | Latency compensation | the localization pose is extrapolated by `delay_constant + delay_factor · message age` before each optimization |
 | Obstacles | the scan processor projects `/scan` into the map frame and writes it into a GPU texture each cycle |
 
-### Data flow
+### System architecture
 
-```
-/map, /plan ─► distance_transform ─► /distance_map, /angle_grid ─┐
-/global_costmap/costmap ─────────────────────────────────────────┤
-/scan ─► scan processor (inside mppi_node) ──────────────────────┼─► mppi_node ─► /drive
-/amcl_pose + /odom (car)  or  /ego_racecar/odom (sim) ───────────┘              ├► /local_trajectory
-                                                                                 └► /debug/mppi_rollouts
-```
+The blue nodes are the ones developed in this work. Mapping, localization and global
+planning come from Nav2 and slam_toolbox, and the hardware interface from the F1TENTH driver stack.
+
+<p align="center"><img src="assets/docs/results/architecture.png" width="560" alt="ROS 2 node graph: slam_toolbox and the Nav2 stack (map_server, amcl, planner_server, global_costmap) feed distance_transform and mppi, which publishes /drive to the F1TENTH driver stack"></p>
+
+On the car, MPPI uses `/amcl_pose` and `/odom`. In simulation it uses `/ego_racecar/odom`.
+Besides `/drive`, the node publishes `/local_trajectory` and `/debug/mppi_rollouts` for visualization.
 
 ### Parameters (`src/f1tenth_bringup/config/mppi_params.yml`)
 
@@ -62,6 +62,60 @@ global_path*.yaml        pre-computed global paths for the lab track
 | `delay_constant`, `delay_factor` | latency compensation |
 | `sim` | `true`: simulator odometry and laser frame; `false`: AMCL + VESC odometry on the car |
 | `real_laser_frame`, `sim_laser_frame` | LiDAR TF frames |
+
+## Results
+
+All experiments ran on the physical car (NVIDIA Jetson Orin Nano 8 GB) on a
+5.5 m × 3.2 m indoor track. Vehicle positions are AMCL estimates.
+
+### Real-time performance
+
+A new pose arrives at 40 Hz, so each control cycle must finish within 25 ms.
+2048 rollouts is the default. 4096 also fits, but occasionally missed the deadline under extra system load.
+
+| Rollouts | Mean [ms] | P95 [ms] | Max [ms] |
+|---:|---:|---:|---:|
+| 512 | 3.30 | 6.39 | 12.70 |
+| 2048 | 5.43 | 8.86 | 17.19 |
+| 4096 | 8.89 | 12.29 | 17.98 |
+| 8192 | 15.40 | 19.07 | 29.76 |
+| 16384 | 16.79 | 20.45 | 35.18 |
+
+### Path tracking
+
+With only the path-tracking cost active, the RMS cross-track error is about 5 cm
+(maximum about 10 cm) for every rollout count. The car holds a constant 2.5 m/s, and
+reaches 3.0 m/s with the full cost function. Higher rollout counts mainly
+make the steering commands smoother.
+
+<p align="center"><img src="assets/docs/results/path_tracking_speeds.svg" width="640" alt="Driven paths at constant speeds from 1.5 to 3.0 m/s compared with the reference path; the 3.0 m/s run leaves the track"></p>
+
+### Obstacle avoidance
+
+Four obstacles that were not in the map were placed on the racing line. The car
+detected them with the LiDAR at runtime and avoided all of them over ten consecutive laps.
+
+<p align="center"><img src="assets/docs/results/obstacle_avoidance_laps.svg" width="640" alt="Ten laps with and without four unmapped obstacles; the path with obstacles swerves around each one"></p>
+
+<p align="center"><img src="assets/docs/results/obstacle_avoidance_planning.svg" width="520" alt="Planned local trajectory at three time instants while passing an obstacle, drawn over the LiDAR-based cost map"></p>
+
+### Simulation vs. real car
+
+With identical parameters, the simulated car drives a very consistent line. The
+real car varies more and turns in later. Its *planned* trajectory matches the
+simulation closely, which points to model mismatch (no tire or actuator
+dynamics in the kinematic model) rather than to the planner.
+
+<p align="center"><img src="assets/docs/results/sim_vs_real.svg" width="640" alt="Ten laps of the physical car compared with the simulation using the same parameters"></p>
+
+### Limitations
+
+- Obstacles are encoded as hard cost walls with no distance gradient, so planned
+  trajectories can graze the inflated obstacle regions.
+- Heading errors in the AMCL pose rotate the LiDAR obstacle map. In one test
+  configuration this caused collisions at higher speed.
+- The evaluation is mostly qualitative (single runs per configuration), and
+  there is no comparison against another controller.
 
 ## Related repositories
 
