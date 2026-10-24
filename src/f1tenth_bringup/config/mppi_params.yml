@@ -11,4 +11,4 @@ mppi_node:
     sim_laser_frame: "ego_racecar/laser"
     delay_constant: 0.05
     delay_factor: 1.0
-    sim: false
+    sim: true

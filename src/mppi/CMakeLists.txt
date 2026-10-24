@@ -32,6 +32,7 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(laser_geometry REQUIRED)
+find_package(visualization_msgs REQUIRED)
 
 # Speed up incremental builds: enable ccache if present
 find_program(CCACHE_PROGRAM ccache)
@@ -67,6 +68,7 @@ ament_target_dependencies(mppi_node
   tf2_geometry_msgs
   sensor_msgs
   laser_geometry
+  visualization_msgs
 )
 
 install(TARGETS mppi_node
